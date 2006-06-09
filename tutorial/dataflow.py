@@ -7,10 +7,14 @@ sys.path += "../"
 import cells
 
 class Rectangle(cells.ModelObject):
-    length = cells.makecell(initarg="length",
-                            initform=lambda s, p: s.width * 2)
-    width = cells.makecell(initarg="width",
-                           initform=lambda s, p: s.length / 2)
+    def _widthcalc(self, prev):
+        return self.length / 2
+
+    def _lencalc(self, prev):
+        return self.width * 2
+    
+    length = cells.makecell(initarg="length", initform=_lencalc)
+    width = cells.makecell(initarg="width", initform=_widthcalc)
         
 class Test(unittest.TestCase):
     testnum = "01a"
