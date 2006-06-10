@@ -6,29 +6,49 @@
 # License forthcoming...
 #-----------------------------
 
-DEBUG = True
+DEBUG = False
 
 def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
 
-def makecell(initarg, initform):
+def makecell(initarg, initform=lambda s,p: None):
     """Standard cell attribute factory"""
     return CellAttr(name=initarg, function=initform)
 # TODO: make a decorator version of the above
+
+def observer(klass, cellname):
+    """Decorator to add an observer to a cell in a class
+
+    TODO: Explain observers, describe required signature for observing funcs,
+    warn that wrapped function is pretty much uncallable
+    """
+    debug("running observer decorator for", str(klass), cellname)
+    def observer_decorator(func):
+        klass.__dict__[cellname].observers.append(func)
+        
+    return observer_decorator
+    
 
 class Cell(object):
     """The actual Cell. Does everything interesting.
 
     TODO: Write a better description
     """
-    def __init__(self, name, function):
+    def __init__(self, name, function=lambda s,p: None, value=None,
+                 observers=[]):
+        debug("running cell init for", name, "with", str(len(observers)),
+              "observers")
         self.name = name
         self.function = function
-        self.value = None
+        self.value = value
+        self.observers = observers
+        
         self.called_by = set([])     # the cells which call this cell
         self.calls = set([])         # the cells which this cell calls
+
         self.time = None
+        self.bound = False
 
     def get(self, owner):
         """Special getter for Cell attributes.
@@ -38,10 +58,12 @@ class Cell(object):
         value, and return that.
         """
         debug(">>> Getting", self.name)
+
         # first, determine if this cell needs its initial calculation
         if not self.value:
             debug(">>> function for", self.name, "callable?",
                   str(callable(self.function)))
+
             self.run(owner)
 
         debug(">>>", self.name, "is", str(self.value))
@@ -62,13 +84,25 @@ class Cell(object):
         if self.value != value:
             owner._time += 1
             self.time = owner._time
+
             debug(">>> Owner time is:", str(owner._time))
             debug(">>> Setting", self.name, "to", str(value))
             debug(">>>", self.name, "calls", \
                   str([ cell.name for cell in self.calls]))
             debug(">>>", self.name, "called by", \
                   str([ cell.name for cell in self.called_by]))
+
+            oldval = self.value         # save for observers
+            oldbound = self.bound       # ditto
+            self.bound = True
             self.value = value
+
+            # run my observers
+            debug(">>> Number of observers:", str(len(self.observers)))
+            for observer in self.observers:
+                debug(">>> Running observer", str(observer))
+                observer(self.value, oldval, oldbound)
+            
             self.equalize(owner)
 
     def run(self, owner):
@@ -114,12 +148,22 @@ class CellAttr(object):
         self.name = name
         self.args = args
         self.kwargs = kwargs
+        self.observers = []
 
     def getcell(self, owner):
         # if there isn't a value in owner.myname, make it a cell
-        print "--> got request for cell in", self.name
+        debug("--> got request for cell in", self.name)
         if self.name not in owner.__dict__.keys():
-            owner.__dict__[self.name] = Cell(self.name, *self.args, **self.kwargs)
+            # first, find out if this object has overrides on this cell's init
+            override = owner._initregistry.get(self.name)
+            
+            if override:               # it does, use the override
+                newcell = Cell(self.name, observers=self.observers, **override)
+            else:                       # it doesn't, use class's default
+                newcell = Cell(self.name, observers=self.observers,
+                               *self.args, **self.kwargs)
+                
+            owner.__dict__[self.name] = newcell
 
         return owner.__dict__[self.name]
         
@@ -128,13 +172,33 @@ class CellAttr(object):
         # return the value in owner.myname
         return self.getcell(owner).get(owner)
 
-    def __set__(self, owner, value):        
-        cell = self.getcell(owner)      # get the cell in owner.myname        
-        cell.set(owner, value)                 # push a value into it
+    def __set__(self, owner, value):
+        cell = self.getcell(owner)  # get the cell in owner.myname        
+        cell.set(owner, value)      # and push a value into it
 
         
 class ModelObject(object):
     """A thing that holds Cells"""
     def __init__(self, *args, **kwargs):
+        # initialize cells based on kwargs
+        self._initregistry = {}
+        klass = self.__class__
+        
+        for k,v in kwargs.iteritems():       # for each keyword arg
+            if k in klass.__dict__.keys():   # if there's a match in my class
+                # normalize the input
+                if callable(v):
+                    cellinit = {'function': v}
+                elif 'keys' in dir(v) and \
+                         ('function' in v.keys() or
+                          'value' in v.keys()):
+                    cellinit = v
+                else:
+                    cellinit = {'value': v}
+                    
+                # set the new init in the registry for this cell name; to be
+                # read at cell-build time
+                self._initregistry[k] = cellinit
+                                         
         self._curr = None
         self._time = 0

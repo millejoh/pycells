@@ -14,15 +14,18 @@ class Rectangle(cells.ModelObject):
         return self.width * 2
     
     length = cells.makecell(initarg="length", initform=_lencalc)
-    width = cells.makecell(initarg="width", initform=_widthcalc)
+    width = cells.makecell(initarg="width")
+
+    def __init__(self, width=_widthcalc, *args, **kwargs):
+        cells.ModelObject.__init__(self, width=width, *args, **kwargs)
+        
         
 class Test(unittest.TestCase):
     testnum = "01a"
 
     def runTest(self):
         # (let ((r (make-instance 'rectangle :len (c-in 42))))
-        rect = Rectangle()
-        rect.length = 42
+        rect = Rectangle(length=42)
         # (cells::ct-assert (eql 21 (width r)))
         self.failUnless(rect.width == 21)
         # ;; make sure we did not break SETF, which must return the value set
