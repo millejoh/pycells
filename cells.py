@@ -12,10 +12,22 @@ def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
 
-def makecell(initarg, initform=lambda s,p: None):
+def makecell(name, function=lambda s,p: None):
     """Standard cell attribute factory"""
-    return CellAttr(name=initarg, function=initform)
-# TODO: make a decorator version of the above
+    return CellAttr(name=name, function=function)
+
+def fun2cell(*args, **kwargs):
+    """Decorator version of makecell
+
+    TODO: More here."""
+    def fun2cell_decorator(func):
+        cellname = kwargs.get('name')
+        if not cellname:
+            cellname = func.__name__
+        return CellAttr(name=cellname, function=func)
+
+    return fun2cell_decorator
+    
 
 def observer(klass, cellname):
     """Decorator to add an observer to a cell in a class

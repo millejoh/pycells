@@ -21,4 +21,4 @@ for modulename in glob.glob("tutorial/*.py"):
     suite.append(module.Test())
 
 # ... ordered by their testnum attribute.
-suite.sort(cmp=lambda x, y: x.testnum > y.testnum)
+suite.sort(cmp=lambda x, y: x.testnum < y.testnum)

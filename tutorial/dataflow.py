@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest, sys
 
 sys.path += "../"
@@ -13,8 +11,8 @@ class Rectangle(cells.ModelObject):
     def _lencalc(self, prev):
         return self.width * 2
     
-    length = cells.makecell(initarg="length", initform=_lencalc)
-    width = cells.makecell(initarg="width")
+    length = cells.makecell(name="length", function=_lencalc)
+    width = cells.makecell(name="width")
 
     def __init__(self, width=_widthcalc, *args, **kwargs):
         cells.ModelObject.__init__(self, width=width, *args, **kwargs)
