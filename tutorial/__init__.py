@@ -12,7 +12,7 @@ suite = []
 # and get their tests ...
 for modulename in glob.glob("tutorial/*.py"):
     if modulename == "tutorial/__init__.py": continue # er, except this one
-
+    
     # so import the Test class from the module
     modulename = modulename.replace('/', '.')
     modulename = modulename[:-3]
@@ -21,4 +21,4 @@ for modulename in glob.glob("tutorial/*.py"):
     suite.append(module.Test())
 
 # ... ordered by their testnum attribute.
-suite.sort(cmp=lambda x, y: x.testnum < y.testnum)
+suite.sort(cmp=lambda x, y: cmp(x.testnum, y.testnum))

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import unittest, sys
 
 sys.path += "../"
@@ -26,8 +28,6 @@ class Rectangle(cells.ModelObject):
 def len_observer(new, old, bound):
     global GUI_TOLD
     GUI_TOLD = True
-    # since this is running as a test, I don't actually want to print anything
-    #print "Tell GUI about", str(new), str(old), str(bound)
     
 class Test(unittest.TestCase):
     testnum = "01b"
@@ -55,4 +55,13 @@ class Test(unittest.TestCase):
         self.failUnless(rect.length == 1000)
         self.failUnless(GUI_TOLD)
         self.failUnless(rect.width == 500)
+
+if __name__ == "__main__":
+    @cells.observer(Rectangle, "length")
+    def len_observer(new, old, bound):
+        print "Tell GUI about", str(new), str(old), str(bound)
+
+    rect = Rectangle()
+    rect.length = 42                    # --> Tell GUI about 42 None False
+    rect.length = 1000                  # --> Tell GUI about 1000 42 True
 

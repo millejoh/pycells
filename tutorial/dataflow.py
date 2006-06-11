@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import unittest, sys
 
 sys.path += "../"
@@ -33,3 +35,6 @@ class Test(unittest.TestCase):
         # ;; make sure new value propagated
         # (cells::ct-assert (eql 500 (width r))))
         self.failUnless(rect.width == 500)
+
+if __name__ == "__main__":
+    pass
