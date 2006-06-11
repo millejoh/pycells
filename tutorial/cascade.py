@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest, sys
+import unittest, sys, math
 sys.path += "../"
 import cells
 
@@ -11,7 +11,7 @@ class Rectangle(cells.ModelObject):
 
     @cells.fun2cell()
     def width(self, prev):
-        return self.length / 2
+        return math.floor(self.length / 2)
 
     @cells.fun2cell()
     def area(self, prev):
@@ -19,7 +19,7 @@ class Rectangle(cells.ModelObject):
 
     @cells.fun2cell()
     def brightness(self, prev):
-        return self.lumens / self.area
+        return math.floor(self.lumens / self.area)
 
     def __init__(self, *args, **kwargs):
         self.lumens = 1000000
@@ -36,8 +36,9 @@ class Test(unittest.TestCase):
         self.failUnless(rect.brightness == 200)
 
         rect.length = 1000
-        self.failUnless(rect.length == 1000)
-        self.failUnless(rect.area == 500000)
+        self.failUnless(rect.length ==  1000)
+        self.failUnless(rect.width == 500)
+        self.failUnless(rect.area ==  500000)
         self.failUnless(rect.brightness == 2)
 
 

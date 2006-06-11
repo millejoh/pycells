@@ -12,9 +12,11 @@ def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
 
+        
 def makecell(name, function=lambda s,p: None):
     """Standard cell attribute factory"""
     return CellAttr(name=name, function=function)
+
 
 def fun2cell(*args, **kwargs):
     """Decorator version of makecell
@@ -50,7 +52,7 @@ class Cell(object):
     def __init__(self, name, function=lambda s,p: None, value=None,
                  observers=[]):
         debug("running cell init for", name, "with", str(len(observers)),
-              "observers")
+              "observers, value=", str(value))
         self.name = name
         self.function = function
         self.value = value
@@ -61,26 +63,37 @@ class Cell(object):
 
         self.time = None
         self.bound = False
+        self.dirty = True
+        self.value_set = False
+
+        if value:
+            self.bound = True
+            self.value_set = True
+            self.dirty = False
+            self.run_observers(None, False)
 
     def get(self, owner):
         """Special getter for Cell attributes.
 
-        If there's a memoized value, return it directly. If there isn't, this
-        is the first time this cell's been run. So, run it, memoize the calc'd
-        value, and return that.
+        If the value's been set, return that. If there's a memoized
+        value, return it that. If there isn't, this is the first time
+        this cell's been run. So, run it, memoize the calc'd value,
+        and return that.
         """
         debug(">>> Getting", self.name)
 
-        # first, determine if this cell needs its initial calculation
-        if not self.value:
-            debug(">>> function for", self.name, "callable?",
-                  str(callable(self.function)))
+        # first, determine if this cell needs a recalculation
+        if not self.bound :
+            debug(">>>", self.name, "has not been bound; running.")
+            self.run(owner)
 
+        if self.dirty and not self.value_set:
+            debug(">>>", self.name, "dirty and unset")
             self.run(owner)
 
         debug(">>>", self.name, "is", str(self.value))
 
-        if (owner._curr):               # if there's a calling cell,
+        if owner._curr:               # if there's a calling cell,
             # notify calling cell that it depends on this cell
             owner._curr.calls.add(self)
             # and add the calling cell to the called-by list
@@ -93,6 +106,7 @@ class Cell(object):
 
         TODO: Describe my behavior
         """
+        self.value_set = True
         if self.value != value:
             owner._time += 1
             self.time = owner._time
@@ -108,48 +122,74 @@ class Cell(object):
             oldbound = self.bound       # ditto
             self.bound = True
             self.value = value
-
-            # run my observers
-            debug(">>> Number of observers:", str(len(self.observers)))
-            for observer in self.observers:
-                debug(">>> Running observer", str(observer))
-                observer(self.value, oldval, oldbound)
             
+            self.run_observers(oldval, oldbound)
             self.equalize(owner)
+
+    def run_observers(self, oldval, oldbound):
+        debug(">>> Number of observers:", str(len(self.observers)))
+        for observer in self.observers:
+            debug(">>> Running observer", str(observer))
+            observer(self.value, oldval, oldbound)
 
     def run(self, owner):
         """Runs the value-generating function & re-equalizes the subgraph"""
         # update to this time quantum, then run the function
         debug(">>> Owner time is:", str(owner._time))
-        self.time = owner._time
+
+        self.time = owner._time        
         oldval = self.value
+        oldbound = self.bound
+        
         debug(">>>", self.name, "time is:", str(owner._time))
 
         # set this cell as the currently-running cell
+        if owner._curr:
+            debug(">>> Currently-running cell was", str(owner._curr.name))
+        else:
+            debug(">>> No currently-running cell")
         oldrunner = owner._curr
         owner._curr = self
+        debug(">>> Currently-running cell is now", str(self.name))
         
         # note the function is passed the *owner* as the first arg, mimicking
         # standard Foo.bar dispatch
         self.value = self.function(owner, self.value)
+        self.bound = True
+        self.dirty = False
 
-        # only rerun dependents if the value changed
+        # only rerun dependents & observers if the value changed
         if oldval != self.value:
+            self.run_observers(oldval, oldbound)
             self.equalize(owner)
 
         # now that the subgraph is equalized, restore the old running cell
         owner._curr = oldrunner
+        if owner._curr:
+            debug(">>> Currently-running cell back to", str(owner._curr.name))
+        else:
+            debug(">>> No currently-running cell")
+
 
     def equalize(self, owner):
         """Brings the subgraph of dependents to equlibrium."""
         debug(">>> Equalizing", self.name)
+        debug(">>>", self.name, "called by",
+              str([ cell.name for cell in self.called_by ]))
+
+        # first, mark all to-be-run cells as dirty (to make sure recalcs
+        # among dependent dependents get run in the right order)
+        for dependent in self.called_by:
+            dependent.dirty = True
         
-        # re-run the cells which call this cell
+        # then, re-run the cells which call this cell
         for dependent in self.called_by:
             # only run if the dependent hasn't been run in this quantum
-            debug(">>> Dependent:", dependent.name, "at", str(dependent.time))
+            debug(">>> Dependent of", self.name, ":", dependent.name, "at",
+                  str(dependent.time))
             if dependent.time < self.time:
-                debug(">>> Dependent:", dependent.name, "re-run")
+                debug(">>> Dependent of", self.name, ":", dependent.name,
+                      "re-run")
                 dependent.run(owner)
         # the subtree is now at equilibrium.
 
@@ -194,6 +234,7 @@ class ModelObject(object):
     def __init__(self, *args, **kwargs):
         # initialize cells based on kwargs
         self._initregistry = {}
+        self._cellregistry = []
         klass = self.__class__
         
         for k,v in kwargs.iteritems():       # for each keyword arg
@@ -214,3 +255,11 @@ class ModelObject(object):
                                          
         self._curr = None
         self._time = 0
+
+        # do initial equalizations
+        # XXX: I'm not convinced this is a good way to do this
+        debug(">>> INITIAL EQUALIZATIONS START")
+        x = None
+        for attrib in dir(self):
+            x = getattr(self, attrib)   # just run every attribute...
+        debug(">>> INITIAL EQUALIZATIONS END")    

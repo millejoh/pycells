@@ -37,8 +37,7 @@ class Test(unittest.TestCase):
         #        (r (make-instance 'rectangle :len (c-in 42))))
         global GUI_TOLD                 # yuck.
         GUI_TOLD = False
-        rect = Rectangle()
-        rect.length = 42
+        rect = Rectangle(length=42)
         
         #   (cells::ct-assert *gui-told*)
         #   (cells::ct-assert (eql 21 (width r)))
@@ -61,7 +60,7 @@ if __name__ == "__main__":
     def len_observer(new, old, bound):
         print "Tell GUI about", str(new), str(old), str(bound)
 
-    rect = Rectangle()
+    rect = Rectangle(length=42)
     rect.length = 42                    # --> Tell GUI about 42 None False
     rect.length = 1000                  # --> Tell GUI about 1000 42 True
 
