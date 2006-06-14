@@ -40,7 +40,7 @@ class Test(unittest.TestCase):
         
         # add an observer which will fail the test if width's old == new
         @cells.observer(Rectangle, "width")
-        def width_observer(new, old, wasbound):
+        def width_observer(modelobj, new, old, wasbound):
             global runlog
             self.failIf(new == old)
             if MAIN: print "Observing width. Is", str(new) + ", was", str(old)
@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
 
         # and a plain-old observer on length
         @cells.observer(Rectangle, "length")
-        def length_observer(new, old, wasbound):
+        def length_observer(modelobj, new, old, wasbound):
             global runlog
             runlog.append("length_observer")
 

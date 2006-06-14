@@ -25,7 +25,7 @@ class Rectangle(cells.ModelObject):
 #   (setf *gui-told* t)
 #   (print (list "tell GUI about" self new-value old-value old-value-bound-p)))
 @cells.observer(Rectangle, "length")
-def len_observer(new, old, bound):
+def len_observer(cell, new, old, bound):
     global GUI_TOLD
     GUI_TOLD = True
     
