@@ -36,7 +36,7 @@ class Cell(object):
     TODO: Write a better description
     """
     def __init__(self, owner, name, function=lambda s,p: None, value=None,
-                 observers=[], type="default"):
+                 observers=[], type=None):
         debug("running cell init for", name, "with", str(len(observers)),
               "observers, value=", str(value))
         self.name = name
@@ -81,10 +81,12 @@ class Cell(object):
         debug(self.name, "is", str(self.value))
 
         if self.owner._curr:               # if there's a calling cell,
-            # notify calling cell that it depends on this cell
-            self.owner._curr.calls.add(self)
-            # and add the calling cell to the called-by list
-            self.called_by.add(self.owner._curr)
+            # and it's not a rule-then-value cell
+            if not isinstance(self.owner._curr, RuleThenValueCell):
+                # notify calling cell that it depends on this cell
+                self.owner._curr.calls.add(self)
+                # and add the calling cell to the called-by list
+                self.called_by.add(self.owner._curr)
 
         return self.value
 
@@ -191,6 +193,18 @@ class RuleCell(Cell):
     def set(self, value):
         raise RuleCellSetError("cannot set a rule cell")
 
+class RuleThenValueCell(Cell):
+    """Runs the rule to determine initial value, then acts like a ValueCell"""
+    def __init__(self, *args, **kwargs):
+        Cell.__init__(self, *args, **kwargs)
+        self.run()
+        self.function = None
+        self.bound = True
+        self.value_set = True
+        self.dirty = False
+        self.run_observers(None, False)
+
+        
 class ValueCell(Cell):
     def run(self):
         raise ValueCellRunError("attempt to run a value cell")
@@ -221,3 +235,5 @@ class EphemeralCell(Cell):
         """run, equalize, then unset"""
         Cell.run(self)
         self.bound = False
+
+    

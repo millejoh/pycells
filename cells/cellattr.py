@@ -19,6 +19,11 @@ class CellAttr(object):
 
     def buildcell(self, owner, name, observers, *args, **kwargs):
         """Creates a new cell of the appropriate type"""
+        debug("Building cell: owner:", str(owner))
+        debug("                name:", name)
+        debug("           observers:", str(observers))
+        debug("                args:", str(args))
+        debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
         if kwargs.has_key('type'):
             celltype = kwargs["type"]

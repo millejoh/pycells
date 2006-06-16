@@ -4,7 +4,7 @@ PyCells
 TODO: More here.
 """
 
-from cell import Cell, ValueCell, RuleCell, EphemeralCell
+from cell import Cell, ValueCell, RuleCell, RuleThenValueCell, EphemeralCell
 from cellattr import CellAttr
 from modelobject import ModelObject
 
@@ -14,9 +14,9 @@ def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
         
-def makecell(name, function=lambda s,p: None, *args, **kwargs):
+def makecell(name, *args, **kwargs):
     """Standard cell attribute factory"""
-    return CellAttr(name=name, function=function, *args, **kwargs)
+    return CellAttr(name=name, *args, **kwargs)
 
 def fun2cell(*args, **kwargs):
     """Decorator version of makecell
