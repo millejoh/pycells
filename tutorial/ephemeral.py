@@ -10,15 +10,12 @@ runlog = []
 class Point(object):
     """Silly little point structure"""
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x, self.y = x, y
 
     def inside(self, box):
         """Returns true if this Point is inside passed Box"""
-        return (box.left <= self.x and
-                box.right > self.x and
-                box.bottom <= self.y and
-                box.top > self.y)
+        return (box.left <= self.x and box.right > self.x and
+                box.bottom <= self.y and box.top > self.y)
 
     def __eq__(self, point):
         return (self.x == point.x) and (self.y == point.y)
@@ -27,16 +24,11 @@ class Point(object):
 class Box(object):
     """Silly little box structure"""
     def __init__(self, l, t, r, b):
-        self.left = l
-        self.right = r
-        self.top = t
-        self.bottom = b
+        self.left, self.right, self.top, self.bottom = l, r, t, b
 
     def __eq__(self, box):
-        return ((box.left == self.left) and
-                (box.right == self.right) and
-                (box.top == self.top) and
-                (box.bottom == self.bottom))
+        return ((box.left == self.left) and (box.right == self.right) and
+                (box.top == self.top) and (box.bottom == self.bottom))
 
     def __str__(self):
         return str((self.left, self.top, self.right, self.bottom))
@@ -52,14 +44,14 @@ class Rectangle(cells.ModelObject):
         return self.click.inside(self.bounding_box)
 
     
-@cells.observer(Rectangle, "click")
+@Rectangle.observer("click")
 def click_observer(modelobj, new, old, oldbound):
     if new:
         if MAIN: print "Resetting bounding box!"
         modelobj.set_with_integrity("bounding_box",
                                     Box(-1000, 1000, 1000, -1000))
 
-@cells.observer(Rectangle, "clicked")
+@Rectangle.observer("clicked")
 def clicked_observer(modelobj, new, old, oldbound):
     if new:
         if MAIN: print "The Rectangle was clicked!"

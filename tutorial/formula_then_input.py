@@ -5,7 +5,6 @@ sys.path += "../"
 import cells
 
 MAIN = False
-
 db = {}
 
 def get_age(id):

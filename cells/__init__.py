@@ -34,6 +34,9 @@ def fun2cell(*args, **kwargs):
 def observer(klass, cellname):
     """Decorator to add an observer to a cell in a class
 
+    You may also do @Klass.observer, a syntax I think I prefer. Nuke this or
+    keep it around?
+        
     TODO: Explain observers, describe required signature for observing funcs,
     warn that wrapped function is pretty much uncallable
     """

@@ -50,3 +50,16 @@ class ModelObject(object):
     def set_with_integrity(self, name, value):
         debug(name, "=", str(value), "(with integrity)")
         self._setqueue.append((name, value))
+
+    @classmethod
+    def observer(klass, cellname):
+        """Decorator to add an observer to a cell in this class
+
+        TODO: Explain observers, describe required signature for observing 
+        funcs, warn that wrapped function is pretty much uncallable
+        """
+        debug("running observer decorator on", cellname)
+        def observer_decorator(func):
+            klass.__dict__[cellname].observers.append(func)
+        
+        return observer_decorator
