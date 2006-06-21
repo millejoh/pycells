@@ -5,10 +5,15 @@ TODO: More here.
 """
 
 from cell import Cell, ValueCell, RuleCell, RuleThenValueCell, EphemeralCell
+from cell import CellException, RuleCellSetError, EphemeralCellUnboundError
+from cell import ValueCellRunError
 from cellattr import CellAttr
 from modelobject import ModelObject
 
 DEBUG = False
+
+time = 1
+curr = None
 
 def debug(*msgs):
     if DEBUG:
