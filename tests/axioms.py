@@ -19,25 +19,26 @@ class DataPulseAxioms(unittest.TestCase):
 
     def test_Axiom1_GlobalUpdateCounter(self):
         """
-        1. Global Update Counter: There is a global update
+        1. Global Update Counter: There is a global datapulse
         counter. (Guarantees that there is a globally-consistent
         notion of the time at which updates occur.)
         """
-        self.failUnless(cells.time > 0)
+        self.failUnless(cells.dp > 0)
         
     def test_Axiom2_CellTime(self):
         """
-        2. Per-Cell 'As Of' Value: Every cell has a 'current-as-of'
-        update count that is initialized with a value that is less
-        than the global update count will ever be.
+        2. Per-Cell 'As Of' Value: Every cell has a
+        'current-as-of-datapulse' value that is initialized with a
+        value that is less than the global datapulse count will ever
+        be.
         """
-        self.failUnless(self.cellA.time == 0)
+        self.failUnless(self.cellA.dp == 0)
 
     def test_Axiom3_CellOutOfDate(self):
         """
-        3. Out-of-dateness: A cell is out of date if its update count
-        is lower than the update count of any of the cells it depends
-        on.
+        3. Out-of-dateness: A cell is out of date if its datapulse
+        value is lower than the datapulse value of any of the cells it
+        depends on.
 
         Given the previous two axioms, a new cell is *always* out of
         date.
@@ -50,24 +51,29 @@ class DataPulseAxioms(unittest.TestCase):
         queried, its rule is only run if the cell is out of date;
         otherwise a cached previous value is returned.  (Guarantees
         that a rule is not run unless its dependencies have changed
-        since the last time the rule was run.)
+        since the last datapulse the rule was run in.)
         """
-                                        # by axiom 3, cellA is out of date
+        # by axiom 3, cellA is out of date
         self.cellA.get()       # should bring it up to date by running the rule
         self.failUnless(self.cellA_runcount == 1) 
         self.cellA.get()       # since it's now up to date, the rule
         self.failUnless(self.cellA_runcount == 1) # should not have been run
 
-    def test_Axiom5_CellTimeUpdates(self):
+    def test_Axiom5_CellDPUpdates(self):
         """
         5. Up-to-date After: Once a cell's rule is run (or its value
-        is changed, if it is an input cell), its update count must be
-        equal to the global update count.  (Guarantees that a rule
-        cannot run more than once per update.)
+        is changed, if it is an input cell), its datapulse value must
+        be equal to the global datapulse counter.  (Guarantees that a
+        rule cannot run more than once per datapulse.)
         """
-        # as before, we bring cellA up to date:
-        self.cellA.get()
-        self.failUnless(self.cellA.time == cells.time)
+        # Rule cell test:
+        self.cellA.get()                # as before, we bring cellA up to date:
+
+        self.failUnless(self.cellA.dp == cells.dp)
+
+        # Value cell test:
+        self.cellB.set(42)
+        self.failUnless(self.cellB.dp == cells.dp)
         
     def test_Axiom6_InputAdvancesSystem(self):
         """
@@ -75,10 +81,12 @@ class DataPulseAxioms(unittest.TestCase):
         When an input cell changes, it increments the global update count and 
         stores the new value in its own update count.
         """
-        pre_update = cells.time
+        pre_update = cells.dp
         self.cellB.set(42)
-        self.failUnless(cells.time == pre_update + 1)
-        self.failUnless(self.cellB.time == cells.time)
+        self.failUnless(cells.dp == pre_update + 1)
+        self.failUnless(self.cellB.dp == cells.dp)
 
+
+        
 if __name__ == "__main__":
     unittest.main()

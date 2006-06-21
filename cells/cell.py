@@ -50,7 +50,7 @@ class Cell(object):
         self.called_by = set([])     # the cells which call this cell
         self.calls = set([])         # the cells which this cell calls
 
-        self.time = 0
+        self.dp = 0
         self.bound = False
         self.value_set = False
         
@@ -65,9 +65,9 @@ class Cell(object):
         """Special getter for Cell attributes.
 
         If the value's been set, return that. If there's a memoized
-        value, return it that. If there isn't, this is the first time
-        this cell's been run. So, run it, memoize the calc'd value,
-        and return that.
+        value, return it that. If there isn't, this is the first
+        datapulse this cell's been run. So, run it, memoize the calc'd
+        value, and return that.
         """
         debug("Getting", self.name)
 
@@ -95,10 +95,10 @@ class Cell(object):
         """
         self.value_set = True
         if self.value != value:
-            cells.time += 1
-            self.time = cells.time
+            cells.dp += 1
+            self.dp = cells.dp
 
-            debug("System time is:", str(cells.time))
+            debug("Global datapulse is:", str(cells.dp))
             debug("Setting", self.name, "to", str(value))
             debug(self.name, "calls", \
                   str([ cell.name for cell in self.calls]))
@@ -121,14 +121,14 @@ class Cell(object):
 
     def run(self):
         """Runs the rule & re-equalizes the subgraph"""
-        # update to this time quantum, then run the rule
-        debug("Time is:", str(cells.time))
+        # update to this datapulse, then run the rule
+        debug("Global datapulse is:", str(cells.dp))
 
-        self.time = cells.time        
+        self.dp = cells.dp        
         oldval = self.value
         oldbound = self.bound
         
-        debug(self.name, "time is:", str(cells.time))
+        debug(self.name, "datapulse is:", str(self.dp))
 
         # set this cell as the currently-running cell
         if cells.curr:
@@ -169,8 +169,8 @@ class Cell(object):
         for dependent in self.called_by:
             # only run if the dependent hasn't been run in this quantum
             debug("Dependent of", self.name, ":", dependent.name, "at",
-                  str(dependent.time))
-            if dependent.time < self.time:
+                  str(dependent.dp))
+            if dependent.dp < self.dp:
                 debug("Dependent of", self.name, ":", dependent.name,
                       "re-run")
                 # catch EphemeralCellUnboundError exceptions

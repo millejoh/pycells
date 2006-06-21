@@ -12,7 +12,7 @@ from modelobject import ModelObject
 
 DEBUG = False
 
-time = 1
+dp = 1
 curr = None
 
 def debug(*msgs):
