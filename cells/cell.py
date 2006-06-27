@@ -30,7 +30,9 @@ class EphemeralCellUnboundError(CellException):
 
 class ValueCellRunError(CellException):
     pass
-        
+
+class SetDuringNotificationError(CellException):
+    pass
         
 class Cell(object):
     """The base Cell class. Does everything interesting.
@@ -47,35 +49,26 @@ class Cell(object):
         self.observers = observers
         self.owner = owner
         
-        self.called_by = set([])     # the cells which call this cell
-        self.calls = set([])         # the cells which this cell calls
+        self.called_by = set([])     # the cells whose rules call this cell
+        self.calls = set([])         # the cells which this cell's rule calls
 
         self.dp = 0
         self.bound = False
-        self.value_set = False
         
-        self.requires_update = True
+        self.constant = False
+        self.notifying = True
+        self.changed = False
 
         if value:
             self.bound = True
-            self.value_set = True
             self.run_observers(None, False)
 
     def get(self):
-        """Special getter for Cell attributes.
-
-        If the value's been set, return that. If there's a memoized
-        value, return it that. If there isn't, this is the first
-        datapulse this cell's been run. So, run it, memoize the calc'd
-        value, and return that.
-        """
         debug("Getting", self.name)
 
         # first, determine if this cell needs a recalculation
-        if self.requires_update:
-            debug(self.name, "needs update; running.")
-            self.run()
-
+        self.update()
+        
         debug(self.name, "is", str(self.value))
 
         if cells.curr:               # if there's a calling cell,
@@ -94,16 +87,13 @@ class Cell(object):
         TODO: Describe my behavior
         """
         self.value_set = True
+        
         if self.value != value:
             cells.dp += 1
             self.dp = cells.dp
+            self.changed = True
 
-            debug("Global datapulse is:", str(cells.dp))
             debug("Setting", self.name, "to", str(value))
-            debug(self.name, "calls", \
-                  str([ cell.name for cell in self.calls]))
-            debug(self.name, "called by", \
-                  str([ cell.name for cell in self.called_by]))
 
             oldval = self.value         # save for observers
             oldbound = self.bound       # ditto
@@ -111,7 +101,42 @@ class Cell(object):
             self.value = value
             
             self.run_observers(oldval, oldbound)
-            self.equalize()
+
+            self.change = False
+
+    def update(self, queryer=None):
+        """Determines whether this cell needs to be updated."""
+        debug(self.name, "updating")
+
+        if not self.bound:              # if unbound, always recalc
+            debug(self.name, "unbound in update")
+            self.run(queryer)
+        else:
+            debug(self.name, "bound in update; I call",
+                  str([ cell.name for cell in self.calls ]))
+            for called in self.calls:                
+                # this cell depends on the changed cell
+                if called.changed == True:
+                    debug(self.name, "is updating, found a changed cell:",
+                          called.name)
+                    # rerun, propogating to the queryer 1st
+                    self.run(queryer)
+                else:
+                    debug(self.name, "running update on", called.name)
+                    # recurse down the calls graph
+                    called.update(self)
+        # and no matter what, at this point we're updated.
+        self.dp = cells.dp
+
+    def add_calls(self, *calls_cells):
+        """Appends the passed list of cells to this cell's calls list"""
+        for cell in calls_cells:
+            self.calls.add(cell)
+
+    def add_called_by(self, *cb_cells):
+        """Appends the passed list of cells to this cell's called-by list"""
+        for cell in cb_cells:
+            self.called_by.add(cell)
 
     def run_observers(self, oldval, oldbound):
         debug("Number of observers:", str(len(self.observers)))
@@ -119,8 +144,15 @@ class Cell(object):
             debug("Running observer", str(observer))
             observer(self.owner, self.value, oldval, oldbound)
 
-    def run(self):
-        """Runs the rule & re-equalizes the subgraph"""
+    def pre_run_hook(self):
+        """A testing hook; exec's as the first statement in run()"""
+        pass
+            
+    def run(self, queryer=None):
+        """Runs the rule & propogates the change to this cell's called-by list,
+        if neccessary, starting with the queryer (if passed)."""
+        self.pre_run_hook()
+
         # update to this datapulse, then run the rule
         debug("Global datapulse is:", str(cells.dp))
 
@@ -143,12 +175,13 @@ class Cell(object):
         # mimicking standard Foo.bar dispatch
         self.value = self.rule(self.owner, self.value)
         self.bound = True
-        self.requires_update = False
         
         # only rerun dependents & observers if the value changed
         if oldval != self.value:
+            self.notifying = True
             self.run_observers(oldval, oldbound)
-            self.equalize()
+            
+            self.notifying = False
 
         # now that the subgraph is equalized, restore the old running cell
         cells.curr = oldrunner
@@ -158,27 +191,6 @@ class Cell(object):
         else:
             debug("Currently-running cell back to",
                   str(cells.curr.name))
-
-    def equalize(self):
-        """Brings the subgraph of dependents to equlibrium."""
-        debug("Equalizing", self.name)
-        debug(self.name, "called by",
-              str([ cell.name for cell in self.called_by ]))
-
-        # re-run the cells which call this cell
-        for dependent in self.called_by:
-            # only run if the dependent hasn't been run in this quantum
-            debug("Dependent of", self.name, ":", dependent.name, "at",
-                  str(dependent.dp))
-            if dependent.dp < self.dp:
-                debug("Dependent of", self.name, ":", dependent.name,
-                      "re-run")
-                # catch EphemeralCellUnboundError exceptions
-                try:
-                    dependent.run()
-                except EphemeralCellUnboundError, e:
-                    debug(dependent.name, "hit an unbound ephemeral")
-        # the subtree is now at equilibrium.
 
 
 class RuleCell(Cell):
@@ -193,7 +205,6 @@ class RuleThenValueCell(Cell):
         self.run()
         self.rule = None
         self.bound = True
-        self.value_set = True
         self.run_observers(None, False)
 
         

@@ -6,7 +6,7 @@ TODO: More here.
 
 from cell import Cell, ValueCell, RuleCell, RuleThenValueCell, EphemeralCell
 from cell import CellException, RuleCellSetError, EphemeralCellUnboundError
-from cell import ValueCellRunError
+from cell import ValueCellRunError, SetDuringNotificationError
 from cellattr import CellAttr
 from modelobject import ModelObject
 
@@ -18,6 +18,13 @@ curr = None
 def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
+
+def reset():
+    global dp
+    global curr
+    
+    dp = 1
+    curr = None
         
 def makecell(name, *args, **kwargs):
     """Standard cell attribute factory"""
