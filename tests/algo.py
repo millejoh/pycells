@@ -35,6 +35,8 @@ Def: Current: A cell is current if its datapulse is equal to the
    be queued. After that cell finishes recalculating, (and that change
    propogated up in the same manner) the queue of recalculations may
    be run.
+
+5. (Deferred cell calculations.)
 """
 
 
@@ -165,11 +167,11 @@ class AlgoTests_Rule3(unittest.TestCase):
         self.x.add_called_by(self.a, self.b) # .. and x
         
         # run a fake x.set(3) in the desired order:
-        cells.dp += 1                   #  \
-        self.x.value = 3                #   } TODO: verify everything's done here
-        self.x.changed = True           #  /
-        self.x.dp = cells.dp            # /
-        self.a.update()                 # causes b.update() to run
+        cells.dp += 1                 #  \
+        self.x.value = 3              #   } TODO: verify everything's done here
+        self.x.changed_dp = cells.dp  #  /
+        self.x.dp = cells.dp          # /
+        self.a.update()               # causes b.update() to run
         self.failUnless(self.b.value == 6) # which causes b's rule to run
         self.x.changed = False
         
@@ -197,40 +199,38 @@ class AlgoTests_Rule4(unittest.TestCase):
         self.runlog = []
         
         self.x = cells.Cell(None, "x", value=5)
-        
-        def c_rule(s, p):
-            self.runlog.append("c")
-            return self.x.get() + (p or 0)
-        self.c = cells.Cell(None, "c", rule=c_rule)
 
-        def b_rule(s,p):
-            self.runlog.append("b")
-            return self.c.get() + (p or 0)
-        self.b = cells.Cell(None, "b", rule=b_rule)
+        def anon_rule(name, getfrom):
+            def rule(s,p):
+                self.runlog.append(name)
+                return getfrom.get() + (p or 0)
+            return rule
+
+        self.c = cells.Cell(None, "c", rule=anon_rule('c', self.x))
+        self.b = cells.Cell(None, "b", rule=anon_rule('b', self.c))
 
         def a_rule(s,p):
             self.runlog.append("a")
             return self.b.get() + self.x.get() + (p or 0)
         self.a = cells.Cell(None, "a", rule=a_rule)
 
-        self.h = cells.Cell(None, "h", rule=lambda s,p: (p or 0) + self.a.get())
-        self.i = cells.Cell(None, "i", rule=lambda s,p: (p or 0) + self.b.get())
-        self.j = cells.Cell(None, "j", rule=lambda s,p: (p or 0) + self.c.get())
+        self.h = cells.Cell(None, "h", rule=anon_rule('h', self.a))
+        self.i = cells.Cell(None, "i", rule=anon_rule('i', self.b))
+        self.j = cells.Cell(None, "j", rule=anon_rule('j', self.c))
 
         # build dependencies
         self.h.get()
         self.i.get()
         self.j.get()
-        
+
         self.runlog = []
 
-        # run a fake x.set(3) in the desired order:
-        cells.dp += 1                   #  \
-        self.x.value = 3                #   } TODO: verify everything's done here
-        self.x.changed = True           #  /
-        self.x.dp = cells.dp            # /
-        self.a.update()                 # causes b.update() to run...
-        self.x.changed = False
+        # run an x.set(3) in the desired order:
+        self.x.propogation_list = lambda s,e: [ self.a, self.c ]
+        self.c.propogation_list = lambda s,e: [ self.b, self.j ]
+        self.b.propogation_list = lambda s,e: [ self.a, self.i ]
+        
+        self.x.set(3)
 
     def testA_QueryingCellRecalcsFirst(self):
         """Rule 4 part a: A cell which recalculates because of an
@@ -251,9 +251,10 @@ class AlgoTests_Rule4(unittest.TestCase):
         """Rule 4 part c: The cells which were queued for
         recalculation must run after all querying cells have been run,
         FIFO."""
-        # (continuing from test_4_QueriedCellQueuesRecalcs)
-        # ... then b's, then a's. Verify that bit.
-        self.failUnless(self.runlog[3:] == ["j", "i", "h"])
+        # (continuing from test_4_QueriedCellQueuesRecalcs) ... then
+        # b's, then a's. Verify that bit.  (note, h isn't deferred so
+        # it's run first, then c's (j), then b's deferred (i).)
+        self.failUnless(self.runlog[3:] == ["h", "j", "i"])
         
 if __name__ == "__main__":
     unittest.main()

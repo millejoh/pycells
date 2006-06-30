@@ -12,9 +12,6 @@ from modelobject import ModelObject
 
 DEBUG = False
 
-dp = 1
-curr = None
-
 def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
@@ -22,9 +19,13 @@ def debug(*msgs):
 def reset():
     global dp
     global curr
+    global curr_propogator
+    global queued_updates
     
     dp = 1
     curr = None
+    curr_propogator = None
+    queued_updates = []
         
 def makecell(name, *args, **kwargs):
     """Standard cell attribute factory"""
@@ -57,3 +58,5 @@ def observer(klass, cellname):
         klass.__dict__[cellname].observers.append(func)
         
     return observer_decorator
+
+reset()
