@@ -22,7 +22,7 @@ class Cell(object):
     TODO: Write a better description
     """
     def __init__(self, owner, name, rule=lambda s,p: None, value=None,
-                 observers=[], type=None):
+                 observers=[], type=None, unchanged_if=lambda o,n: o == n):
         debug("running cell init for", name, "with", str(len(observers)),
               "observers, value=", str(value))
         self.name = name
@@ -30,6 +30,7 @@ class Cell(object):
         self.value = value
         self.observers = observers
         self.owner = owner
+        self.unchanged_if = unchanged_if
         
         self.called_by = set([])     # the cells whose rules call this cell
         self.calls = set([])         # the cells which this cell's rule calls
@@ -64,7 +65,7 @@ class Cell(object):
             cells.deferred_sets.append((self, value)) # defer the set
         else:
             debug(self.name, "setting")        
-            if self.value != value:
+            if not self.unchanged_if(self.value, value):
                 debug(self.name, "new value is different; propogating change")
                 self.value = value
 
@@ -200,17 +201,22 @@ class Cell(object):
             cell.remove_cb(self)
         self.reset_calls()
 
-        oldval = self.value
         self.dp = cells.dp                             # we're up-to-date
-        self.value = self.rule(self.owner, self.value) # run the rule
+        newvalue = self.rule(self.owner, self.value) # run the rule
         self.bound = True
         
         # restore old running cell
         cells.curr = oldcurr
 
         # return changed status
-        debug(self.name, "changed?", str(oldval != self.value))
-        return oldval != self.value
+        if self.unchanged_if(self.value, newvalue):
+            debug(self.name, "unchanged.")
+            return False
+        else:
+            debug(self.name, "changed.")
+            self.value = newvalue
+            return True
+
 
     def changed(self):
         return cells.dp == self.changed_dp

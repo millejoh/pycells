@@ -36,7 +36,12 @@ Def: Current: A cell is current if its datapulse is equal to the
    propogated up in the same manner) the queue of recalculations may
    be run.
 
-5. (Deferred cell calculations.)
+The following are far more trivial rules for all cells -- this just seemed
+the best place to test them
+   
+5. A cell must allow an alternate function to be passed which tests
+   for equality of the previous & new values.
+
 """
 
 
@@ -255,6 +260,22 @@ class AlgoTests_Rule4(unittest.TestCase):
         # b's, then a's. Verify that bit.  (note, h isn't deferred so
         # it's run first, then c's (j), then b's deferred (i).)
         self.failUnless(self.runlog[3:] == ["h", "j", "i"])
+
+class AlgoTests_Rule9999(unittest.TestCase):
+    """All the 'trivial' rules go in here"""
+    def testA_AlternateEqualityTester(self):
+        """5. A cell must allow an alternate function to be passed which tests
+        for equality of the previous & new values."""
+        x = cells.Cell(None, "x", value=5,
+                       unchanged_if=lambda old,new: abs(old - new) < 5)
+        a = cells.Cell(None, "a", rule=lambda s,p: x.get() * 2)
+
+        self.failUnless(a.get() == 10)
+        x.set(7)                        # will *not* set, since |5-7| < 5
+        self.failUnless(a.get() == 10)  # and so no propogation happens
+        x.set(11)                       # will set, since |5-11| > 5
+        self.failUnless(a.get() == 22)
+        
         
 if __name__ == "__main__":
     unittest.main()
