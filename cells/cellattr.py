@@ -1,4 +1,4 @@
-from cell import Cell, RuleCell, ValueCell, EphemeralCell
+from cell import Cell, RuleCell, InputCell
 
 DEBUG = False
 
@@ -30,7 +30,7 @@ class CellAttr(object):
         elif kwargs.has_key('function'):  # it's a rule-cell.
             celltype = RuleCell
         elif kwargs.has_key('value'):     # it's a value-cell
-            celltype = ValueCell
+            celltype = InputCell
         else:
             pass                          # can't figure it out? fail noisily.
 

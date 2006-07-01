@@ -15,24 +15,6 @@ def debug(*msgs):
     if DEBUG:
         print " ".join(msgs)
 
-
-class CellException(Exception):
-    def __init__(self, value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
-class RuleCellSetError(CellException):
-    pass
-
-class EphemeralCellUnboundError(CellException):
-    pass
-
-class ValueCellRunError(CellException):
-    pass
-
-class SetDuringNotificationError(CellException):
-    pass
         
 class Cell(object):
     """The base Cell class. Does everything interesting.
@@ -60,12 +42,13 @@ class Cell(object):
         self.changed_dp = cells.dp
 
         self.propogate_to = None
-
+        self.lazy = False
+        
         if value:
             self.bound = True
             self.run_observers(None, False)
 
-    def get(self):
+    def get(self, init=False):
         # if there's a cell on the call stack, this get is part of a rule
         # run. so, make the appropriate changes to the cells' deps
         if cells.curr:                  # (curr == None when not propogating)
@@ -76,15 +59,19 @@ class Cell(object):
         return self.value
 
     def set(self, value):
-        debug(self.name, "setting")        
-        if self.value != value:
-            debug(self.name, "new value is different; propogating change")
-            self.value = value
+        if cells.curr_propogator:       # if a propogation is happening
+            debug(self.name, "sees in-progress propogation; deferring set.")
+            cells.deferred_sets.append((self, value)) # defer the set
+        else:
+            debug(self.name, "setting")        
+            if self.value != value:
+                debug(self.name, "new value is different; propogating change")
+                self.value = value
 
-            cells.dp += 1
-            self.dp = cells.dp
-
-            self.propogate()
+                cells.dp += 1
+                self.dp = cells.dp
+                
+                self.propogate()
 
     def update(self, queryer=None):
         debug(self.name, "updating")
@@ -102,9 +89,10 @@ class Cell(object):
             debug(self.name, "is current.")
             return False                # it's current.
         if not cells.curr_propogator:   # if the system isn't propogating,
-            debug(self.name, "sees system is not propogating; is current.")
-            self.dp = cells.dp
-            return False                # this cell is current.
+            if not self.lazy:           # and we're not lazy,
+                debug(self.name, "sees system is not propogating; is current.")
+                self.dp = cells.dp
+                return False            # this cell is current.
 
         # otherwise, verify we're current: (by the above ifs, the
         # system is propogating and this cell is not current)
@@ -159,9 +147,13 @@ class Cell(object):
             debug(self.name, "finished propogating to first update",
               propogate_first.name)
         else:
+            # weird for testing
             for cell in Cell.propogation_list(self, propogate_first):
-                debug(self.name, "asking", cell.name, "to update")
-                cell.update()
+                if cell.lazy:
+                    debug(self.name, "saw", cell.name, ", but it's lazy -- not updating")
+                else:
+                    debug(self.name, "asking", cell.name, "to update")
+                    cell.update()
                 
         self.notifying = False
         cells.curr_propogator = prev_propogator
@@ -172,18 +164,28 @@ class Cell(object):
         else:
             debug(self.name, "finished propogating. No old propogator")
         
-        # run deferred updates if no cell is currently propogating
+        # run deferred stuff if no cell is currently propogating
         if not cells.curr_propogator:
-            # okay, this is hacky:
+            # first, updates:            
+            # okay, this is a little hacky:
             cells.curr_propogator = cells.Cell(None,
                                               "dummy for queued propogation")
             
             debug("no cell propogating! running deferred updates.")
-            for cell in cells.queued_updates:
+            to_update = cells.queued_updates
+            cells.queued_updates = []
+            for cell in to_update:
                 debug("Running deferred update on", cell.name)
                 cell.update()
                 
             cells.curr_propogator = None
+
+            # next, deferred sets:
+            debug("running deferred sets")
+            to_set = cells.deferred_sets
+            cells.deferred_sets = []
+            for cell, value in to_set:
+                cell.set(value)
 
     def run(self):
         debug(self.name, "running")
@@ -239,14 +241,17 @@ class Cell(object):
             observer(self.owner, self.value, oldval, oldbound)
 
 
-
 class RuleCell(Cell):
     """A cell whose value is determined by a function (a rule)."""
+    def __init__(self, model, name, rule, *args, **kwargs):
+        Cell.__init__(self, model, name, rule=rule, *args, **kwargs)
+        
     def set(self, value):
         raise RuleCellSetError("cannot set a rule cell")
 
-class RuleThenValueCell(Cell):
-    """Runs the rule to determine initial value, then acts like a ValueCell"""
+    
+class RuleThenInputCell(Cell):
+    """Runs the rule to determine initial value, then acts like a InputCell"""
     def __init__(self, *args, **kwargs):
         Cell.__init__(self, *args, **kwargs)
         self.run()
@@ -255,35 +260,40 @@ class RuleThenValueCell(Cell):
         self.run_observers(None, False)
 
         
-class ValueCell(Cell):
-    def run(self):
-        raise ValueCellRunError("attempt to run a value cell")
-    
-class EphemeralCell(Cell):
-    def get(self):
-        debug("get for", self.name, "(ephemeral)")
-        if not self.bound:
-            debug("ephemeral", self.name, "unbound")
-            if cells.curr:               # if there's a calling cell,
-                # notify calling cell that it depends on this cell
-                cells.curr.calls.add(self)
-                # and add the calling cell to the called-by list
-                self.called_by.add(cells.curr)
-
-            raise EphemeralCellUnboundError("attempt to read from unbound cell")
-        else:
-            return Cell.get(self)
-        
-    def set(self, value):
-        """set, equalize, then unset"""
-        debug("ephemeral cell", self.name, "setting")
-        Cell.set(self, value)
-        debug("ephemeral cell", self.name, "equalized, unbinding")
-        self.bound = False
+class InputCell(Cell):
+    def __init__(self, model, name, value, *args, **kwargs):
+        Cell.__init__(self, model, name, value=value, *args, **kwargs)
 
     def run(self):
-        """run, equalize, then unset"""
-        Cell.run(self)
-        self.bound = False
+        raise InputCellRunError("attempt to run a value cell")
 
-    
+
+class LazyCell(RuleCell):
+    def __init__(self, *args, **kwargs):
+        RuleCell.__init__(self, *args, **kwargs)
+        self.lazy = True
+
+class OnceAskedLazyCell(LazyCell):
+    pass
+
+class AlwaysLazyCell(LazyCell):
+    pass
+
+class UntilAskedLazyCell(LazyCell):
+    def get(self, init=False, *args, **kwargs):
+        v = LazyCell.get(self, *args, **kwargs)
+        if not init:
+            self.lazy = False
+
+        return v
+
+class CellException(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class RuleCellSetError(CellException): pass
+class EphemeralCellUnboundError(CellException): pass
+class InputCellRunError(CellException): pass
+class SetDuringNotificationError(CellException): pass

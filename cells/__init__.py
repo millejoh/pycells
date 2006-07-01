@@ -4,9 +4,10 @@ PyCells
 TODO: More here.
 """
 
-from cell import Cell, ValueCell, RuleCell, RuleThenValueCell, EphemeralCell
-from cell import CellException, RuleCellSetError, EphemeralCellUnboundError
-from cell import ValueCellRunError, SetDuringNotificationError
+from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
+from cell import UntilAskedLazyCell, AlwaysLazyCell
+from cell import CellException, RuleCellSetError
+from cell import InputCellRunError, SetDuringNotificationError
 from cellattr import CellAttr
 from modelobject import ModelObject
 
@@ -21,11 +22,13 @@ def reset():
     global curr
     global curr_propogator
     global queued_updates
+    global deferred_sets
     
     dp = 1
     curr = None
     curr_propogator = None
     queued_updates = []
+    deferred_sets = []
         
 def makecell(name, *args, **kwargs):
     """Standard cell attribute factory"""
