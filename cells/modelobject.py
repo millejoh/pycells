@@ -33,23 +33,40 @@ class ModelObject(object):
                 # read at cell-build time
                 self._initregistry[k] = cellinit
                 
-        # register observers
+        # register observers -- must be done in a pass before cells
+        # are initialized
         self._observers = []
         debug("init'ing observers")
         for attrib_name in dir(self):
-            attrib = getattr(self, attrib_name)
-            debug(attrib, "?", isinstance(attrib, Observer))
-            if isinstance(attrib, Observer):
-                self._observers.append(attrib)
+            # the following gymnastics ensure we get a CellAttr instead of the
+            # value of a Cell
+            attr = getattr(self.__class__, attrib_name, None) # get class-levels
+            if not attr:
+                attr = getattr(self, attrib_name) # get instance-levels
+            debug(attrib_name, "?", isinstance(attr, Observer))
+            if isinstance(attr, Observer):
+                self._observers.append(attr)
         
         self._initialized = False
 
         # do initial equalizations
         debug("INITIAL EQUALIZATIONS START")
         x = None
-        for attrib in dir(self):
+        # since CellAttrs add to the dict when they build their Cells, we need
+        # to just grab the whole dict as it is now rather than using the
+        # iteritems generator.
+        for name in dir(self):
+            attr = getattr(self.__class__, name, None) # class-level attribs
+            if not attr:
+                attr = getattr(self, name) # instance-level attribs
+            debug("examining", name, "for initial init")
             try:
-                x = getattr(self, attrib)   # just run every attribute...
+                if isinstance(attr, CellAttr):
+                    debug("doing initial get on", name)
+                    getattr(self, name) # will run observers by itself
+                else:                   # we need to run observers ourselves
+                    debug("running observers on", name, "=", str(attr))
+                    self.run_observers(attr)
             except EphemeralCellUnboundError, e:
                 debug(attrib, "was an unbound ephemeral")
         debug("INITIAL EQUALIZATIONS END")
