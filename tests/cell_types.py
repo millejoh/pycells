@@ -8,9 +8,10 @@ import cells
 """
 There are several types of cells. These are their rules:
 
-Input Cells: 1. Must be 'set'able 2. A set during propogation must
-defer until the propogation is complete 3. Trying to .run() a input
-cell throws an exception
+Input Cells:
+1. Must be 'set'able
+2. A set during propogation must defer until the propogation is complete
+3. Trying to .run() a input cell raises an exception
 
 Rule Cells:
 1. Trying to set a rule cell throws an exception

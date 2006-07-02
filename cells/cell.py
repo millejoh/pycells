@@ -22,13 +22,11 @@ class Cell(object):
     TODO: Write a better description
     """
     def __init__(self, owner, name, rule=lambda s,p: None, value=None,
-                 observers=[], type=None, unchanged_if=lambda o,n: o == n):
-        debug("running cell init for", name, "with", str(len(observers)),
-              "observers, value=", str(value))
+                 type=None, unchanged_if=lambda o,n: o == n):
+        debug("running cell init for", name)
         self.name = name
         self.rule = rule
         self.value = value
-        self.observers = observers
         self.owner = owner
         self.unchanged_if = unchanged_if
         
@@ -44,10 +42,10 @@ class Cell(object):
 
         self.propogate_to = None
         self.lazy = False
+        self.last_value = None
         
         if value:
             self.bound = True
-            self.run_observers(None, False)
 
     def get(self, init=False):
         # if there's a cell on the call stack, this get is part of a rule
@@ -67,10 +65,14 @@ class Cell(object):
             debug(self.name, "setting")        
             if not self.unchanged_if(self.value, value):
                 debug(self.name, "new value is different; propogating change")
+                self.last_value = self.value
                 self.value = value
 
                 cells.dp += 1
                 self.dp = cells.dp
+
+                if self.owner:
+                    self.owner.run_observers(self)
                 
                 self.propogate()
 
@@ -103,10 +105,17 @@ class Cell(object):
                 debug(self.name, "got recalc command from", cell.name)
                 if not self.dp == cells.dp:
                     if self.run():          # we need to re-run
+                        # the run changed the value of this cell, so...
+                        # run any observers on this cell
+                        if self.owner:
+                            self.owner.run_observers(attribute=self)
+
+                        # propogate the change, starting at the cell which
+                        # requested this cell update
                         pt = queryer
                         if self.propogate_to:
                             pt = self.propogate_to
-                        self.propogate(pt) # and propogate
+                        self.propogate(pt) 
                         self.propogate_to = None
 
                     # after that run(), self.calls is out of date, and
@@ -151,7 +160,8 @@ class Cell(object):
             # weird for testing
             for cell in Cell.propogation_list(self, propogate_first):
                 if cell.lazy:
-                    debug(self.name, "saw", cell.name, ", but it's lazy -- not updating")
+                    debug(self.name, "saw", cell.name,
+                          ", but it's lazy -- not updating")
                 else:
                     debug(self.name, "asking", cell.name, "to update")
                     cell.update()
@@ -214,6 +224,7 @@ class Cell(object):
             return False
         else:
             debug(self.name, "changed.")
+            self.last_value = self.value
             self.value = newvalue
             return True
 
@@ -240,16 +251,10 @@ class Cell(object):
         """Resets the calls list to empty"""
         self.calls = set([])
 
-    def run_observers(self, oldval, oldbound):
-        debug("Number of observers:", str(len(self.observers)))
-        for observer in self.observers:
-            debug("Running observer", str(observer))
-            observer(self.owner, self.value, oldval, oldbound)
-
 
 class RuleCell(Cell):
     """A cell whose value is determined by a function (a rule)."""
-    def __init__(self, model, name, rule, *args, **kwargs):
+    def __init__(self, model, name, rule=lambda s,p: None, *args, **kwargs):
         Cell.__init__(self, model, name, rule=rule, *args, **kwargs)
         
     def set(self, value):
@@ -263,11 +268,10 @@ class RuleThenInputCell(Cell):
         self.run()
         self.rule = None
         self.bound = True
-        self.run_observers(None, False)
 
         
 class InputCell(Cell):
-    def __init__(self, model, name, value, *args, **kwargs):
+    def __init__(self, model, name, value=None, *args, **kwargs):
         Cell.__init__(self, model, name, value=value, *args, **kwargs)
 
     def run(self):

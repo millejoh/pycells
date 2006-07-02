@@ -15,26 +15,28 @@ class CellAttr(object):
         self.name = name
         self.args = args
         self.kwargs = kwargs
-        self.observers = []
 
-    def buildcell(self, owner, name, observers, *args, **kwargs):
+    def buildcell(self, owner, name, *args, **kwargs):
         """Creates a new cell of the appropriate type"""
         debug("Building cell: owner:", str(owner))
         debug("                name:", name)
-        debug("           observers:", str(observers))
         debug("                args:", str(args))
         debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
         if kwargs.has_key('type'):
             celltype = kwargs["type"]
-        elif kwargs.has_key('function'):  # it's a rule-cell.
+        elif kwargs.has_key('rule'):  # it's a rule-cell.
             celltype = RuleCell
         elif kwargs.has_key('value'):     # it's a value-cell
             celltype = InputCell
         else:
-            pass                          # can't figure it out? fail noisily.
+            raise Exception("Could not determine target type for cell " +
+                            "given owner: " + str(owner) +
+                            ", name: " + name +
+                            ", args:" + str(args) +
+                            ", kwargs:" + str(kwargs))
 
-        return celltype(owner, self.name, observers=observers, *args, **kwargs)
+        return celltype(owner, self.name, *args, **kwargs)
         
     def getcell(self, owner):
         # if there isn't a value in owner.myname, make it a cell
@@ -43,11 +45,10 @@ class CellAttr(object):
             # first, find out if this object has overrides on this cell's init
             override = owner._initregistry.get(self.name)            
             if override:                # it does, use the override
-                newcell = self.buildcell(owner, self.name, self.observers,
-                                         **override)
+                newcell = self.buildcell(owner, self.name, **override)
             else:                       # it doesn't, use class's default
-                newcell = self.buildcell(owner, self.name, self.observers,
-                                         *self.args, **self.kwargs)
+                newcell = self.buildcell(owner, self.name, *self.args,
+                                         **self.kwargs)
                 
             owner.__dict__[self.name] = newcell
 
@@ -60,19 +61,4 @@ class CellAttr(object):
         return self.getcell(owner).get()
 
     def __set__(self, owner, value):
-        debug("Setting", self.name, "=", str(value))
-        cell = self.getcell(owner)  # get the cell in owner.myname        
-        cell.set(value)      # and push a value into it
-        debug("Finished setting", self.name, "=", str(value))
-
-        # if there's nothing currently running, then a perturbation has finished
-        # propogating. since a setattr is a recursive call, we can just pull the
-        # first item off the set queue, if there is one, and run it.
-        if owner._curr:
-            debug(owner._curr.name, "currently running")
-        if not owner._curr:
-            debug("nothing running")
-            if owner._setqueue:                
-                name, value = owner._setqueue.pop(0)
-                debug("set queue has an item: ", name, "=", str(value))
-                setattr(owner, name, value)
+        self.getcell(owner).set(value)
