@@ -11,7 +11,7 @@ def debug(*msgs):
 
 
 class CellAttr(object):
-    """A descriptor for a Cell attribute in a ModelObject"""
+    """A descriptor for a Cell attribute in a Model"""
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs

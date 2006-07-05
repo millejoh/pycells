@@ -10,7 +10,7 @@ from cell import UntilAskedLazyCell, AlwaysLazyCell
 from cell import CellException, RuleCellSetError
 from cell import InputCellRunError, SetDuringNotificationError
 from cellattr import CellAttr
-from modelobject import ModelObject, NonCellSetError
+from model import Model, NonCellSetError
 
 def debug(*msgs):
     if DEBUG:

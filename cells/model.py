@@ -40,7 +40,7 @@ class ModelMetatype(type):
                 klass._noncells.add(k)
                 
                       
-class ModelObject(object):
+class Model(object):
     __metaclass__ = ModelMetatype
 
     _initialized = False

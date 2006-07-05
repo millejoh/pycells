@@ -30,7 +30,7 @@ class SimpleModelTests(unittest.TestCase):
         cells.reset()
         self.a_ran = False
         
-        class MyModel(cells.ModelObject):
+        class MyModel(cells.Model):
             x = cells.makecell(value=5)
 
             @cells.fun2cell()
@@ -40,7 +40,7 @@ class SimpleModelTests(unittest.TestCase):
 
             def __init__(self, *args, **kwargs):
                 self.offset = 1
-                cells.ModelObject.__init__(self, *args, **kwargs)
+                cells.Model.__init__(self, *args, **kwargs)
 
         self.M = MyModel
         
@@ -116,7 +116,7 @@ class ObserverTests(unittest.TestCase):
         cells.reset()
         self.observerlog = []
         
-        class MyModel(cells.ModelObject):
+        class MyModel(cells.Model):
             x = cells.makecell(value=5)
             a = cells.makecell(rule=lambda s,p: int(s.x) + s.offset)
             offset = 2
