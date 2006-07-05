@@ -31,7 +31,7 @@ class SimpleModelTests(unittest.TestCase):
         self.a_ran = False
         
         class MyModel(cells.ModelObject):
-            x = cells.makecell("x", value=5)
+            x = cells.makecell(value=5)
 
             @cells.fun2cell()
             def a(modelself, prev):
@@ -76,6 +76,40 @@ class SimpleModelTests(unittest.TestCase):
         m = self.M(a=lambda s,p: s.x + s.offset + 10)
         self.failUnless(m.a == 16)
 
+    def test_Inheritance(self):
+        self.b_ran = False
+        class AnotherModel(self.M):
+            @cells.fun2cell()
+            def b(model, prev):
+                self.b_ran = True
+                return model.x + model.a
+
+        n = AnotherModel()
+        self.b_ran = False
+        self.failUnless(n.x == 5)
+        self.failUnless(n.a == 6)
+        self.failUnless(n.b == 11)
+        self.failIf(self.b_ran)
+
+        # test overriding inherited Cell attrib
+        self.modified_a_ran = False
+        class YetAnother(self.M):
+            @cells.fun2cell()
+            def a(modelself, prev):
+                self.modified_a_ran = True
+                return modelself.x * 10
+
+        o = YetAnother()
+        self.modified_a_ran = False
+        self.failUnless(o.x == 5)
+        self.failUnless(o.a == 50)
+        self.failIf(self.modified_a_ran)
+
+        o.x = 1
+        self.failUnless(o.x == 1)
+        self.failUnless(o.a == 10)
+        self.failUnless(self.modified_a_ran)
+            
         
 class ObserverTests(unittest.TestCase):
     def setUp(self):
@@ -83,8 +117,8 @@ class ObserverTests(unittest.TestCase):
         self.observerlog = []
         
         class MyModel(cells.ModelObject):
-            x = cells.makecell("x", value=5)
-            a = cells.makecell("a", rule=lambda s,p: int(s.x) + s.offset)
+            x = cells.makecell(value=5)
+            a = cells.makecell(rule=lambda s,p: int(s.x) + s.offset)
             offset = 2
 
         # observes whole model
@@ -116,7 +150,8 @@ class ObserverTests(unittest.TestCase):
         @MyModel.observer(newvalue=lambda v: type(v) == type(1.0))
         def newval_obs(model):
             self.observerlog.append("newval")
-
+            
+        self.M = MyModel
         self.m = MyModel()            # this will test the very basics
 
     def test_ModelObserver(self):
@@ -181,8 +216,42 @@ class ObserverTests(unittest.TestCase):
         self.observerlog = []
         self.m.x = 2.3
         self.failUnless(1 == self.observerlog.count("oldval"))
-                        
+
+    def test_ObserverMultipleObjects(self):
+        "Observers should act correctly with multiple instances of a MO"
+        # this test is a little different than the others, so
+        cells.reset()
+        self.observerlog = []
+        a = self.M()                    # this should fire the model obs
+        b = self.M()                    # as should this
+        self.failUnless(2 == self.observerlog.count("model"))
         
+    def test_ObserverInheritance(self):
+        "Observers should inherit with few surprises."
+        class N(self.M):
+            # modify an attribute the observers are looking for
+            a = cells.makecell(rule=lambda s,p: int(s.x) * s.offset)
+
+        # override one of the observers
+        @N.observer(attrib="a")
+        def rulecell_obs(model):
+            # make it a bit more fonzie
+            self.observerlog.append("Eyyy!")
+
+        # and add a new observer
+        @N.observer()
+        def model2_obs(model):
+            self.observerlog.append("model2")
+
+        n = N()
+
+        self.observerlog = []
+        n.x = 2
+        self.failUnless(1 == self.observerlog.count("Eyyy!"))
+        self.failUnless(1 == self.observerlog.count("model2"))
+        self.failIf(self.observerlog.count("a"))
+
+            
 if __name__ == "__main__":
     unittest.main()
         

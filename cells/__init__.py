@@ -3,6 +3,7 @@ PyCells
 
 TODO: More here.
 """
+DEBUG = False
 
 from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
 from cell import UntilAskedLazyCell, AlwaysLazyCell
@@ -10,8 +11,6 @@ from cell import CellException, RuleCellSetError
 from cell import InputCellRunError, SetDuringNotificationError
 from cellattr import CellAttr
 from modelobject import ModelObject, NonCellSetError
-
-DEBUG = False
 
 def debug(*msgs):
     if DEBUG:
@@ -30,9 +29,9 @@ def reset():
     queued_updates = []
     deferred_sets = []
         
-def makecell(name, *args, **kwargs):
+def makecell(*args, **kwargs):
     """Standard cell attribute factory"""
-    return CellAttr(name, *args, **kwargs)
+    return CellAttr(*args, **kwargs)
 
 def fun2cell(*args, **kwargs):
     """Decorator version of makecell
@@ -43,7 +42,7 @@ def fun2cell(*args, **kwargs):
             cellname = func.__name__
         else:
             cellname = kwargs.pop('name')
-        return CellAttr(name=cellname, rule=func, *args, **kwargs)
+        return CellAttr(rule=func, *args, **kwargs)
 
     return fun2cell_decorator
 

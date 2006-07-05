@@ -12,7 +12,7 @@ import cells
 def debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "        cell > ")
-    if DEBUG:
+    if DEBUG or cells.DEBUG:
         print " ".join(msgs)
 
         
@@ -46,6 +46,8 @@ class Cell(object):
         
         if value:
             self.bound = True
+            if owner:
+                owner.run_observers(self)
 
     def get(self, init=False):
         # if there's a cell on the call stack, this get is part of a rule
@@ -105,11 +107,7 @@ class Cell(object):
                 debug(self.name, "got recalc command from", cell.name)
                 if not self.dp == cells.dp:
                     if self.run():          # we need to re-run
-                        # the run changed the value of this cell, so...
-                        # run any observers on this cell
-                        if self.owner:
-                            self.owner.run_observers(attribute=self)
-
+                        # the run changed the value of this cell, so
                         # propogate the change, starting at the cell which
                         # requested this cell update
                         pt = queryer
@@ -226,6 +224,11 @@ class Cell(object):
             debug(self.name, "changed.")
             self.last_value = self.value
             self.value = newvalue
+
+            # run any observers on this cell
+            if self.owner:
+                self.owner.run_observers(attribute=self)
+            
             return True
 
 
