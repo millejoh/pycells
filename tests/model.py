@@ -9,11 +9,16 @@ And now, the model:
 
 1. Simplifies the creation of cells as attributes; on model instance init, the
    model runs each cell in turn in order to initialize the dependency graph.
+
 2. Allow overriding instance cells at initialization
+
 3. Allow non-cell attributes to be created at init, but disallow changes to
    those attributes after init.
+
 4. Must provide an instance of itself to its RuledCell attributes.
+
 5. Provides an interface for observers to be added to the model.
+
 6. Observers must be allowed to associate with a:
    * model
    * specific attribute (even non-Cell attributes)
@@ -21,8 +26,18 @@ And now, the model:
      returns True, the observer runs)
    * type of old value (as above)
    * bound value (that is, if a cell had a previous value)
+
 7. (To research/ask about: post-propogation task queue?)
+
 8. (To research/ask about: all observers run only once per DP change?)
+
+9. A model provides the following cells:
+   * model_name: the name of this Model object   
+   * model_value: a way to reduce the Model to a single value; returns
+     None by default     
+   * parent: a way to set a 'parent' Model in a graph of Models -- see
+     Family for a bit more about this
+     
 """
 
 class SimpleModelTests(unittest.TestCase):
@@ -109,7 +124,17 @@ class SimpleModelTests(unittest.TestCase):
         self.failUnless(o.x == 1)
         self.failUnless(o.a == 10)
         self.failUnless(self.modified_a_ran)
-            
+
+    def test_hasName(self):
+        self.failUnless(self.M().model_name == None)
+
+    def test_hasValue(self):
+        self.failUnless(self.M().model_value == None)
+
+    def test_hasParent(self):
+        self.failUnless(self.M().parent == None)
+
+                
         
 class ObserverTests(unittest.TestCase):
     def setUp(self):

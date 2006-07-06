@@ -11,7 +11,7 @@ import cells
 
 def debug(*msgs):
     msgs = list(msgs)
-    msgs.insert(0, "        cell > ")
+    msgs.insert(0, "cell".rjust(cells.DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(msgs)
 
@@ -21,14 +21,13 @@ class Cell(object):
 
     TODO: Write a better description
     """
-    def __init__(self, owner, name, rule=lambda s,p: None, value=None,
-                 type=None, unchanged_if=lambda o,n: o == n):
+    def __init__(self, owner, name, **kwargs):
         debug("running cell init for", name)
         self.name = name
-        self.rule = rule
-        self.value = value
+        self.rule = kwargs.get("rule", lambda s,p: None)
+        self.value = kwargs.get("value", None)
         self.owner = owner
-        self.unchanged_if = unchanged_if
+        self.unchanged_if = kwargs.get("unchanged_if", lambda o,n: o == n)
         
         self.called_by = set([])     # the cells whose rules call this cell
         self.calls = set([])         # the cells which this cell's rule calls
@@ -44,7 +43,7 @@ class Cell(object):
         self.lazy = False
         self.last_value = None
         
-        if value:
+        if kwargs.has_key("value"):
             self.bound = True
             if owner:
                 owner.run_observers(self)
@@ -278,7 +277,7 @@ class InputCell(Cell):
         Cell.__init__(self, model, name, value=value, *args, **kwargs)
 
     def run(self):
-        raise InputCellRunError("attempt to run a value cell")
+        raise InputCellRunError("attempt to run value cell '" + self.name + "'")
 
 
 class LazyCell(RuleCell):

@@ -5,7 +5,7 @@ DEBUG = False
 
 def debug(*msgs):
     msgs = list(msgs)
-    msgs.insert(0, "   cell attr > ")
+    msgs.insert(0, "cell attr".rjust(cells.DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(msgs)
 

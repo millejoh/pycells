@@ -7,7 +7,7 @@ DEBUG = False
 
 def debug(*msgs):
     msgs = list(msgs)
-    msgs.insert(0, "model object > ")
+    msgs.insert(0, "model".rjust(cells.DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(( str(msg) for msg in msgs))
 
@@ -44,6 +44,11 @@ class Model(object):
     __metaclass__ = ModelMetatype
 
     _initialized = False
+
+    # the default cells in a Model:
+    model_name = cells.makecell(value=None)
+    model_value = cells.makecell(value=None)
+    parent = cells.makecell(value=None)
     
     def __init__(self, *args, **kwargs):
         # initialize cells based on kwargs
