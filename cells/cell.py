@@ -21,12 +21,12 @@ class Cell(object):
 
     TODO: Write a better description
     """
-    def __init__(self, owner, name, **kwargs):
-        debug("running cell init for", name)
-        self.name = name
+    def __init__(self, owner, **kwargs):
+        debug("running cell init for", kwargs.get("name") or 'anonymous')
+        self.owner = owner
+        self.name = kwargs.get("name", None)
         self.rule = kwargs.get("rule", lambda s,p: None)
         self.value = kwargs.get("value", None)
-        self.owner = owner
         self.unchanged_if = kwargs.get("unchanged_if", lambda o,n: o == n)
         
         self.called_by = set([])     # the cells whose rules call this cell
@@ -46,7 +46,7 @@ class Cell(object):
         if kwargs.has_key("value"):
             self.bound = True
             if owner:
-                owner.run_observers(self)
+                owner._run_observers(self)
 
     def get(self, init=False):
         # if there's a cell on the call stack, this get is part of a rule
@@ -73,7 +73,7 @@ class Cell(object):
                 self.dp = cells.dp
 
                 if self.owner:
-                    self.owner.run_observers(self)
+                    self.owner._run_observers(self)
                 
                 self.propogate()
 
@@ -177,7 +177,7 @@ class Cell(object):
             # first, updates:            
             # okay, this is a little hacky:
             cells.curr_propogator = cells.Cell(None,
-                                              "dummy for queued propogation")
+                                              name="queued propogation dummy")
             
             debug("no cell propogating! running deferred updates.")
             to_update = cells.queued_updates
@@ -226,7 +226,7 @@ class Cell(object):
 
             # run any observers on this cell
             if self.owner:
-                self.owner.run_observers(attribute=self)
+                self.owner._run_observers(attribute=self)
             
             return True
 
@@ -256,8 +256,8 @@ class Cell(object):
 
 class RuleCell(Cell):
     """A cell whose value is determined by a function (a rule)."""
-    def __init__(self, model, name, rule=lambda s,p: None, *args, **kwargs):
-        Cell.__init__(self, model, name, rule=rule, *args, **kwargs)
+    def __init__(self, model, rule=lambda s,p: None, *args, **kwargs):
+        Cell.__init__(self, model, rule=rule, *args, **kwargs)
         
     def set(self, value):
         raise RuleCellSetError("cannot set a rule cell")
@@ -273,11 +273,11 @@ class RuleThenInputCell(Cell):
 
         
 class InputCell(Cell):
-    def __init__(self, model, name, value=None, *args, **kwargs):
-        Cell.__init__(self, model, name, value=value, *args, **kwargs)
+    def __init__(self, model, value=None, *args, **kwargs):
+        Cell.__init__(self, model, value=value, *args, **kwargs)
 
     def run(self):
-        raise InputCellRunError("attempt to run value cell '" + self.name + "'")
+        raise InputCellRunError("attempt to run input cell '" + self.name + "'")
 
 
 class LazyCell(RuleCell):

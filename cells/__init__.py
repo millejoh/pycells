@@ -13,16 +13,9 @@ def makecell(*args, **kwargs):
     return CellAttr(*args, **kwargs)
 
 def fun2cell(*args, **kwargs):
-    """Decorator version of makecell
-
-    TODO: More here."""
+    """Decorator version of makecell"""
     def fun2cell_decorator(func):        
-        if not kwargs.has_key('name'):
-            cellname = func.__name__
-        else:
-            cellname = kwargs.pop('name')
         return CellAttr(rule=func, *args, **kwargs)
-
     return fun2cell_decorator
 
 from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell

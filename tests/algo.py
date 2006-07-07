@@ -57,7 +57,7 @@ class AlgoTests_Rule0(unittest.TestCase):
         """A cell does not recalculate itself if it is current
         """
         cells.curr = None
-        x = cells.Cell(None, "x", rule=lambda s,p: (p or 39) + 3)
+        x = cells.Cell(None, name="x", rule=lambda s,p: (p or 39) + 3)
         self.failUnless(x.get() == x.get())  # should not calculate twice
 
 class AlgoTests_Rule1(unittest.TestCase):
@@ -67,7 +67,7 @@ class AlgoTests_Rule1(unittest.TestCase):
     """
     def setUp(self):
         cells.reset()
-        self.x = cells.Cell(None, "x", value=21)
+        self.x = cells.Cell(None, name="x", value=21)
         
     def testA_SettingAdvancesGlobalDP(self):
         """Rule 1 part a: A cell being set advances the global DP"""
@@ -94,13 +94,13 @@ class AlgoTests_Rule2(unittest.TestCase):
     """
     def setUp(self):
         cells.reset()
-        self.x = cells.Cell(None, "x", value=21)
+        self.x = cells.Cell(None, name="x", value=21)
 
         self.captured_notify_flag = None
         def a_rule(s, p):
             self.captured_notify_flag = self.x.notifying
             return self.x.get() * 2
-        self.a = cells.Cell(None, "a", rule=a_rule)
+        self.a = cells.Cell(None, name="a", rule=a_rule)
 
     def testA_SettingNotifications(self):
         """Rule 2 part a: A cell with a changed value must tell the
@@ -127,9 +127,9 @@ class AlgoTests_Rule3(unittest.TestCase):
     """
     def setUp(self):
         cells.reset()
-        self.x = cells.Cell(None, "x", value=1)
-        self.b = cells.Cell(None, "b", rule=lambda s,p: (p or 40) + 2)
-        self.a = cells.Cell(None, "a",
+        self.x = cells.Cell(None, name="x", value=1)
+        self.b = cells.Cell(None, name="b", rule=lambda s,p: (p or 40) + 2)
+        self.a = cells.Cell(None, name="a",
                             rule=lambda s,p: self.b.get() * self.x.get())
         
     def testA_QueriedCellWithNoOODUpdates(self):
@@ -164,7 +164,7 @@ class AlgoTests_Rule3(unittest.TestCase):
         #   ^__________/
         # we're gonna have to jury-rig this, since we can't let b
         # recalculate first naturally
-        self.b = cells.Cell(None, "b", rule=lambda s,p: (p or 2) * self.x.get())
+        self.b = cells.Cell(None, name="b", rule=lambda s,p: (p or 2) * self.x.get())
         
         self.b.add_calls(self.x)             # set up dependencies for b by hand
         self.b.add_called_by(self.a)
@@ -203,7 +203,7 @@ class AlgoTests_Rule4(unittest.TestCase):
         cells.reset()
         self.runlog = []
         
-        self.x = cells.Cell(None, "x", value=5)
+        self.x = cells.Cell(None, name="x", value=5)
 
         def anon_rule(name, getfrom):
             def rule(s,p):
@@ -211,17 +211,17 @@ class AlgoTests_Rule4(unittest.TestCase):
                 return getfrom.get() + (p or 0)
             return rule
 
-        self.c = cells.Cell(None, "c", rule=anon_rule('c', self.x))
-        self.b = cells.Cell(None, "b", rule=anon_rule('b', self.c))
+        self.c = cells.Cell(None, name="c", rule=anon_rule('c', self.x))
+        self.b = cells.Cell(None, name="b", rule=anon_rule('b', self.c))
 
         def a_rule(s,p):
             self.runlog.append("a")
             return self.b.get() + self.x.get() + (p or 0)
-        self.a = cells.Cell(None, "a", rule=a_rule)
+        self.a = cells.Cell(None, name="a", rule=a_rule)
 
-        self.h = cells.Cell(None, "h", rule=anon_rule('h', self.a))
-        self.i = cells.Cell(None, "i", rule=anon_rule('i', self.b))
-        self.j = cells.Cell(None, "j", rule=anon_rule('j', self.c))
+        self.h = cells.Cell(None, name="h", rule=anon_rule('h', self.a))
+        self.i = cells.Cell(None, name="i", rule=anon_rule('i', self.b))
+        self.j = cells.Cell(None, name="j", rule=anon_rule('j', self.c))
 
         # build dependencies
         self.h.get()
@@ -266,9 +266,9 @@ class AlgoTests_Rule9999(unittest.TestCase):
     def testA_AlternateEqualityTester(self):
         """5. A cell must allow an alternate function to be passed which tests
         for equality of the previous & new values."""
-        x = cells.Cell(None, "x", value=5,
+        x = cells.Cell(None, name="x", value=5,
                        unchanged_if=lambda old,new: abs(old - new) < 5)
-        a = cells.Cell(None, "a", rule=lambda s,p: x.get() * 2)
+        a = cells.Cell(None, name="a", rule=lambda s,p: x.get() * 2)
 
         self.failUnless(a.get() == 10)
         x.set(7)                        # will *not* set, since |5-7| < 5

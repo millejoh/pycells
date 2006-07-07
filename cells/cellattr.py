@@ -60,6 +60,8 @@ class CellAttr(object):
                             ", args:" + str(args) +
                             ", kwargs:" + str(kwargs))
 
-        return celltype(owner, name=self.name, *args, **kwargs)
+        kwargs['name'] = self.name
+
+        return celltype(owner, *args, **kwargs)
 
 

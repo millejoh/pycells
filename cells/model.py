@@ -16,6 +16,7 @@ class ModelMetatype(type):
         # copy over inherited registries of observers and non-cell attributes
         klass._observernames = set([])
         klass._noncells = set([])
+        
         for cls in bases:
             obsnames = getattr(cls, "_observernames", None)
             noncellnames = getattr(cls, "_noncells", None)
@@ -41,15 +42,15 @@ class ModelMetatype(type):
                 
                       
 class Model(object):
+    # default cells for Model, currently partially hidden
+    _model_name = cells.makecell(value=None)
+    _model_value = cells.makecell(value=None)
+    _parent = cells.makecell(value=None)
+
     __metaclass__ = ModelMetatype
 
     _initialized = False
 
-    # the default cells in a Model:
-    model_name = cells.makecell(value=None)
-    model_value = cells.makecell(value=None)
-    parent = cells.makecell(value=None)
-    
     def __init__(self, *args, **kwargs):
         # initialize cells based on kwargs
         self._initregistry = {}
@@ -88,29 +89,41 @@ class Model(object):
 
         # run observers on non-cell attributes
         for key in self._noncells:
-            self.run_observers(getattr(self, key))
+            self._run_observers(getattr(self, key))
 
         # and now we're initialized. lock the object down.
         self._initialized = True
 
-        
+    def __getattr__(self, key):
+        # shortstop the default cells
+        if key in ("model_name", "model_value", "parent"):
+            # and if they don't exist in this object
+            if key not in dir(self):
+                # copy the default over
+                debug("copying default", key, "into this Model")
+                object.__setattr__(self, key,
+                                   object.__getattribute__(self, "_" + key))
+
+        return object.__getattribute__(self, key)
+
     def __setattr__(self, key, value):
-        if isinstance(self.__dict__.get(key), Cell): # always set Cells
+         # always set Cells
+        if isinstance(self.__dict__.get(key), Cell):
                 object.__setattr__(self, key, value)
-        elif not self._initialized:     # we can set noncells before init
+        # we can set noncells before init
+        elif not self._initialized:     
             if key not in self._noncells: # make sure it's registered, though
                 self._noncells.add(key)
             object.__setattr__(self, key, value) # and then set it
+        # we can set anything we've not seen, too
+        elif key not in self.__dict__.keys():
+            object.__setattr__(self, key, value)
+        # but the only thing left is non-cells we've seen, which is verboten
         else:
             raise NonCellSetError, "Setting non-cell attributes of models " + \
                   "after init is disallowed"
         
-    def set_with_integrity(self, name, value):
-        "Explicitly deferred set. Neccessary? I don't think so..."
-        debug(name, "=", str(value), "(with integrity)")
-        self._setqueue.append((name, value))
-
-    def run_observers(self, attribute):
+    def _run_observers(self, attribute):
         """Runs each observer in turn. There's some optimization that
         could go on here, if it turns out to be neccessary.
         """
@@ -119,6 +132,40 @@ class Model(object):
         for observer in self._observers:
             observer.run_if_applicable(self, attribute)
 
+    def makecell(self, name, *args, **kwargs):
+        debug("adding cell to Model")
+        if name in self.__dict__.keys():
+            raise CellOverrideError, "You cannot override a cell after Model" +\
+                  "initialization"        
+                
+        self.__dict__[name] = self._buildcell(self, name, *args, **kwargs)
+
+        # and now send it a get() so it's up-to-date
+        getattr(self, name)
+
+    def _buildcell(self, name, *args, **kwargs):
+        """Creates a new cell of the appropriate type"""
+        debug("Building cell: owner:", str(self))
+        debug("                name:", name)
+        debug("                args:", str(args))
+        debug("              kwargs:", str(kwargs))
+        # figure out what type the user wants:
+        if kwargs.has_key('type'):
+            celltype = kwargs["type"]
+        elif kwargs.has_key('rule'):  # it's a rule-cell.
+            celltype = cells.RuleCell
+        elif kwargs.has_key('value'):     # it's a value-cell
+            celltype = cells.InputCell
+        else:
+            raise Exception("Could not determine target type for cell " +
+                            "given owner: " + str(self) +
+                            ", name: " + name +
+                            ", args:" + str(args) +
+                            ", kwargs:" + str(kwargs))
+        
+        kwargs['name'] = name
+        return celltype(self, *args, **kwargs)
+
     @classmethod
     def observer(klass, attrib=None, oldvalue=None, newvalue=None):
         def observer_decorator(func):
@@ -126,7 +173,6 @@ class Model(object):
             setattr(klass, func.__name__, ObserverAttr(func.__name__, attrib,
                                                        oldvalue, newvalue,
                                                        func))
-                                
         return observer_decorator
 
 

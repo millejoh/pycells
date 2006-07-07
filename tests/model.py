@@ -10,7 +10,7 @@ And now, the model:
 1. Simplifies the creation of cells as attributes; on model instance init, the
    model runs each cell in turn in order to initialize the dependency graph.
 
-2. Allow overriding instance cells at initialization
+2. Allow overriding instance cells at initialization.
 
 3. Allow non-cell attributes to be created at init, but disallow changes to
    those attributes after init.
@@ -37,7 +37,9 @@ And now, the model:
      None by default     
    * parent: a way to set a 'parent' Model in a graph of Models -- see
      Family for a bit more about this
-     
+
+   These cells may be overridden by the normal cell override, or
+   at class creation time.
 """
 
 class SimpleModelTests(unittest.TestCase):
