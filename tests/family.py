@@ -16,13 +16,20 @@ provides, plus the following:
 3. If a Model in a kids list defines an attribute which is also
    defined in the kid_slots blueprint, the attribute in kid_slots
    overrides the Model's definition.
+
+4. Provides the following convenience methods:
+   * grandparent: the parent's parent, or None
+   * kid_number: this Model's position in the parent's kids list
+   * previous_sib: the sibiling Model in parent.kids[kid_number - 1]
+   * next_sib: the sibiling Model in parent.kids[kid_number + 1]
+   
 """
 
 class FamilyTest(unittest.TestCase):
     def setUp(self):
         cells.reset()
         
-        class K(cells.Model):
+        class K(cells.Family):
             x = cells.makecell(value=1)
             model_value = cells.makecell(rule=lambda s,p: s.x * 3)
             
@@ -72,6 +79,37 @@ class FamilyTest(unittest.TestCase):
         self.failUnless(f.kids[0].x == 1)
         self.failUnless(f.kids[1].model_name == "Bee")
         self.failUnless(f.kids[2].model_value == 3)
+
+    def test_GrandparentMethod(self):
+        f = self.F()
+        f.make_kid(self.F)
+        f.kids[0].make_kid(self.K)
+        self.failUnless(f.kids[0].kids[0].grandparent() is f)
+
+    def test_SiblingMethods(self):
+        f = self.F()
+        f.make_kid(self.K)
+        f.make_kid(self.K)
+
+        kidA = f.kids[0]
+        kidB = f.kids[1]
+
+        self.failUnless(kidA.next_sib() is kidB)
+        self.failUnless(kidB.next_sib() is None)
+
+        self.failUnless(kidA.previous_sib() is None)
+        self.failUnless(kidB.previous_sib() is kidA)
+
+    def test_PositionMethod(self):
+        f = self.F()
+        f.make_kid(self.K)
+        f.make_kid(self.K)
+
+        kidA = f.kids[0]
+        kidB = f.kids[1]
+
+        self.failUnless(kidA.position() == 0)
+        self.failUnless(kidB.position() == 1)
 
 if __name__ == "__main__": unittest.main()
     

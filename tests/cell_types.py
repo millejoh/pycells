@@ -33,7 +33,7 @@ Lazy Rule Cell, Always-lazy flavor:
 class CellTypeTests_Input(unittest.TestCase):
     def setUp(self):
         cells.reset()
-        self.x = cells.InputCell(None, "x", 5)
+        self.x = cells.InputCell(None, 5, name="x")
         
     def test_1_Settability(self):
         "Input 1: An input cell must be settable"
@@ -44,7 +44,7 @@ class CellTypeTests_Input(unittest.TestCase):
 
     def test_2_SetDuringPropogation(self):
         "Input 2: A set during propogation must defer until propogation is complete"
-        a = cells.RuleCell(None, "a", lambda s,p: self.x.get() * 3)
+        a = cells.RuleCell(None, lambda s,p: self.x.get() * 3, name="a")
 
         self.captured_x = None
         def d_rule(s,p):
@@ -52,7 +52,7 @@ class CellTypeTests_Input(unittest.TestCase):
             if not self.captured_x:
                 self.captured_x = self.x.value
             return a.get()
-        d = cells.RuleCell(None, "d", d_rule)
+        d = cells.RuleCell(None, d_rule, name="d")
 
         # establish dependencies. 
         d.get()                         # x.value = 2, now.
@@ -71,14 +71,14 @@ class CellTypeTests_Rule(unittest.TestCase):
     def test_1_Nonsettability(self):
         "Rule 1: Rule cells may not be set"
         cells.reset()
-        x = cells.RuleCell(None, "", lambda s,p: 0)
+        x = cells.RuleCell(None, lambda s,p: 0, name="x")
         self.failUnlessRaises(cells.RuleCellSetError, x.set, 5)
 
 class CellTypeTests_OnceAskedLazy(unittest.TestCase):
     def setUp(self):
         cells.reset()
-        self.x = cells.InputCell(None, "x", 4)
-        self.a = cells.OnceAskedLazyCell(None, "a",
+        self.x = cells.InputCell(None, 4, name="x")
+        self.a = cells.OnceAskedLazyCell(None, name="a",
                                          rule=lambda s,p: self.x.get()+(p or 1))
 
         self.a.get()                         # establish dependencies
@@ -100,8 +100,8 @@ class CellTypeTests_OnceAskedLazy(unittest.TestCase):
 class CellTypeTests_UntilAskedLazy(unittest.TestCase):
     def setUp(self):
         cells.reset()
-        self.x = cells.InputCell(None, "x", 4)
-        self.a = cells.UntilAskedLazyCell(None, "a",
+        self.x = cells.InputCell(None, 4, name="x")
+        self.a = cells.UntilAskedLazyCell(None, name="a",
                                      rule=lambda s,p: self.x.get() + 1)
         self.a.get(init=True)          # establish dependencies, a = 5
         self.x.set(42)                 # cause propogation
@@ -122,8 +122,9 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
     def test_1_NoEvalOnPropogation(self):
         "Always Lazy 1: Always lazys never evaluate on change propogation"
         cells.reset()
-        x = cells.InputCell(None, "x", 4)
-        a = cells.AlwaysLazyCell(None, "a", rule=lambda s,p: x.get() + (p or 1))
+        x = cells.InputCell(None, 4, name="x")
+        a = cells.AlwaysLazyCell(None, name="a",
+                                 rule=lambda s,p: x.get() + (p or 1))
 
         a.get()                         # establish dependencies
         x.set(42)                       # cause propogation

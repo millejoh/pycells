@@ -6,6 +6,12 @@ TODO: More here.
 DEBUG = False
 DECO_OFFSET = 9                 # for the debug '  module > ' messages
 
+dp = 0
+curr = None
+curr_propogator = None
+queued_updates = []
+deferred_sets = []
+
 from cellattr import CellAttr
 
 def makecell(*args, **kwargs):

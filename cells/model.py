@@ -132,17 +132,6 @@ class Model(object):
         for observer in self._observers:
             observer.run_if_applicable(self, attribute)
 
-    def makecell(self, name, *args, **kwargs):
-        debug("adding cell to Model")
-        if name in self.__dict__.keys():
-            raise CellOverrideError, "You cannot override a cell after Model" +\
-                  "initialization"        
-                
-        self.__dict__[name] = self._buildcell(self, name, *args, **kwargs)
-
-        # and now send it a get() so it's up-to-date
-        getattr(self, name)
-
     def _buildcell(self, name, *args, **kwargs):
         """Creates a new cell of the appropriate type"""
         debug("Building cell: owner:", str(self))
