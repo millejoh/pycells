@@ -42,6 +42,9 @@ class Cell(object):
         self.propogate_to = None
         self.lazy = False
         self.last_value = None
+
+        self.synapse_space = {}         # storage for synapses used in this
+                                        # cell (possible) rule
         
         if kwargs.has_key("value"):
             self.bound = True
@@ -209,7 +212,7 @@ class Cell(object):
         self.reset_calls()
 
         self.dp = cells.dp                             # we're up-to-date
-        newvalue = self.rule(self.owner, self.value) # run the rule
+        newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         
         # restore old running cell

@@ -31,6 +31,7 @@ from cell import InputCellRunError, SetDuringNotificationError
 
 from model import Model, NonCellSetError
 from family import Family
+from synapse import ChangeSynapse
 
 def debug(*msgs):
     if DEBUG:
