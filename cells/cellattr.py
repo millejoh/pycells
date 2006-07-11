@@ -37,6 +37,11 @@ class CellAttr(object):
                 
             owner.__dict__[self.name] = newcell
 
+            # observers have to be run *after* the cell is embedded in the
+            # instance!
+            owner._run_observers(newcell)
+
+
         debug("finished getting", self.name)
         return owner.__dict__[self.name]
 

@@ -33,11 +33,11 @@ class Cell(object):
         self.calls = set([])         # the cells which this cell's rule calls
 
         self.dp = 0
+        self.changed_dp = 0
         self.bound = False
         
         self.constant = False
         self.notifying = False
-        self.changed_dp = cells.dp
 
         self.propogate_to = None
         self.lazy = False
@@ -48,8 +48,8 @@ class Cell(object):
         
         if kwargs.has_key("value"):
             self.bound = True
-            if owner:
-                owner._run_observers(self)
+            self.changed_dp = cells.dp
+            self.dp = cells.dp
 
     def get(self, init=False):
         # if there's a cell on the call stack, this get is part of a rule

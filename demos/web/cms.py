@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import cells, BaseHTTPServer, ConfigParser
+import cells, BaseHTTPServer, ConfigParser, glob, os, re
 
 CellCMSConfig = ConfigParser.ConfigParser()
+CellCMSConfig.read('cms.cfg')
 
 # the general idea for this thing is that there be a thin shell of
 # "normal" python to set up & feed the models which will do the heavy
@@ -11,25 +12,54 @@ CellCMSConfig = ConfigParser.ConfigParser()
 # let's build the models.
 class Page(cells.Model):
     """A model to hold a single page, from request to page generation."""
-    request = cells.makecell(value=None) # input
+    # Non-Cells
+    cleanpath = re.compile(r"(/([A-Za-z0-9]+\.)*([A-Za-z0-9]*))*(\?.*)?")
+    
+    # INPUT CELLS
+    request = cells.makecell(value=None)
+    config = cells.makecell(value=None)
 
+    # RULE CELLS
+    @cells.fun2cell()
+    def cleaned_path(self, prev):
+        if not self.cleanpath.match(self.request.path):
+            print "Illegal path request:", self.request.path
+            return "/"
+        return self.request.path
+    
     @cells.fun2cell()
     def output(self, prev):
         """Outputs the final, rendered version of this Page"""
         if not self.request: return
-        return "You are:\n" + str(self.request.headers)
 
+        if glob.glob(self.config.get('directories', 'static') +
+                     self.cleaned_path):
+            # TODO: actual content-type exam here
+            return open(self.config.get('directories', 'static') +
+                        self.cleaned_path).read()
+        # TODO: Look for generated content
+        else:
+            return "No such file"
+
+@Page.observer(attrib="request")
+def pagelog_observer(self):
+    """Each time a Page is created or modified, log."""
+    if self.request:
+        print self.request.client_address[0] + ":", str(self.request.path), \
+              "-- created Page"
 
 class RequestHandler(cells.Model):
     """A model which turns GET requests into formatted content
     
     The idea for this thing is that we build a model for every
-    request, then store them in the pages slot. We can use the
-    template slot to give each page model the same base instantiation
+    request, then store them in the pages slot. 
     """
     def __init__(self):
         cells.Model.__init__(self)
         self.pages = {}
+
+    # NONCELLS
+    special = ('/stats',)
         
     # INPUT CELLS
     config = cells.makecell(value=None)  # handle to the ConfigParser object    
@@ -42,25 +72,41 @@ class RequestHandler(cells.Model):
         """Takes a BaseHTTPRequestHandler and makes a page key out of it"""
         if self.request:
             req = self.request
-            return (req.client_address, req.command, req.path)
+            return (req.client_address[0], req.command, req.path)
         return None
 
     @cells.fun2cell()
     def output(self, prev):
         """Outputs the requested page, rendered and ready for the browser."""
         if not self.request_key: return
+        
+        if self.request.path == '/stats':
+            buff = ["Cell CMS Statistics",
+                    "Number of stored Pages: " + str(len(self.pages.keys())),
+                    str([str(key) for key in self.pages.keys()])]
+            return "\n".join(buff)
+            
         return self.pages[self.request_key].output
 
+@RequestHandler.observer(attrib="request")
+def handlerlog_observer(self):
+    """Each time a request is recieved, log"""
+    if self.request:
+        print self.request.client_address[0] + ":", str(self.request.path), \
+              "-- got request"
+        
+    
 @RequestHandler.observer(attrib="request_key")
 def request_key_obs(self):
     """Builds the Request-to-Page dictionary"""
     # TODO: pages_registry management -- it grows forever, now.
     if not self.request_key: return
-        
+    if self.request.path in self.special: return
+    
     page = self.pages.get(self.request_key, None)
     if not page:                    # build a Page if one doesn't exist for
-        self.pages[self.request_key] = Page() # this request
-        self.pages[self.request_key].request = self.request
+        page = Page(config=self.config, request=self.request) # this request
+        self.pages[self.request_key] = page
 
     
 handler = RequestHandler() # make a new cellular handler
@@ -81,16 +127,15 @@ class Request(object):
         self.wfile = request.wfile
                                                   
 class CellRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):        
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
-
     def do_GET(self):
         handler.request = Request(self) # build a new request object
         print >>self.wfile, handler.output
 
 # Finally, set it moving:
-print "Starting server on port", 8082
-server_address=('', 8082)
+print "Starting server at", CellCMSConfig.get('server', 'address'), "on port", \
+      CellCMSConfig.get('server', 'port')
+server_address=(CellCMSConfig.get('server', 'address'),
+                CellCMSConfig.getint('server', 'port'))
 httpd = BaseHTTPServer.HTTPServer(server_address, CellRequestHandler)
 print "... server started."
 httpd.serve_forever()
