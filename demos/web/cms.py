@@ -1,9 +1,28 @@
 #!/usr/bin/env python
 
-import cells, BaseHTTPServer, ConfigParser, glob, os, re, time, datetime, urllib
+"""
+Cells CMS
+(calling this a CMS is like calling a model rocket a space ship)
 
-# BIG props to Yuri Takhteyev for markdown.py.  
-import markdown
+This works by setting up a BaseHTTPServer, and a custom request
+handler to access pages in the PageCache. The cache builds pages upon
+request if they don't exist, or brings pages' source filetimes up to
+date if they do. A Page extends cells.Model, and it's here the cool
+stuff happens:
+
+When page '/foo' gets rendered, its template may pull in other
+resources -- my default page template pulls in a '__header__' and
+'__footer__'. When those Pages' resources are read by rendering page,
+they discover they must inform that new page when they change. This,
+of course, happens just because of the basic cells functionality. So
+if you later alter one of the resources a rendered page depends on, it
+will be informed of the change and re-render itself
+automatically. There's no need to check up-to-dateness of the
+resources a given page uses; it all happens automatically.
+"""
+
+import cells, BaseHTTPServer, ConfigParser, glob, os, re, time, datetime, urllib
+import markdown           # props to Yuri Takhteyev for markdown.py.  
 
 CellCMSConfig = ConfigParser.ConfigParser()
 CellCMSConfig.read('cms.cfg')
@@ -19,7 +38,6 @@ class PageCache(object):
         page = self.cache.get(request.path, None)
         
         if not page:           # and if it doesn't exist in the cache, build it
-            # XXX: eventually, we'd chose a template based on the request
             page = Page(cache=self, request=request)
             self.cache[request.path] = page # and put it in the cache
 
@@ -42,6 +60,7 @@ class PageCache(object):
 
     
 class Page(cells.Model):
+    """A number of representations of a given resource (eg, '/foo')"""
     def __init__(self, cache, *args, **kwargs):
         self.cache = cache
         self.config = CellCMSConfig
@@ -58,12 +77,14 @@ class Page(cells.Model):
     # RULE CELLS
     @cells.fun2cell()
     def dirty_path(self, prev):
+        """The not-cleaned path from self.request"""
         if not self.request:
             return "/"
         return self.request.path
     
     @cells.fun2cell()
     def cleaned_path(self, prev):
+        """A safe path which may be used for reading/writing to"""
         if not self.cleanpath.match(self.dirty_path):
             print "Illegal path request:", self.dirty_path
             return "/"
@@ -71,25 +92,32 @@ class Page(cells.Model):
 
     @cells.fun2cell()
     def dynamic_path(self, prev):
+        """The location, on-disk, of the requested resource if it's dynamic"""
         return (self.config.get('directories', 'storage') + self.cleaned_path)
 
     @cells.fun2cell()
     def static_path(self, prev):
+        """The location, on-disk, of the requested resource if it's static"""
         return (self.config.get('directories', 'static') + self.cleaned_path)
-    
+
+    # these just figure out if the request is for a dynamic or static
+    # resource
     is_dynamic = cells.makecell(rule=lambda s,p: glob.glob(s.dynamic_path))
     is_static = cells.makecell(rule=lambda s,p: glob.glob(s.static_path))
 
     @cells.fun2cell()
     def is_directory(self, prev):
+        """Is the request for a directory?"""
         return os.path.isdir(self.static_path)
 
     @cells.fun2cell()
     def is_special(self, prev):
+        """Is the request for a 'special' resource (eg, '__foo__')"""
         return self.special.match(self.cleaned_path)
 
     @cells.fun2cell()
     def is_valid(self, prev):
+        """Is the resource available on-disk?"""
         return self.is_dynamic or self.is_static
 
     @cells.fun2cell()
@@ -123,6 +151,7 @@ class Page(cells.Model):
 
     @cells.fun2cell()
     def source(self, prev):
+        """Holds the rendered, untemplatized version of this Page"""
         if self.is_dynamic:
             return markdown.markdown(self.raw_source)
         else:
@@ -143,6 +172,7 @@ class Page(cells.Model):
         
     @cells.fun2cell()
     def templatized(self, prev):
+        """Holds the rendered, templatized version of this Page"""
         if self.is_dynamic or self.is_directory or not self.is_valid:
             return Template(cache=self.cache,
                             page=self,
@@ -167,7 +197,9 @@ def templatized_log_obs(self):
     print self.cleaned_path, "regenerated"
 
 class Template(object):
+    """An object which applies a template to a chunk of text."""
     # this could probably be done with one regex. I'm too lazy to figure it out.
+    # finds tags that look like <include_resource name="blah" />
     includetag1 = re.compile(r"\<\s*include_resource\s*name\s*=\s*" +\
                              r"'(?P<resource>[^']+)'\s*\/\>")
     includetag2 = re.compile(r'\<\s*include_resource\s*name\s*=\s*' +\
@@ -179,6 +211,7 @@ class Template(object):
         self.template = template
 
     def render(self):
+        """Actually applies the template"""
         rendered = ""
         
         # do resource insertion        
@@ -223,6 +256,9 @@ pages = PageCache()
 class Request(object):
     """Just a container for the RequestHandler's current request data"""
     def __init__(self, request=None, path=None):
+        # since we can request resources from a template or a "real"
+        # request, there's two versions of this object, with a flag to
+        # tell them apart
         if request:
             self.client_address = request.client_address
             self.command = request.command
@@ -231,7 +267,7 @@ class Request(object):
             self.headers = request.headers
             self.rfile = request.rfile
             self.wfile = request.wfile
-            self.is_dummy = False
+            self.is_dummy = False       # "real" request
         else:
             self.client_address = None
             self.command = None
@@ -240,31 +276,38 @@ class Request(object):
             self.headers = None
             self.rfile = None
             self.wfile = None
-            self.is_dummy = True
+            self.is_dummy = True        # template request
 
 class CellRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+    """Makes BaseHTTPServer use the page cache"""
     cleanpath = re.compile(r"(/([A-Za-z0-9]+\.)*([A-Za-z0-9]*))*(\?.*)?")     
 
     def do_GET(self):
         print >>self.wfile, pages[Request(request=self)].templatized
 
     def do_POST(self):
+        # read the POSTed data
         content_len = int(self.headers.getheader('content-length'))
         postdata = self.rfile.read(content_len)
-        print self.command+"ed", repr(postdata)
-
         newbody = filter(lambda a: a[0] == "newbody",
                          [s.split("=") for s in postdata.split("&")])[0][1]
 
+        # check that we should write to the requested resource, and if
+        # so write to it
         if self.cleanpath.match(self.path):
             out = open(CellCMSConfig.get('directories', 'storage') + self.path,
                        'w')
             out.write(urllib.unquote_plus(newbody))
             out.close()
 
+        # this is inelegant, but it gets the job done: to get the edit
+        # box a user must have navigated to the resource they're
+        # changing. this may have generated a Page filled with
+        # "resource not found"; instead of trying to make that Page
+        # regenerate, I just nuke it...
         if not pages[Request(request=self)].is_valid:
             pages.remove(Request(request=self))
-
+        # and this request makes a new one.
         print >>self.wfile, pages[Request(request=self)].templatized
     
 # Finally, set the server moving:
