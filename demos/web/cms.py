@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import cells, BaseHTTPServer, ConfigParser, glob, os, re, time, datetime
+import cells, BaseHTTPServer, ConfigParser, glob, os, re, time, datetime, urllib
+
+# BIG props to Yuri Takhteyev for markdown.py.  
+import markdown
 
 CellCMSConfig = ConfigParser.ConfigParser()
 CellCMSConfig.read('cms.cfg')
@@ -16,20 +19,26 @@ class PageCache(object):
         page = self.cache.get(request.path, None)
         
         if not page:           # and if it doesn't exist in the cache, build it
-            print "Building page for", request.path
             # XXX: eventually, we'd chose a template based on the request
             page = Page(cache=self, request=request)
             self.cache[request.path] = page # and put it in the cache
-        else:                  # if it does exist, make sure its source is curr
-            print "Page cache updating mod-time on", request.path
-            if page.is_static:
-                page.modified = os.stat(page.static_path)[9]
-            elif page.is_dynamic:
-                page.modified = os.stat(page.dynamic_path)[9]
+
+        print request.path, "resetting ctime"
+        if page.is_static:
+            print request.path, "is static, setting modified to", \
+                  str(os.stat(page.static_path)[9])
+            page.modified = os.stat(page.static_path)[9]
+        elif page.is_dynamic:
+            print request.path, "is dynamic, setting modified to", \
+                  str(os.stat(page.dynamic_path)[9])
+            page.modified = os.stat(page.dynamic_path)[9]
 
         print "Cache has", repr(self.cache.keys())
 
-        return page.output
+        return page
+
+    def remove(self, request):
+        self.cache.pop(request.path, None)
 
     
 class Page(cells.Model):
@@ -39,7 +48,7 @@ class Page(cells.Model):
         cells.Model.__init__(self, *args, **kwargs)
 
     special = re.compile(r"/__.*__")
-    cleanpath = re.compile(r"(/([A-Za-z0-9]+\.)*([A-Za-z0-9]*))*(\?.*)?")
+    cleanpath = re.compile(r"(/([A-Za-z0-9]+\.)*([A-Za-z0-9]*))*(\?.*)?") 
     
     # INPUT CELLS
     request = cells.makecell(value=None)
@@ -80,18 +89,14 @@ class Page(cells.Model):
         return self.special.match(self.cleaned_path)
 
     @cells.fun2cell()
-    def should_apply_template(self, prev):
-        return self.is_dynamic and not self.is_special
-
-    @cells.fun2cell()
     def is_valid(self, prev):
         return self.is_dynamic or self.is_static
 
     @cells.fun2cell()
-    def source(self, prev):
+    def raw_source(self, prev):
         """Holds the unrendered source data for this Page"""
         if not self.is_valid:
-            return "No such file"
+            return "Resource not found. You can edit it below."
 
         # all we need to do is depend on self.modified and the source
         # will be updated whenever the modification-time is
@@ -111,35 +116,55 @@ class Page(cells.Model):
             return open(self.static_path).read()
         
         if self.is_dynamic:
-            return open(self.dynamic_path).read()
+            return (open(self.dynamic_path).read())
 
         else:
             return "Should not have got here!"
+
+    @cells.fun2cell()
+    def source(self, prev):
+        if self.is_dynamic:
+            return markdown.markdown(self.raw_source)
+        else:
+            return self.raw_source
     
     @cells.fun2cell()
-    def template(self, prev):
-        """Applies a template to this Page depending on request type"""
-        # (doesn't actually make any choices, currently)
-        if self.should_apply_template:
-            return Template(cache=self.cache, text=self.source)
+    def template_file(self, prev):
+        """Determines which template to apply to this Page depending
+        on request type"""
+        if self.is_special:
+            return "templates/just_edit.tmpl"
+        if self.is_directory:
+            return "templates/directory.tmpl"
+        if self.is_static:
+            return "templates/static.tmpl"
+        else:
+            return "templates/full.tmpl"
         
     @cells.fun2cell()
-    def output(self, prev):
-        if self.should_apply_template:
-            return self.template.render()
+    def templatized(self, prev):
+        if self.is_dynamic or self.is_directory or not self.is_valid:
+            return Template(cache=self.cache,
+                            page=self,
+                            template=self.template_file).render()
         else:
-            return self.source
+            return self.raw_source
 
 @Page.observer(attrib="source")
 def source_obs(self):
     """Each time a new source gets generated, update its built-time
     """
-    if self.is_valid:
-        self.built = self.modified
+    print "reset built-time"
+    self.built = self.modified
 
-@Page.observer(attrib="output")
-def out_obs(self):
-    print self.cleaned_path, "-- New output"
+@Page.observer(attrib="request")
+def source_obs(self):
+    print self.cleaned_path, "reset request"
+
+@Page.observer(attrib="templatized")
+def templatized_log_obs(self):
+    """Each time the templatized version of the Page changes, log to stdout"""
+    print self.cleaned_path, "regenerated"
 
 class Template(object):
     # this could probably be done with one regex. I'm too lazy to figure it out.
@@ -148,13 +173,12 @@ class Template(object):
     includetag2 = re.compile(r'\<\s*include_resource\s*name\s*=\s*' +\
                              r'"(?P<resource>[^"]+)"\s*\/\>')
 
-    def __init__(self, text, cache, template="default.tmpl"):
-        self.source = text
+    def __init__(self, page, cache, template="default.tmpl"):
+        self.page = page
         self.cache = cache
         self.template = template
 
     def render(self):
-        print "Running template.output with", repr(self.source[:10])
         rendered = ""
         
         # do resource insertion        
@@ -166,15 +190,21 @@ class Template(object):
 
             # loop over the line while we find them
             while m:
-                # if the requested resource is "__body__", insert the source
-                if m.group(1) == "__body__":
-                    replacement = self.source
-
+                # if the requested resource is "__body__", insert the
+                # page's rendered source
+                var = m.group(1)
+                if var == "__body__":
+                    replacement = self.page.source
+                elif var == "__rawbody__":
+                    replacement = self.page.raw_source
+                elif var == "__path__":
+                    replacement = self.page.cleaned_path
+                
                 # otherwise, just pull from the page cache (which may build
                 # another Page)
                 else:
-                    req = Request(path="/" + m.group(1)) # dummy request
-                    replacement = self.cache[req]
+                    req = Request(path="/" + var) # dummy request
+                    replacement = self.cache[req].source
 
                 line = line[:m.span()[0]] + replacement + line[m.span()[1]:]
                             
@@ -201,6 +231,7 @@ class Request(object):
             self.headers = request.headers
             self.rfile = request.rfile
             self.wfile = request.wfile
+            self.is_dummy = False
         else:
             self.client_address = None
             self.command = None
@@ -209,11 +240,32 @@ class Request(object):
             self.headers = None
             self.rfile = None
             self.wfile = None
-                                                  
-class CellRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    def do_GET(self):
-        print >>self.wfile, pages[Request(request=self)]
+            self.is_dummy = True
 
+class CellRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+    cleanpath = re.compile(r"(/([A-Za-z0-9]+\.)*([A-Za-z0-9]*))*(\?.*)?")     
+
+    def do_GET(self):
+        print >>self.wfile, pages[Request(request=self)].templatized
+
+    def do_POST(self):
+        content_len = int(self.headers.getheader('content-length'))
+        postdata = self.rfile.read(content_len)
+        print self.command+"ed", repr(postdata)
+
+        newbody = filter(lambda a: a[0] == "newbody",
+                         [s.split("=") for s in postdata.split("&")])[0][1]
+
+        if self.cleanpath.match(self.path):
+            out = open(CellCMSConfig.get('directories', 'storage') + self.path,
+                       'w')
+            out.write(urllib.unquote_plus(newbody))
+            out.close()
+
+        if not pages[Request(request=self)].is_valid:
+            pages.remove(Request(request=self))
+
+        print >>self.wfile, pages[Request(request=self)].templatized
     
 # Finally, set the server moving:
 print "Starting server at", CellCMSConfig.get('server', 'address'), "on port", \

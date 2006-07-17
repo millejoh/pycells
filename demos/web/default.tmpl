@@ -7,5 +7,10 @@
     <include_resource name="__header__" />
     <include_resource name="__body__"/>
     <include_resource name="__footer__"/>
+    <form method="POST" action="<include_resource name="__path__" />">
+      Edit this page<br />
+      <textarea name="newbody" rows="15" cols="80"
+       ><include_resource name="__rawbody__" /></textarea>
+      <input type="submit" />
   </body>
 </html>
