@@ -43,7 +43,7 @@ class Synapse(cells.Cell):
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
-        for cell in self.calls:
+        for cell in self.calls_list():
             debug(self.name, "removing c-b link from", cell.name)
             cell.remove_cb(self)
         self.reset_calls()

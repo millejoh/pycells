@@ -42,6 +42,10 @@ the best place to test them
 5. A cell must allow an alternate function to be passed which tests
    for equality of the previous & new values.
 
+6. A cell must be garbage collected appropriately; that is, other
+   cells must not prevent it from being GCd because of internal
+   references.
+
 """
 
 
@@ -275,7 +279,21 @@ class AlgoTests_Rule9999(unittest.TestCase):
         self.failUnless(a.get() == 10)  # and so no propogation happens
         x.set(11)                       # will set, since |5-11| > 5
         self.failUnless(a.get() == 22)
+
+    def testB_DelWorks(self):
+        """6. A cell must be garbage collected appropriately; that is,
+        other cells must not prevent it from being GCd because of
+        internal references.
+        """
+        import weakref
         
+        self.x = cells.Cell(None, value=3)
+        a = cells.Cell(None, rule=lambda s,p: self.x.get() + 1)
+
+        ref_x = weakref.ref(self.x)
+        a.get()
+        del(self.x)
+        self.failIf(ref_x())
         
 if __name__ == "__main__":
     unittest.main()

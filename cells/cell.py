@@ -7,7 +7,7 @@ TODO: More here.
 
 DEBUG = False
 
-import cells
+import cells, weakref
 
 def debug(*msgs):
     msgs = list(msgs)
@@ -44,7 +44,7 @@ class Cell(object):
         self.last_value = None
 
         self.synapse_space = {}         # storage for synapses used in this
-                                        # cell (possible) rule
+                                        # cell's (possible) rule
         
         if kwargs.has_key("value"):
             self.bound = True
@@ -103,7 +103,7 @@ class Cell(object):
 
         # otherwise, verify we're current: (by the above ifs, the
         # system is propogating and this cell is not current)
-        for cell in self.calls:
+        for cell in self.calls_list():
             debug(self.name, "asking", cell.name, "to update")
             if cell.update(self):       # if any called cell requires us,
                 debug(self.name, "got recalc command from", cell.name)
@@ -147,7 +147,7 @@ class Cell(object):
         if propogate_first:
             # append everything but the propogate_first cell onto the deferred
             # propogation FIFO
-            deferrals = list(self.called_by - set([propogate_first]))
+            deferrals = list(self.called_by() - set([propogate_first]))
             debug(self.name, "deferring update of",
                   str([ c.name for c in deferrals ]))
             cells.queued_updates.extend(deferrals)
@@ -206,7 +206,7 @@ class Cell(object):
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
-        for cell in self.calls:
+        for cell in self.calls_list():
             debug(self.name, "removing c-b link from", cell.name)
             cell.remove_cb(self)
         self.reset_calls()
@@ -237,20 +237,27 @@ class Cell(object):
     def changed(self):
         return cells.dp == self.changed_dp
 
+    def calls_list(self):
+        return (r() for r in self.calls)
+
+    def called_by_list(self):
+        return (r() for r in self.calls)
+
     def propogation_list(self, elide=None):
-        return self.called_by - set([elide])
+        return (r() for r in self.called_by - set([elide]))
     
     def add_calls(self, *calls_cells):
         """Appends the passed list of cells to this cell's calls list"""
-        self.calls.update(set(calls_cells))
+        self.calls.update(set([ weakref.ref(cell) for cell in calls_cells ]))
 
     def add_called_by(self, *cb_cells):
         """Appends the passed list of cells to this cell's called-by list"""
-        self.called_by.update(set(cb_cells))
+        self.called_by.update(set([ weakref.ref(cell) for cell in cb_cells ]))
 
     def remove_cb(self, *cb_cells):
         """Removes the passed list of cells from this cell's called-by list"""
-        self.called_by.difference_update(set(cb_cells))
+        self.called_by.difference_update(set(
+            [ weakref.ref(cell) for cell in cb_cells ]))
 
     def reset_calls(self):
         """Resets the calls list to empty"""
