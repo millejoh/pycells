@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;cells
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h2 class="py-src">Source Code for <a href="cells-module.html">Package cells</a></h2>
+<div class="py-src">
+<pre class="py-src">
+<span class="lineno">  1</span>  <span class="py-line"><span class="py-docstring">"""</span> </span>
+<span class="lineno">  2</span>  <span class="py-line"><span class="py-docstring">PyCells</span> </span>
+<span class="lineno">  3</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">  4</span>  <span class="py-line"><span class="py-docstring">PyCells is a port of Ken Tilton's Cells extenstion to Common</span> </span>
+<span class="lineno">  5</span>  <span class="py-line"><span class="py-docstring">Lisp. Cells are objects which automatically discover the cells which</span> </span>
+<span class="lineno">  6</span>  <span class="py-line"><span class="py-docstring">call them, and notify those cells of changes.</span> </span>
+<span class="lineno">  7</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">  8</span>  <span class="py-line"><span class="py-docstring">@var DEBUG: Turns on debugging messages for *all* submodules. This is</span> </span>
+<span class="lineno">  9</span>  <span class="py-line"><span class="py-docstring">    a whole lot of text, so you'll probably want to use the</span> </span>
+<span class="lineno"> 10</span>  <span class="py-line"><span class="py-docstring">    submodules' C{DEBUG} flags instead</span> </span>
+<span class="lineno"> 11</span>  <span class="py-line"><span class="py-docstring">"""</span> </span>
+<span class="lineno"> 12</span>  <span class="py-line"><a class="py-name" href="cells-module.html#DEBUG">DEBUG</a> <span class="py-op">=</span> <span class="py-name">False</span> </span>
+<span class="lineno"> 13</span>  <span class="py-line"> </span>
+<span class="lineno"> 14</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_DECO_OFFSET">_DECO_OFFSET</a> <span class="py-op">=</span> <span class="py-number">9</span>                 <span class="py-comment"># for the debug '  module &gt; ' messages</span> </span>
+<span class="lineno"> 15</span>  <span class="py-line"> </span>
+<span class="lineno"> 16</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_dp">_dp</a> <span class="py-op">=</span> <span class="py-number">0</span> </span>
+<span class="lineno"> 17</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_curr">_curr</a> <span class="py-op">=</span> <span class="py-name">None</span> </span>
+<span class="lineno"> 18</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_curr_propogator">_curr_propogator</a> <span class="py-op">=</span> <span class="py-name">None</span> </span>
+<span class="lineno"> 19</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_queued_updates">_queued_updates</a> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+<span class="lineno"> 20</span>  <span class="py-line"><a class="py-name" href="cells-module.html#_deferred_sets">_deferred_sets</a> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+<span class="lineno"> 21</span>  <span class="py-line"> </span>
+<span class="lineno"> 22</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.cellattr-module.html">cellattr</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.cellattr.CellAttr-class.html">CellAttr</a> </span>
+<span class="lineno"> 23</span>  <span class="py-line"> </span>
+<a name="makecell"></a><div id="makecell-def"><span class="lineno"> 24</span> <a class="pysrc-toggle" href="#" id="makecell-toggle" onclick="toggle('makecell'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells-module.html#makecell">makecell</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-param">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-param">kwargs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="makecell-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="makecell-expanded"><span class="lineno"> 25</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 26</span>  <span class="py-line"><span class="py-docstring">    makecell(rule=None, value=None, unchanged_if=None,</span> </span>
+<span class="lineno"> 27</span>  <span class="py-line"><span class="py-docstring">    celltype=None) -&gt; CellAttr</span> </span>
+<span class="lineno"> 28</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 29</span>  <span class="py-line"><span class="py-docstring">    Creates a new cell attribute in a L{Model}. This attribute may be</span> </span>
+<span class="lineno"> 30</span>  <span class="py-line"><span class="py-docstring">    accessed as one would access a non-cell attribute, and</span> </span>
+<span class="lineno"> 31</span>  <span class="py-line"><span class="py-docstring">    autovivifies itself in the instance upon first access (in</span> </span>
+<span class="lineno"> 32</span>  <span class="py-line"><span class="py-docstring">    L{Model.__init__}).</span> </span>
+<span class="lineno"> 33</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 34</span>  <span class="py-line"><span class="py-docstring">    @param rule: Define a rule which backs this cell. You must only</span> </span>
+<span class="lineno"> 35</span>  <span class="py-line"><span class="py-docstring">        define one of C{rule} or C{value}. Lacking C{celltype}, this</span> </span>
+<span class="lineno"> 36</span>  <span class="py-line"><span class="py-docstring">        creates a L{RuleCell}.  This must be passed a callable with</span> </span>
+<span class="lineno"> 37</span>  <span class="py-line"><span class="py-docstring">        the signature C{f(self, prev) -&gt; value}, where C{self} is the</span> </span>
+<span class="lineno"> 38</span>  <span class="py-line"><span class="py-docstring">        model instance the cell is in and C{prev} is the cell's</span> </span>
+<span class="lineno"> 39</span>  <span class="py-line"><span class="py-docstring">        out-of-date value.</span> </span>
+<span class="lineno"> 40</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 41</span>  <span class="py-line"><span class="py-docstring">    @param value: Define a value for this cell. You must only define</span> </span>
+<span class="lineno"> 42</span>  <span class="py-line"><span class="py-docstring">        one of C{rule} or C{value}. Lacking C{celltype}, this creates an</span> </span>
+<span class="lineno"> 43</span>  <span class="py-line"><span class="py-docstring">        L{InputCell}.</span> </span>
+<span class="lineno"> 44</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 45</span>  <span class="py-line"><span class="py-docstring">    @param unchanged_if: Sets a function to determine if a cell's</span> </span>
+<span class="lineno"> 46</span>  <span class="py-line"><span class="py-docstring">        value has changed. For example,</span> </span>
+<span class="lineno"> 47</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 48</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; class A(cells.Model):</span> </span>
+<span class="lineno"> 49</span>  <span class="py-line"><span class="py-docstring">            ...     x = cells.makecell(value=1,</span> </span>
+<span class="lineno"> 50</span>  <span class="py-line"><span class="py-docstring">            ...                        unchanged_if=lambda n,o: abs(n - o) &gt; 5)</span> </span>
+<span class="lineno"> 51</span>  <span class="py-line"><span class="py-docstring">            ...     y = cells.makecell(rule=lambda s,p: s.x * 2)</span> </span>
+<span class="lineno"> 52</span>  <span class="py-line"><span class="py-docstring">            ... </span> </span>
+<span class="lineno"> 53</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a = A()</span> </span>
+<span class="lineno"> 54</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno"> 55</span>  <span class="py-line"><span class="py-docstring">            1</span> </span>
+<span class="lineno"> 56</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y</span> </span>
+<span class="lineno"> 57</span>  <span class="py-line"><span class="py-docstring">            2</span> </span>
+<span class="lineno"> 58</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x = 3</span> </span>
+<span class="lineno"> 59</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno"> 60</span>  <span class="py-line"><span class="py-docstring">            3</span> </span>
+<span class="lineno"> 61</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y</span> </span>
+<span class="lineno"> 62</span>  <span class="py-line"><span class="py-docstring">            6</span> </span>
+<span class="lineno"> 63</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x = 90</span> </span>
+<span class="lineno"> 64</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno"> 65</span>  <span class="py-line"><span class="py-docstring">            3</span> </span>
+<span class="lineno"> 66</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y </span> </span>
+<span class="lineno"> 67</span>  <span class="py-line"><span class="py-docstring">            6</span> </span>
+<span class="lineno"> 68</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 69</span>  <span class="py-line"><span class="py-docstring">        The signature for the passed function is C{f(old, new) -&gt;</span> </span>
+<span class="lineno"> 70</span>  <span class="py-line"><span class="py-docstring">        bool}.</span> </span>
+<span class="lineno"> 71</span>  <span class="py-line"><span class="py-docstring">            </span> </span>
+<span class="lineno"> 72</span>  <span class="py-line"><span class="py-docstring">    @param celltype: Set the cell type to generate. You must pass C{rule}</span> </span>
+<span class="lineno"> 73</span>  <span class="py-line"><span class="py-docstring">        or C{value} correctly. Refer to L{cells.cell} for available</span> </span>
+<span class="lineno"> 74</span>  <span class="py-line"><span class="py-docstring">        types.</span> </span>
+<span class="lineno"> 75</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<span class="lineno"> 76</span>  <span class="py-line">    <span class="py-keyword">return</span> <a title="cells.cellattr.CellAttr" class="py-name" href="cells.cellattr.CellAttr-class.html">CellAttr</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-name">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-name">kwargs</span><span class="py-op">)</span> </span>
+</div><span class="lineno"> 77</span>  <span class="py-line"> </span>
+<a name="fun2cell"></a><div id="fun2cell-def"><span class="lineno"> 78</span> <a class="pysrc-toggle" href="#" id="fun2cell-toggle" onclick="toggle('fun2cell'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells-module.html#fun2cell">fun2cell</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-param">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-param">kwargs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="fun2cell-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="fun2cell-expanded"><span class="lineno"> 79</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 80</span>  <span class="py-line"><span class="py-docstring">    fun2cell(unchanged_if=None, celltype=None) -&gt; decorator</span> </span>
+<span class="lineno"> 81</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 82</span>  <span class="py-line"><span class="py-docstring">    By default, creates a new RuleCell using the decorated function as</span> </span>
+<span class="lineno"> 83</span>  <span class="py-line"><span class="py-docstring">    the C{rule} parameter.</span> </span>
+<span class="lineno"> 84</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 85</span>  <span class="py-line"><span class="py-docstring">    @param unchanged_if: Sets a function to determine if a cell's</span> </span>
+<span class="lineno"> 86</span>  <span class="py-line"><span class="py-docstring">        value has changed. For example,</span> </span>
+<span class="lineno"> 87</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 88</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; class A(cells.Model):</span> </span>
+<span class="lineno"> 89</span>  <span class="py-line"><span class="py-docstring">            ...     x = cells.makecell(value=1,</span> </span>
+<span class="lineno"> 90</span>  <span class="py-line"><span class="py-docstring">            ...                        unchanged_if=lambda n,o: abs(n - o) &gt; 5)</span> </span>
+<span class="lineno"> 91</span>  <span class="py-line"><span class="py-docstring">            ...     y = cells.makecell(rule=lambda s,p: s.x * 2)</span> </span>
+<span class="lineno"> 92</span>  <span class="py-line"><span class="py-docstring">            ... </span> </span>
+<span class="lineno"> 93</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a = A()</span> </span>
+<span class="lineno"> 94</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno"> 95</span>  <span class="py-line"><span class="py-docstring">            1</span> </span>
+<span class="lineno"> 96</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y</span> </span>
+<span class="lineno"> 97</span>  <span class="py-line"><span class="py-docstring">            2</span> </span>
+<span class="lineno"> 98</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x = 3</span> </span>
+<span class="lineno"> 99</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno">100</span>  <span class="py-line"><span class="py-docstring">            3</span> </span>
+<span class="lineno">101</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y</span> </span>
+<span class="lineno">102</span>  <span class="py-line"><span class="py-docstring">            6</span> </span>
+<span class="lineno">103</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x = 90</span> </span>
+<span class="lineno">104</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.x</span> </span>
+<span class="lineno">105</span>  <span class="py-line"><span class="py-docstring">            3</span> </span>
+<span class="lineno">106</span>  <span class="py-line"><span class="py-docstring">            &gt;&gt;&gt; a.y </span> </span>
+<span class="lineno">107</span>  <span class="py-line"><span class="py-docstring">            6</span> </span>
+<span class="lineno">108</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">109</span>  <span class="py-line"><span class="py-docstring">        The signature for the passed function is C{f(old, new) -&gt;</span> </span>
+<span class="lineno">110</span>  <span class="py-line"><span class="py-docstring">        bool}.</span> </span>
+<span class="lineno">111</span>  <span class="py-line"><span class="py-docstring">            </span> </span>
+<span class="lineno">112</span>  <span class="py-line"><span class="py-docstring">    @param celltype: Set the cell type to generate. You must pass C{rule}</span> </span>
+<span class="lineno">113</span>  <span class="py-line"><span class="py-docstring">        or C{value} correctly. Refer to L{cells.cell} for available</span> </span>
+<span class="lineno">114</span>  <span class="py-line"><span class="py-docstring">        types.</span> </span>
+<span class="lineno">115</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<a name="fun2cell.fun2cell_decorator"></a><div id="fun2cell.fun2cell_decorator-def"><span class="lineno">116</span> <a class="pysrc-toggle" href="#" id="fun2cell.fun2cell_decorator-toggle" onclick="toggle('fun2cell.fun2cell_decorator'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.fun2cell-class.html#fun2cell_decorator">fun2cell_decorator</a><span class="py-op">(</span><span class="py-param">func</span><span class="py-op">)</span><span class="py-op">:</span>         </span>
+</div><span class="lineno">117</span>  <span class="py-line">        <span class="py-keyword">return</span> <a title="cells.cellattr.CellAttr" class="py-name" href="cells.cellattr.CellAttr-class.html">CellAttr</a><span class="py-op">(</span><a title="cells.synapse.Synapse.rule" class="py-name" href="cells.synapse.Synapse-class.html#rule">rule</a><span class="py-op">=</span><span class="py-name">func</span><span class="py-op">,</span> <span class="py-op">*</span><span class="py-name">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-name">kwargs</span><span class="py-op">)</span> </span>
+</div><span class="lineno">118</span>  <span class="py-line">    <span class="py-keyword">return</span> <span class="py-name">fun2cell_decorator</span> </span>
+</div><span class="lineno">119</span>  <span class="py-line"> </span>
+<span class="lineno">120</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.cell-module.html">cell</a> <span class="py-keyword">import</span> <span class="py-name">Cell</span><span class="py-op">,</span> <a class="py-name" href="cells.cell.InputCell-class.html">InputCell</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.RuleCell-class.html">RuleCell</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.RuleThenInputCell-class.html">RuleThenInputCell</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.OnceAskedLazyCell-class.html">OnceAskedLazyCell</a> </span>
+<span class="lineno">121</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.cell-module.html">cell</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.cell.UntilAskedLazyCell-class.html">UntilAskedLazyCell</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.AlwaysLazyCell-class.html">AlwaysLazyCell</a> </span>
+<span class="lineno">122</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.cell-module.html">cell</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.cell._CellException-class.html">_CellException</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.RuleCellSetError-class.html">RuleCellSetError</a> </span>
+<span class="lineno">123</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.cell-module.html">cell</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.cell.InputCellRunError-class.html">InputCellRunError</a><span class="py-op">,</span> <a class="py-name" href="cells.cell.SetDuringNotificationError-class.html">SetDuringNotificationError</a> </span>
+<span class="lineno">124</span>  <span class="py-line"> </span>
+<span class="lineno">125</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.model-module.html">model</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.model.Model-class.html">Model</a><span class="py-op">,</span> <a class="py-name" href="cells.model.NonCellSetError-class.html">NonCellSetError</a> </span>
+<span class="lineno">126</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.family-module.html">family</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.family.Family-class.html">Family</a><span class="py-op">,</span> <a class="py-name" href="cells.family.FamilyTraversalError-class.html">FamilyTraversalError</a> </span>
+<span class="lineno">127</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells.synapse-module.html">synapse</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.synapse.ChangeSynapse-class.html">ChangeSynapse</a> </span>
+<span class="lineno">128</span>  <span class="py-line"> </span>
+<a name="_debug"></a><div id="_debug-def"><span class="lineno">129</span> <a class="pysrc-toggle" href="#" id="_debug-toggle" onclick="toggle('_debug'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells-module.html#_debug">_debug</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-param">msgs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="_debug-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_debug-expanded"><span class="lineno">130</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno">131</span>  <span class="py-line"><span class="py-docstring">    debug() -&gt; None</span> </span>
+<span class="lineno">132</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">133</span>  <span class="py-line"><span class="py-docstring">    Prints debug messages.</span> </span>
+<span class="lineno">134</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<span class="lineno">135</span>  <span class="py-line">    <span class="py-keyword">if</span> <span id="link-0" class="py-name"><a title="cells.DEBUG
+cells.cell.DEBUG
+cells.cellattr.DEBUG
+cells.family.DEBUG
+cells.model.DEBUG
+cells.observer.DEBUG
+cells.synapse.DEBUG" class="py-name" href="#" onclick="doclink('link-0', 'DEBUG', 'Variable DEBUG=cells-module.html#DEBUG,Variable cell.DEBUG=cells.cell-module.html#DEBUG,Variable cellattr.DEBUG=cells.cellattr-module.html#DEBUG,Variable family.DEBUG=cells.family-module.html#DEBUG,Variable model.DEBUG=cells.model-module.html#DEBUG,Variable observer.DEBUG=cells.observer-module.html#DEBUG,Variable synapse.DEBUG=cells.synapse-module.html#DEBUG'); return false;">DEBUG</a></span></span><span class="py-op">:</span> </span>
+<span class="lineno">136</span>  <span class="py-line">        <span class="py-keyword">print</span> <span class="py-string">" "</span><span class="py-op">.</span><span class="py-name">join</span><span class="py-op">(</span><span class="py-name">msgs</span><span class="py-op">)</span> </span>
+</div><span class="lineno">137</span>  <span class="py-line"> </span>
+<a name="reset"></a><div id="reset-def"><span class="lineno">138</span> <a class="pysrc-toggle" href="#" id="reset-toggle" onclick="toggle('reset'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells-module.html#reset">reset</a><span class="py-op">(</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="reset-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="reset-expanded"><span class="lineno">139</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno">140</span>  <span class="py-line"><span class="py-docstring">    reset() -&gt; None</span> </span>
+<span class="lineno">141</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">142</span>  <span class="py-line"><span class="py-docstring">    Resets all of PyCells' globals back to their on-package-import</span> </span>
+<span class="lineno">143</span>  <span class="py-line"><span class="py-docstring">    values.  This is a pretty dangerous thing to do if you care about</span> </span>
+<span class="lineno">144</span>  <span class="py-line"><span class="py-docstring">    the currently-instantiated cells' values, but quite useful while</span> </span>
+<span class="lineno">145</span>  <span class="py-line"><span class="py-docstring">    fooling around in an ipython session.</span> </span>
+<span class="lineno">146</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<span class="lineno">147</span>  <span class="py-line">    <span class="py-keyword">global</span> <a title="cells._dp" class="py-name" href="cells-module.html#_dp">_dp</a><span class="py-op">,</span> <a title="cells._curr" class="py-name" href="cells-module.html#_curr">_curr</a><span class="py-op">,</span> <a title="cells._curr_propogator" class="py-name" href="cells-module.html#_curr_propogator">_curr_propogator</a><span class="py-op">,</span> <a title="cells._queued_updates" class="py-name" href="cells-module.html#_queued_updates">_queued_updates</a><span class="py-op">,</span> <a title="cells._deferred_sets" class="py-name" href="cells-module.html#_deferred_sets">_deferred_sets</a> </span>
+<span class="lineno">148</span>  <span class="py-line">     </span>
+<span class="lineno">149</span>  <span class="py-line">    <a title="cells._dp" class="py-name" href="cells-module.html#_dp">_dp</a> <span class="py-op">=</span> <span class="py-number">1</span> </span>
+<span class="lineno">150</span>  <span class="py-line">    <a title="cells._curr" class="py-name" href="cells-module.html#_curr">_curr</a> <span class="py-op">=</span> <span class="py-name">None</span> </span>
+<span class="lineno">151</span>  <span class="py-line">    <a title="cells._curr_propogator" class="py-name" href="cells-module.html#_curr_propogator">_curr_propogator</a> <span class="py-op">=</span> <span class="py-name">None</span> </span>
+<span class="lineno">152</span>  <span class="py-line">    <a title="cells._queued_updates" class="py-name" href="cells-module.html#_queued_updates">_queued_updates</a> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+<span class="lineno">153</span>  <span class="py-line">    <a title="cells._deferred_sets" class="py-name" href="cells-module.html#_deferred_sets">_deferred_sets</a> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+</div><span class="lineno">154</span>  <span class="py-line"> </span>
+<span class="lineno">155</span>  <span class="py-line"><a class="py-name" href="cells-module.html#reset">reset</a><span class="py-op">(</span><span class="py-op">)</span> </span>
+<span class="lineno">156</span>  <span class="py-line"> </span><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:06 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

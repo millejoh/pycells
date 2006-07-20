@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;cells
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PACKAGE DESCRIPTION ==================== -->
+<h2 class="package">Package cells
+<br/><span class="codelink"><a href="cells-pysrc.html">source&nbsp;code</a></span></h2>
+<p>PyCells</p>
+  PyCells is a port of Ken Tilton's Cells extenstion to Common Lisp. 
+  Cells are objects which automatically discover the cells which call them,
+  and notify those cells of changes.<br /><br />
+
+<!-- ==================== SUBMODULES ==================== -->
+<a name="section-Submodules"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Submodules</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Submodules"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr><td><ul>
+    <li> <strong class="uidlink"><a href="cells.cell-module.html">cells.cell</a></strong>: <em class="summary">Cell</em></li>
+    <li> <strong class="uidlink"><a href="cells.cellattr-module.html">cells.cellattr</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.family-module.html">cells.family</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.model-module.html">cells.model</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.observer-module.html">cells.observer</a></strong></li>
+    <li> <strong class="uidlink"><a href="cells.synapse-module.html">cells.synapse</a></strong></li>
+  </ul></td></tr>
+</table>
+
+<br />
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Functions</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells-module.html#makecell" class="sig-name">makecell</a>(<span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+    <br />Creates a new cell attribute in a <a 
+      href="cells.model.Model-class.html" class="link">Model</a>.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells-module.html#fun2cell" class="sig-name">fun2cell</a>(<span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+    <br />By default, creates a new RuleCell using the decorated function as
+      the <code>rule</code> parameter.
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells-module.html#_debug" class="sig-name">_debug</a>()</span>
+    <br />Prints debug messages.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells-module.html#reset" class="sig-name">reset</a>()</span>
+    <br />Resets all of PyCells' globals back to their on-package-import 
+      values.
+  </td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells-module.html#DEBUG">DEBUG</a></strong></td>
+  <td>Turns on debugging messages for *all* submodules.</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_DECO_OFFSET">_DECO_OFFSET</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_dp">_dp</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_curr">_curr</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_curr_propogator">_curr_propogator</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_queued_updates">_queued_updates</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells-module.html#_deferred_sets">_deferred_sets</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Function Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="makecell"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">makecell</span>(<span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells-pysrc.html#makecell">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Creates a new cell attribute in a <a 
+  href="cells.model.Model-class.html" class="link">Model</a>. This 
+  attribute may be accessed as one would access a non-cell attribute, and 
+  autovivifies itself in the instance upon first access (in <a 
+  href="cells.model.Model-class.html#__init__" 
+  class="link">Model.__init__</a>).
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>rule</code></strong> - Define a rule which backs this cell. You must only define one 
+          of <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates a <a 
+          href="cells.cell.RuleCell-class.html" class="link">RuleCell</a>.
+          This must be passed a callable with the signature <code>f(self, 
+          prev) -&gt; value</code>, where <code>self</code> is the model 
+          instance the cell is in and <code>prev</code> is the cell's 
+          out-of-date value.</li>
+        <li><strong class="pname"><code>value</code></strong> - Define a value for this cell. You must only define one of 
+          <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates an <a 
+          href="cells.cell.InputCell-class.html" 
+          class="link">InputCell</a>.</li>
+        <li><strong class="pname"><code>unchanged_if</code></strong> - Sets a function to determine if a cell's value has changed. 
+          For example,
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=1,
+<span class="py-prompt">... </span>                       unchanged_if=<span class="py-keyword">lambda</span> n,o: abs(n - o) &gt; 5)
+<span class="py-prompt">... </span>    y = cells.makecell(rule=<span class="py-keyword">lambda</span> s,p: s.x * 2)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">1</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">2</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 3
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 90
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">6</span></pre>
+          The signature for the passed function is <code>f(old, new) 
+          -&gt; bool</code>.</li>
+        <li><strong class="pname"><code>celltype</code></strong> - Set the cell type to generate. You must pass <code>rule</code>
+          or <code>value</code> correctly. Refer to <a 
+          href="cells.cell-module.html" class="link">cells.cell</a> for 
+          available types.</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+CellAttr
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="fun2cell"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">fun2cell</span>(<span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells-pysrc.html#fun2cell">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  By default, creates a new RuleCell using the decorated function as the
+  <code>rule</code> parameter.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>unchanged_if</code></strong> - Sets a function to determine if a cell's value has changed. 
+          For example,
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=1,
+<span class="py-prompt">... </span>                       unchanged_if=<span class="py-keyword">lambda</span> n,o: abs(n - o) &gt; 5)
+<span class="py-prompt">... </span>    y = cells.makecell(rule=<span class="py-keyword">lambda</span> s,p: s.x * 2)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">1</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">2</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 3
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 90
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.y</span>
+<span class="py-output">6</span></pre>
+          The signature for the passed function is <code>f(old, new) 
+          -&gt; bool</code>.</li>
+        <li><strong class="pname"><code>celltype</code></strong> - Set the cell type to generate. You must pass <code>rule</code>
+          or <code>value</code> correctly. Refer to <a 
+          href="cells.cell-module.html" class="link">cells.cell</a> for 
+          available types.</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+decorator
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_debug"></a>
+<div class="private">
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">_debug</span>()</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells-pysrc.html#_debug">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Prints debug messages.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="reset"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">reset</span>()</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells-pysrc.html#reset">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Resets all of PyCells' globals back to their on-package-import values.
+  This is a pretty dangerous thing to do if you care about the 
+  currently-instantiated cells' values, but quite useful while fooling 
+  around in an ipython session.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Variables Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="DEBUG"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>DEBUG</h3>
+  Turns on debugging messages for *all* submodules. This is a whole lot 
+  of text, so you'll probably want to use the submodules' 
+  <code>DEBUG</code> flags instead
+  <dl><dt></dt><dd>
+    <dl title="False"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+False                                                                  
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_DECO_OFFSET"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_DECO_OFFSET</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="9"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_dp"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_dp</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="1"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_curr"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_curr</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="None"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_curr_propogator"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_curr_propogator</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="None"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_queued_updates"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_queued_updates</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="[]"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+[]                                                                     
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_deferred_sets"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_deferred_sets</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="[]"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+[]                                                                     
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:00 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

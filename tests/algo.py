@@ -75,9 +75,9 @@ class AlgoTests_Rule1(unittest.TestCase):
         
     def testA_SettingAdvancesGlobalDP(self):
         """Rule 1 part a: A cell being set advances the global DP"""
-        prev_dp = cells.dp
+        prev_dp = cells._dp
         self.x.set(42)
-        self.failUnless(prev_dp + 1 == cells.dp)
+        self.failUnless(prev_dp + 1 == cells._dp)
 
     def testB_SettingChangesValue(self):
         """Rule 1 part b: A cell being set changes its value"""
@@ -88,7 +88,7 @@ class AlgoTests_Rule1(unittest.TestCase):
         """Rule 1 part c: A cell being set advances its DP to the global DP
         """
         self.x.set(42)
-        self.failUnless(self.x.dp == cells.dp)
+        self.failUnless(self.x.dp == cells._dp)
 
 class AlgoTests_Rule2(unittest.TestCase):
     """2. If a cell's value changes, it must tell all cells which call it to
@@ -143,9 +143,9 @@ class AlgoTests_Rule3(unittest.TestCase):
         b_prev = self.b.get()           # b is current
         self.a.get()                    # initialize deps on b and x
         
-        cells.dp += 1                   # advance DP
+        cells._dp += 1                   # advance DP
         self.a.get()                    # no dependencies are out-of-date, so
-        self.failUnless(self.a.dp == cells.dp) # its DP count == global DP count
+        self.failUnless(self.a.dp == cells._dp) # its DP count = global DP count
 
     def testB_CalledCellQueriesCalled(self):
         """Rule 3 part b: A cell B which is called by a cell A which
@@ -158,7 +158,7 @@ class AlgoTests_Rule3(unittest.TestCase):
         # was up to date
         self.a.get()               # links set up, b initialized to 42
         self.x.set(2)                   # a out of date, recalculates
-        self.failUnless(self.b.dp == cells.dp) # b up-to-date
+        self.failUnless(self.b.dp == cells._dp) # b up-to-date
         self.failUnless(self.b.value == 42) # but it did not recalculate
 
     def testC_QueriedCellRecalculates(self):
@@ -176,10 +176,10 @@ class AlgoTests_Rule3(unittest.TestCase):
         self.x.add_called_by(self.a, self.b) # .. and x
         
         # run a fake x.set(3) in the desired order:
-        cells.dp += 1                 #  \
-        self.x.value = 3              #   } TODO: verify everything's done here
-        self.x.changed_dp = cells.dp  #  /
-        self.x.dp = cells.dp          # /
+        cells._dp += 1                 #  \
+        self.x.value = 3               #   } TODO: verify everything's done here
+        self.x.changed_dp = cells._dp  #  /
+        self.x.dp = cells._dp          # /
         self.a.update()               # causes b.update() to run
         self.failUnless(self.b.value == 6) # which causes b's rule to run
         self.x.changed = False

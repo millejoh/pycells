@@ -95,9 +95,9 @@ class FamilyTest(unittest.TestCase):
         kidB = f.kids[1]
 
         self.failUnless(kidA.next_sib() is kidB)
-        self.failUnless(kidB.next_sib() is None)
+        self.failUnlessRaises(cells.FamilyTraversalError, kidB.next_sib)
 
-        self.failUnless(kidA.previous_sib() is None)
+        self.failUnlessRaises(cells.FamilyTraversalError, kidA.previous_sib)
         self.failUnless(kidB.previous_sib() is kidA)
 
     def test_PositionMethod(self):

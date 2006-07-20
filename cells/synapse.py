@@ -1,14 +1,14 @@
-import cells
+import cells, cell
 
 DEBUG = False
 
 def debug(*msgs):
     msgs = list(msgs)
-    msgs.insert(0, "synapse".rjust(cells.DECO_OFFSET) + " > ")
+    msgs.insert(0, "synapse".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(msgs)
 
-class Synapse(cells.Cell):
+class Synapse(cell.Cell):
     initialized = False
     
     def __new__(cls, owner, name=None, **kwargs):
@@ -17,7 +17,7 @@ class Synapse(cells.Cell):
         if not owner.synapse_space.has_key(name): # and if there isn't
             # make one in the owner
             debug("building new synapse '" + name + "' in", str(owner))
-            owner.synapse_space[name] = cells.Cell.__new__(cls, owner,
+            owner.synapse_space[name] = cell.Cell.__new__(cls, owner,
                                                            name=name, **kwargs)
 
         # finally, return the owner's synapse
@@ -29,7 +29,7 @@ class Synapse(cells.Cell):
         # it's been initialized, though. so:
         if not self.initialized:
             debug("(re)initializing", name)
-            cells.Cell.__init__(self, owner, name=name, **kwargs)
+            cell.Cell.__init__(self, owner, name=name, **kwargs)
             self.initialized = True
         
     def __call__(self):
@@ -38,8 +38,8 @@ class Synapse(cells.Cell):
     def run(self):
         debug(self.name, "running")
         # call stack manipulation
-        oldcurr = cells.curr
-        cells.curr = self
+        oldcurr = cells._curr
+        cells._curr = self
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
@@ -48,12 +48,12 @@ class Synapse(cells.Cell):
             cell.remove_cb(self)
         self.reset_calls()
 
-        self.dp = cells.dp                             # we're up-to-date
+        self.dp = cells._dp                             # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         
         # restore old running cell
-        cells.curr = oldcurr
+        cells._curr = oldcurr
 
         # return changed status
         if self.unchanged_if(self.value, newvalue):

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Trees</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">&nbsp;</td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="trees.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE HIERARCHY ==================== -->
+<h2>Module Hierarchy</h2>
+<ul>
+    <li> <strong class="uidlink"><a href="cells-module.html">cells</a></strong>: <em class="summary">PyCells</em></li>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.cell-module.html">cells.cell</a></strong>: <em class="summary">Cell</em></li>
+    <li> <strong class="uidlink"><a href="cells.cellattr-module.html">cells.cellattr</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.family-module.html">cells.family</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.model-module.html">cells.model</a></strong>: <em class="summary">&nbsp;</em></li>
+    <li> <strong class="uidlink"><a href="cells.observer-module.html">cells.observer</a></strong></li>
+    <li> <strong class="uidlink"><a href="cells.synapse-module.html">cells.synapse</a></strong></li>
+    </ul>
+    </li>
+</ul>
+<!-- ==================== CLASS HIERARCHY ==================== -->
+<h2>Class Hierarchy</h2>
+<ul>
+    <li> <strong class="uidlink">exceptions.Exception</strong>:
+      <em class="summary">Common base class for all exceptions.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.family.FamilyTraversalError-class.html">cells.family.FamilyTraversalError</a></strong>:
+      <em class="summary">Raised when there's some sort of error in <code><a 
+        href="cells.family.Family-class.html" 
+        class="link">Family</a></code>'s traversal methods.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell._CellException-class.html">cells.cell._CellException</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.cell.EphemeralCellUnboundError-class.html">cells.cell.EphemeralCellUnboundError</a></strong>:
+      <em class="summary">An EphemeralCell was <code><code 
+        class="link">get</code></code>ted without being bound.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.InputCellRunError-class.html">cells.cell.InputCellRunError</a></strong>:
+      <em class="summary">An attempt to <code><code class="link">run</code>()</code> an 
+        InputCell was made.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.SetDuringNotificationError-class.html">cells.cell.SetDuringNotificationError</a></strong>:
+      <em class="summary">An attempt at a non-deferred <code><code 
+        class="link">set</code>()</code> happened during propogation.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleAndValueInitError-class.html">cells.cell.RuleAndValueInitError</a></strong>:
+      <em class="summary">Both <code>rule</code> and <code>value</code> were passed to 
+        <code><a href="cells.cell._CellException-class.html#__init__" 
+        class="link">__init__</a></code>.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
+      <em class="summary">RuleCells may not be set.</em>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink">object</strong>:
+      <em class="summary">The most base type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.observer.Observer-class.html">cells.observer.Observer</a></strong>:
+      <em class="summary">Watch.</em>
+    </li>
+    <li> <strong class="uidlink">type</strong>:
+      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
+        -&gt; a new type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink">cells.cell.Cell</strong>:
+      <em class="summary">The base Cell class.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleCell-class.html">cells.cell.RuleCell</a></strong>:
+      <em class="summary">A cell whose value is determined by a function (a rule).</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.cell.LazyCell-class.html">cells.cell.LazyCell</a></strong>:
+      <em class="summary">A RuleCell which does not update upon propogation.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.cell.AlwaysLazyCell-class.html">cells.cell.AlwaysLazyCell</a></strong>:
+      <em class="summary">A LazyCell variant that is *always* Lazy</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.OnceAskedLazyCell-class.html">cells.cell.OnceAskedLazyCell</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.UntilAskedLazyCell-class.html">cells.cell.UntilAskedLazyCell</a></strong>:
+      <em class="summary">A LazyCell who converts to a normal RuleCell after its first 
+        post-init <code><a 
+        href="cells.cell.UntilAskedLazyCell-class.html#get" 
+        class="link">get</a>()</code></em>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.InputCell-class.html">cells.cell.InputCell</a></strong>:
+      <em class="summary">A cell whose value can be set</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.synapse.Synapse-class.html">cells.synapse.Synapse</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.synapse.ChangeSynapse-class.html">cells.synapse.ChangeSynapse</a></strong>:
+      <em class="summary">A very simple filter.</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
+      <em class="summary">Runs the rule to determine initial value, then acts like a 
+        InputCell</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.model.Model-class.html">cells.model.Model</a></strong>:
+      <em class="summary">A class in which CellAttrs may be used.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.family.Family-class.html">cells.family.Family</a></strong>:
+      <em class="summary">Family</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
+      <em class="summary">CellAttr</em>
+    </li>
+    </ul>
+    </li>
+</ul>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navselect"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:23:59 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

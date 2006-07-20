@@ -5,7 +5,7 @@ DEBUG = False
 
 def debug(*msgs):
     msgs = list(msgs)
-    msgs.insert(0, "observer".rjust(cells.DECO_OFFSET) + " > ")
+    msgs.insert(0, "observer".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(msgs)
 
@@ -38,7 +38,7 @@ class Observer(object):
 
     def run_if_applicable(self, model, attr):
         debug("running observer", self.func.__name__)
-        if self.last_ran == cells.dp:   # never run twice in one DP
+        if self.last_ran == cells._dp:   # never run twice in one DP
             debug(self.func.__name__, "already ran in this dp")
             return
         
@@ -76,4 +76,4 @@ class Observer(object):
         # if we're here, it passed all the tests, so
         debug(self.func.__name__, "running")
         self.func(model)
-        self.last_ran = cells.dp
+        self.last_ran = cells._dp

@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells.family.Family</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="cells-module.html">Package&nbsp;cells</a> ::
+        <a href="cells.family-module.html">Module&nbsp;family</a> ::
+        Class&nbsp;Family
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells.family.Family-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h2 class="class">Class Family
+<br/><span class="codelink"><a href="cells.family-pysrc.html#Family">source&nbsp;code</a></span></h2>
+<pre class="base-tree">
+ object --+    
+          |    
+<a href="cells.model.Model-class.html">model.Model</a> --+
+              |
+             <strong class="uidshort">Family</strong>
+</pre>
+
+<hr />
+<p>Family</p>
+  A specialized <code><a href="cells.model.Model-class.html" 
+  class="link">Model</a></code> which has <code>kids</code>, 
+  <code>kid_slots</code>, and a number of convenience functions for 
+  traversing the parent/child graph.<br /><br />
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Nested Classes</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
+      <code><a href="cells.model.ModelMetatype-class.html">__metaclass__</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Methods</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#kid_instance" class="sig-name">kid_instance</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>)</span>
+    <br />Creates a new instance of a Cell based on the passed class (in 
+      <code>klass</code>) and the overrides defined in 
+      <code>kid_slots</code>.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#make_kid" class="sig-name">make_kid</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>)</span>
+    <br />Adds a new instance of a Cell based on the passed class (in 
+      <code>klass</code>) and the overrides defined in 
+      <code>kid_slots</code> into the <code>kids</code> list
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#add_kid" class="sig-name">add_kid</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">kid</span>)</span>
+    <br />Inserts the kid into this Family's <code>kids</code> list
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#position" class="sig-name">position</a>(<span class="sig-arg">self</span>)</span>
+    <br />Returns this instance's position in the enclosing Family's 
+      <code>kids</code> list.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#previous_sib" class="sig-name">previous_sib</a>(<span class="sig-arg">self</span>)</span>
+    <br />Returns the Model previous to this Model in the enclosing Family's
+      <code>kids</code> list
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#next_sib" class="sig-name">next_sib</a>(<span class="sig-arg">self</span>)</span>
+    <br />Returns the Model subsequent to this Model in the enclosing 
+      Family's <code>kids</code> list
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.family.Family-class.html#grandparent" class="sig-name">grandparent</a>(<span class="sig-arg">self</span>)</span>
+    <br />Returns enclosing Family instance's enclosing Family instance, or 
+      None if no such object exists.
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
+      <code><a href="cells.model.Model-class.html#__setattr__">__setattr__</a></code>
+      </p>
+    <div class="private">    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span> (private):
+      <code><a href="cells.model.Model-class.html#_buildcell">_buildcell</a></code>,
+      <code><a href="cells.model.Model-class.html#_run_observers">_run_observers</a></code>
+      </p></div>
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS METHODS ==================== -->
+<a name="section-ClassMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Class Methods</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
+      <code><a href="cells.model.Model-class.html#observer">observer</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Class Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%">
+    <strong><a href="cells.family.Family-class.html#_noncells">_noncells</a></strong></td>
+  <td>&nbsp;</td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
+      <code><a href="cells.model.Model-class.html#model_name">model_name</a></code>,
+      <code><a href="cells.model.Model-class.html#model_value">model_value</a></code>,
+      <code><a href="cells.model.Model-class.html#parent">parent</a></code>
+      </p>
+    <div class="private">    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span> (private):
+      <code><a href="cells.model.Model-class.html#_initialized">_initialized</a></code>,
+      <code><a href="cells.model.Model-class.html#_observernames">_observernames</a></code>
+      </p></div>
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.family.Family-class.html#kids">kids</a></strong></td>
+  <td>A list of Models which are guaranteed to have the attribute 
+      overrides defined in <code>kid_slots</code></td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.family.Family-class.html#kid_slots">kid_slots</a></strong></td>
+  <td>An override definition for the Cells inserted into the 
+      <code>kids</code> list.</td>
+</tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Method Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.__init__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      <a href="cells.model.Model-class.html#__init__">model.Model.__init__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="kid_instance"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">kid_instance</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.kid_instance">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Creates a new instance of a Cell based on the passed class (in 
+  <code>klass</code>) and the overrides defined in 
+  <code>kid_slots</code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>klass</code></strong> - The base type for the new kid instance</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Cell
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="make_kid"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">make_kid</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.make_kid">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Adds a new instance of a Cell based on the passed class (in 
+  <code>klass</code>) and the overrides defined in <code>kid_slots</code> 
+  into the <code>kids</code> list
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>klass</code></strong> - the base type for the new kid instance</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="add_kid"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">add_kid</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">kid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.add_kid">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Inserts the kid into this Family's <code>kids</code> list
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>kid</code></strong> - the Model instance to insert</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="position"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">position</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.position">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Returns this instance's position in the enclosing Family's 
+  <code>kids</code> list. Returns -1 if there is no enclosing Family.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+int
+
+</pre></dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul>
+        <li><code><strong class='fraise'>FamilyTraversalError</strong></code> - Raises if there is no enclosing Family</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="previous_sib"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">previous_sib</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.previous_sib">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Returns the Model previous to this Model in the enclosing Family's 
+  <code>kids</code> list
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Model
+
+</pre></dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul>
+        <li><code><strong class='fraise'>FamilyTraversalError</strong></code> - Raises if there is no enclosing Family</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="next_sib"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">next_sib</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.next_sib">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Returns the Model subsequent to this Model in the enclosing Family's 
+  <code>kids</code> list
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Model
+
+</pre></dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul>
+        <li><code><strong class='fraise'>FamilyTraversalError</strong></code> - Raises if there is no enclosing Family</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="grandparent"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">grandparent</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family.grandparent">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Returns enclosing Family instance's enclosing Family instance, or None
+  if no such object exists.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Model
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Class Variable Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="_noncells"></a>
+<div class="private">
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>_noncells</h3>
+  
+  <dl><dt></dt><dd>
+    <dl title="set(['__module__', 'position', '__metaclass__', 'observer', 'grandparent', '_initialized', '__setattr__', 'add_kid', 'make_kid', 'previous_sib', 'kid_instance', '_buildcell', '_run_observers', 'next_sib', '__doc__', '__init__'])"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+set(['__module__', 'position', '__metaclass__', 'observer', 'grandpare<span class="variable-linewrap">\</span>
+nt', '_initialized', '__setattr__', 'add_kid', 'make_kid', 'previous_s<span class="variable-linewrap">\</span>
+ib', 'kid_instance', '_buildcell', '_run_observers', 'next_sib', '__do<span class="variable-linewrap">\</span>
+c__', '__init__'])                                                     
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Instance Variable Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="kids"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>kids</h3>
+  A list of Models which are guaranteed to have the attribute overrides 
+  defined in <code>kid_slots</code>
+  <dl><dt></dt><dd>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x4081f0&gt;"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+&lt;cells.cellattr.CellAttr object at 0x4081f0&gt;                           
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="kid_slots"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>kid_slots</h3>
+  An override definition for the Cells inserted into the 
+  <code>kids</code> list. The attributes overridden are every attribute 
+  defined in the class in <code>kid_slots</code> minus the attributes 
+  defined in every Model.
+  <dl><dt></dt><dd>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x408230&gt;"><dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+&lt;cells.cellattr.CellAttr object at 0x408230&gt;                           
+      </pre></td></tr></table></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -1,3 +1,7 @@
+"""
+@var DEBUG: Turns on debugging messages for the model module.
+"""
+
 import cells
 from cell import Cell, EphemeralCellUnboundError
 from cellattr import CellAttr
@@ -6,8 +10,13 @@ from observer import Observer, ObserverAttr
 DEBUG = False
 
 def debug(*msgs):
+    """
+    debug() -> None
+
+    Prints debug messages.
+    """
     msgs = list(msgs)
-    msgs.insert(0, "model".rjust(cells.DECO_OFFSET) + " > ")
+    msgs.insert(0, "model".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(( str(msg) for msg in msgs))
 
@@ -42,14 +51,18 @@ class ModelMetatype(type):
                 
                       
 class Model(object):
-    # default cells for Model, currently partially hidden
-    _model_name = cells.makecell(value=None)
-    _model_value = cells.makecell(value=None)
-    _parent = cells.makecell(value=None)
-
+    """
+    A class in which CellAttrs may be used. Models automatically bring
+    their cells up-to-date at C{L{__init__}}-time.
+    """
     __metaclass__ = ModelMetatype
 
     _initialized = False
+
+    # default cells for Model, currently partially hidden
+    model_name = cells.makecell(value=None, kid_overrides=False)
+    model_value = cells.makecell(value=None, kid_overrides=False)
+    parent = cells.makecell(value=None, kid_overrides=False)
 
     def __init__(self, *args, **kwargs):
         # initialize cells based on kwargs
@@ -93,18 +106,6 @@ class Model(object):
 
         # and now we're initialized. lock the object down.
         self._initialized = True
-
-    def __getattr__(self, key):
-        # shortstop the default cells
-        if key in ("model_name", "model_value", "parent"):
-            # and if they don't exist in this object
-            if key not in dir(self):
-                # copy the default over
-                debug("copying default", key, "into this Model")
-                object.__setattr__(self, key,
-                                   object.__getattribute__(self, "_" + key))
-
-        return object.__getattribute__(self, key)
 
     def __setattr__(self, key, value):
          # always set Cells

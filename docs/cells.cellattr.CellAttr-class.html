@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells.cellattr.CellAttr</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="cells-module.html">Package&nbsp;cells</a> ::
+        <a href="cells.cellattr-module.html">Module&nbsp;cellattr</a> ::
+        Class&nbsp;CellAttr
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells.cellattr.CellAttr-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h2 class="class">Class CellAttr
+<br/><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr">source&nbsp;code</a></span></h2>
+<pre class="base-tree">
+object --+
+         |
+        <strong class="uidshort">CellAttr</strong>
+</pre>
+
+<hr />
+<p>CellAttr</p>
+  A descriptor which auto-vivifies a new Cell in each instance of a 
+  Model, and which does the hiding of <code>Cell.<code 
+  class="link">get</code>()</code> and <code>Cell.<code 
+  class="link">set</code>()</code>.<br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Methods</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cellattr.CellAttr-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+    <br />Sets the parameters which will be used as defaults to build a Cell
+      when the time comes.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cellattr.CellAttr-class.html#__set__" class="sig-name">__set__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">value</span>)</span>
+    <br />Runs <code><code class="link">set</code>(value)</code> on the Cell
+      in <code>owner</code>.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cellattr.CellAttr-class.html#__get__" class="sig-name">__get__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">ownertype</span>)</span>
+    <br />Runs <code><code class="link">get</code>()</code> on the Cell in 
+      <code>owner</code>, if <code>owner</code> is passed.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cellattr.CellAttr-class.html#getcell" class="sig-name">getcell</a>(<span class="sig-arg">owner</span>)</span>
+    <br />Return the instance of this CellAttr's Cell in 
+      <code>owner</code>.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cellattr.CellAttr-class.html#buildcell" class="sig-name">buildcell</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>)</span>
+    <br />Builds an instance of a Cell into <code>owner</code>.
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Class Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Method Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr.__init__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Sets the parameters which will be used as defaults to build a Cell 
+  when the time comes.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>rule</code></strong> - Define a rule which backs this cell. You must only define one 
+          of <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates a <a 
+          href="cells.cell.RuleCell-class.html" class="link">RuleCell</a>.
+          This must be passed a callable with the signature <code>f(self, 
+          prev) -&gt; value</code>, where <code>self</code> is the model 
+          instance the cell is in and <code>prev</code> is the cell's 
+          out-of-date value.</li>
+        <li><strong class="pname"><code>value</code></strong> - Define a value for this cell. You must only define one of 
+          <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates an <a 
+          href="cells.cell.InputCell-class.html" 
+          class="link">InputCell</a>.</li>
+        <li><strong class="pname"><code>unchanged_if</code></strong> - Sets a function to determine if a cell's value has changed. 
+          The signature for the passed function is <code>f(old, new) -&gt; 
+          bool</code>.</li>
+        <li><strong class="pname"><code>celltype</code></strong> - Set the cell type to generate. You must pass <code>rule</code>
+          or <code>value</code> correctly. Refer to <a 
+          href="cells.cell-module.html" class="link">cells.cell</a> for 
+          available types.</li>
+    </ul>
+    <dl><dt>Overrides:
+      object.__init__
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__set__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__set__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">value</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr.__set__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Runs <code><code class="link">set</code>(value)</code> on the Cell in 
+  <code>owner</code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>owner</code></strong> - The Model instance in which to look for the Cell to run 
+          <code><code class="link">set</code>()</code> on.</li>
+        <li><strong class="pname"><code>value</code></strong> - The value to set</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__get__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__get__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">ownertype</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr.__get__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Runs <code><code class="link">get</code>()</code> on the Cell in 
+  <code>owner</code>, if <code>owner</code> is passed. Otherwise, return 
+  <code>self</code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>owner</code></strong> - The Model instance in which to look for the Cell to run 
+          <code><code class="link">get</code>()</code> on .</li>
+        <li><strong class="pname"><code>ownertype</code></strong> - (unused)</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+value
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="getcell"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">getcell</span>(<span class="sig-arg">owner</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr.getcell">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the instance of this CellAttr's Cell in <code>owner</code>. If 
+  an instance of the CellAttr's Cell doesn't exist in <code>owner</code>, 
+  first insert an instance into <code>owner</code>, then return it. To 
+  build it, first examine the <code>owner</code> for runtime overrides of 
+  this cell, and use those (if they exist) as parameters to <code><a 
+  href="cells.cellattr.CellAttr-class.html#buildcell" 
+  class="link">buildcell</a></code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>owner</code></strong> - The Model instance in which to look for the Cell.</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Cell
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="buildcell"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">buildcell</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cellattr-pysrc.html#CellAttr.buildcell">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Builds an instance of a Cell into <code>owner</code>. Will 
+  automatically create the right type of Cell given the keyword arguments 
+  if <code>celltype</code> is not passed
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>owner</code></strong> - The Model instance in which to build the Cell.</li>
+        <li><strong class="pname"><code>rule</code></strong> - Define a rule which backs this cell. You must only define one 
+          of <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates a <a 
+          href="cells.cell.RuleCell-class.html" class="link">RuleCell</a>.
+          This must be passed a callable with the signature <code>f(self, 
+          prev) -&gt; value</code>, where <code>self</code> is the model 
+          instance the cell is in and <code>prev</code> is the cell's 
+          out-of-date value.</li>
+        <li><strong class="pname"><code>value</code></strong> - Define a value for this cell. You must only define one of 
+          <code>rule</code> or <code>value</code>. Lacking 
+          <code>celltype</code>, this creates an <a 
+          href="cells.cell.InputCell-class.html" 
+          class="link">InputCell</a>.</li>
+        <li><strong class="pname"><code>unchanged_if</code></strong> - Sets a function to determine if a cell's value has changed. 
+          The signature for the passed function is <code>f(old, new) -&gt; 
+          bool</code>.</li>
+        <li><strong class="pname"><code>celltype</code></strong> - Set the cell type to generate. You must pass <code>rule</code>
+          or <code>value</code> correctly. Refer to <a 
+          href="cells.cell-module.html" class="link">cells.cell</a> for 
+          available types.</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+Cell
+
+</pre></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells.family</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="cells-module.html">Package&nbsp;cells</a> ::
+        Module&nbsp;family
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells.family-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h2 class="py-src">Source Code for <a href="cells.family-module.html">Module cells.family</a></h2>
+<div class="py-src">
+<pre class="py-src">
+<span class="lineno">  1</span>  <span class="py-line"><span class="py-docstring">"""</span> </span>
+<span class="lineno">  2</span>  <span class="py-line"><span class="py-docstring">@var DEBUG: Turns on debugging messages for the cellattr module.</span> </span>
+<span class="lineno">  3</span>  <span class="py-line"><span class="py-docstring">"""</span> </span>
+<span class="lineno">  4</span>  <span class="py-line"> </span>
+<span class="lineno">  5</span>  <span class="py-line"><a class="py-name" href="cells.family-module.html#DEBUG">DEBUG</a> <span class="py-op">=</span> <span class="py-name">False</span> </span>
+<span class="lineno">  6</span>  <span class="py-line"> </span>
+<span class="lineno">  7</span>  <span class="py-line"><span class="py-keyword">import</span> <a class="py-name" href="cells-module.html">cells</a> </span>
+<span class="lineno">  8</span>  <span class="py-line"><span class="py-keyword">from</span> <a title="cells.model" class="py-name" href="cells.model-module.html">model</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.model.Model-class.html">Model</a><span class="py-op">,</span> <a class="py-name" href="cells.model.ModelMetatype-class.html">ModelMetatype</a> </span>
+<span class="lineno">  9</span>  <span class="py-line"><span class="py-keyword">from</span> <a title="cells.cellattr" class="py-name" href="cells.cellattr-module.html">cellattr</a> <span class="py-keyword">import</span> <a class="py-name" href="cells.cellattr.CellAttr-class.html">CellAttr</a> </span>
+<span class="lineno"> 10</span>  <span class="py-line"> </span>
+<a name="debug"></a><div id="debug-def"><span class="lineno"> 11</span> <a class="pysrc-toggle" href="#" id="debug-toggle" onclick="toggle('debug'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells.family-module.html#debug">debug</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-param">msgs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="debug-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="debug-expanded"><span class="lineno"> 12</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 13</span>  <span class="py-line"><span class="py-docstring">    debug() -&gt; None</span> </span>
+<span class="lineno"> 14</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 15</span>  <span class="py-line"><span class="py-docstring">    Prints debug messages.</span> </span>
+<span class="lineno"> 16</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<span class="lineno"> 17</span>  <span class="py-line">    <span class="py-name">msgs</span> <span class="py-op">=</span> <span class="py-name">list</span><span class="py-op">(</span><span class="py-name">msgs</span><span class="py-op">)</span> </span>
+<span class="lineno"> 18</span>  <span class="py-line">    <span class="py-name">msgs</span><span class="py-op">.</span><span class="py-name">insert</span><span class="py-op">(</span><span class="py-number">0</span><span class="py-op">,</span> <span class="py-string">"family"</span><span class="py-op">.</span><span class="py-name">rjust</span><span class="py-op">(</span><a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells._DECO_OFFSET" class="py-name" href="cells-module.html#_DECO_OFFSET">_DECO_OFFSET</a><span class="py-op">)</span> <span class="py-op">+</span> <span class="py-string">" &gt; "</span><span class="py-op">)</span> </span>
+<span class="lineno"> 19</span>  <span class="py-line">    <span class="py-keyword">if</span> <span id="link-0" class="py-name"><a title="cells.DEBUG
+cells.cell.DEBUG
+cells.cellattr.DEBUG
+cells.family.DEBUG
+cells.model.DEBUG
+cells.observer.DEBUG
+cells.synapse.DEBUG" class="py-name" href="#" onclick="doclink('link-0', 'DEBUG', 'Variable DEBUG=cells-module.html#DEBUG,Variable cell.DEBUG=cells.cell-module.html#DEBUG,Variable cellattr.DEBUG=cells.cellattr-module.html#DEBUG,Variable DEBUG=cells.family-module.html#DEBUG,Variable model.DEBUG=cells.model-module.html#DEBUG,Variable observer.DEBUG=cells.observer-module.html#DEBUG,Variable synapse.DEBUG=cells.synapse-module.html#DEBUG'); return false;">DEBUG</a></span></span> <span class="py-keyword">or</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><span id="link-1" class="py-name"><a title="cells.DEBUG
+cells.cell.DEBUG
+cells.cellattr.DEBUG
+cells.family.DEBUG
+cells.model.DEBUG
+cells.observer.DEBUG
+cells.synapse.DEBUG" class="py-name" href="#" onclick="doclink('link-1', 'DEBUG', 'Variable DEBUG=cells-module.html#DEBUG,Variable cell.DEBUG=cells.cell-module.html#DEBUG,Variable cellattr.DEBUG=cells.cellattr-module.html#DEBUG,Variable DEBUG=cells.family-module.html#DEBUG,Variable model.DEBUG=cells.model-module.html#DEBUG,Variable observer.DEBUG=cells.observer-module.html#DEBUG,Variable synapse.DEBUG=cells.synapse-module.html#DEBUG'); return false;">DEBUG</a></span></span><span class="py-op">:</span> </span>
+<span class="lineno"> 20</span>  <span class="py-line">        <span class="py-keyword">print</span> <span class="py-string">" "</span><span class="py-op">.</span><span class="py-name">join</span><span class="py-op">(</span><span class="py-name">msgs</span><span class="py-op">)</span> </span>
+</div><span class="lineno"> 21</span>  <span class="py-line"> </span>
+<a name="Family"></a><div id="Family-def"><span class="lineno"> 22</span> <a class="pysrc-toggle" href="#" id="Family-toggle" onclick="toggle('Family'); return false;">-</a><span class="py-line"><span class="py-keyword">class</span> <a class="py-def-name" href="cells.family.Family-class.html">Family</a><span class="py-op">(</span><span class="py-base-class">Model</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Family-expanded"><span class="lineno"> 23</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 24</span>  <span class="py-line"><span class="py-docstring">    Family</span> </span>
+<span class="lineno"> 25</span>  <span class="py-line"><span class="py-docstring">    </span> </span>
+<span class="lineno"> 26</span>  <span class="py-line"><span class="py-docstring">    A specialized C{L{Model}} which has C{kids}, C{kid_slots}, and a</span> </span>
+<span class="lineno"> 27</span>  <span class="py-line"><span class="py-docstring">    number of convenience functions for traversing the parent/child</span> </span>
+<span class="lineno"> 28</span>  <span class="py-line"><span class="py-docstring">    graph.</span> </span>
+<span class="lineno"> 29</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 30</span>  <span class="py-line"><span class="py-docstring">    @ivar kids: A list of Models which are guaranteed to have the</span> </span>
+<span class="lineno"> 31</span>  <span class="py-line"><span class="py-docstring">        attribute overrides defined in C{L{kid_slots}}</span> </span>
+<span class="lineno"> 32</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 33</span>  <span class="py-line"><span class="py-docstring">    @ivar kid_slots: An override definition for the Cells inserted</span> </span>
+<span class="lineno"> 34</span>  <span class="py-line"><span class="py-docstring">        into the C{L{kids}} list. The attributes overridden are every</span> </span>
+<span class="lineno"> 35</span>  <span class="py-line"><span class="py-docstring">        attribute defined in the class in C{kid_slots} minus the</span> </span>
+<span class="lineno"> 36</span>  <span class="py-line"><span class="py-docstring">        attributes defined in every Model.</span> </span>
+<span class="lineno"> 37</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<span class="lineno"> 38</span>  <span class="py-line">    <a class="py-name" href="cells.family.Family-class.html#kids">kids</a> <span class="py-op">=</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells.makecell" class="py-name" href="cells-module.html#makecell">makecell</a><span class="py-op">(</span><span class="py-name">value</span><span class="py-op">=</span><span class="py-name">None</span><span class="py-op">,</span> <span class="py-name">kid_overrides</span><span class="py-op">=</span><span class="py-name">False</span><span class="py-op">)</span> </span>
+<span class="lineno"> 39</span>  <span class="py-line">    <a class="py-name" href="cells.family.Family-class.html#kid_slots">kid_slots</a> <span class="py-op">=</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells.makecell" class="py-name" href="cells-module.html#makecell">makecell</a><span class="py-op">(</span><span class="py-name">value</span><span class="py-op">=</span><a title="cells.model.Model" class="py-name" href="cells.model.Model-class.html">Model</a><span class="py-op">,</span> <span class="py-name">kid_overrides</span><span class="py-op">=</span><span class="py-name">False</span><span class="py-op">)</span> </span>
+<span class="lineno"> 40</span>  <span class="py-line"> </span>
+<a name="Family.__init__"></a><div id="Family.__init__-def"><span class="lineno"> 41</span> <a class="pysrc-toggle" href="#" id="Family.__init__-toggle" onclick="toggle('Family.__init__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#__init__">__init__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-op">*</span><span class="py-param">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-param">kwargs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.__init__-expanded"><span class="lineno"> 42</span>  <span class="py-line">        <a title="cells.model.Model" class="py-name" href="cells.model.Model-class.html">Model</a><span class="py-op">.</span><span id="link-2" class="py-name"><a title="cells.cell.InputCell.__init__
+cells.cell.LazyCell.__init__
+cells.cell.RuleCell.__init__
+cells.cell.RuleThenInputCell.__init__
+cells.cell._CellException.__init__
+cells.cellattr.CellAttr.__init__
+cells.family.Family.__init__
+cells.family.FamilyTraversalError.__init__
+cells.model.Model.__init__
+cells.model.ModelMetatype.__init__
+cells.model.NonCellSetError.__init__
+cells.observer.Observer.__init__
+cells.observer.ObserverAttr.__init__
+cells.synapse.ChangeSynapse.__init__
+cells.synapse.Synapse.__init__" class="py-name" href="#" onclick="doclink('link-2', '__init__', 'Method cell.InputCell.__init__()=cells.cell.InputCell-class.html#__init__,Method cell.LazyCell.__init__()=cells.cell.LazyCell-class.html#__init__,Method cell.RuleCell.__init__()=cells.cell.RuleCell-class.html#__init__,Method cell.RuleThenInputCell.__init__()=cells.cell.RuleThenInputCell-class.html#__init__,Method cell._CellException.__init__()=cells.cell._CellException-class.html#__init__,Method cellattr.CellAttr.__init__()=cells.cellattr.CellAttr-class.html#__init__,Method __init__()=cells.family.Family-class.html#__init__,Method FamilyTraversalError.__init__()=cells.family.FamilyTraversalError-class.html#__init__,Method model.Model.__init__()=cells.model.Model-class.html#__init__,Method model.ModelMetatype.__init__()=cells.model.ModelMetatype-class.html#__init__,Class Method model.NonCellSetError.__init__()=cells.model.NonCellSetError-class.html#__init__,Method observer.Observer.__init__()=cells.observer.Observer-class.html#__init__,Method observer.ObserverAttr.__init__()=cells.observer.ObserverAttr-class.html#__init__,Method synapse.ChangeSynapse.__init__()=cells.synapse.ChangeSynapse-class.html#__init__,Method synapse.Synapse.__init__()=cells.synapse.Synapse-class.html#__init__'); return false;">__init__</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">,</span> <span class="py-op">*</span><span class="py-name">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-name">kwargs</span><span class="py-op">)</span> </span>
+<span class="lineno"> 43</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-keyword">not</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">:</span> </span>
+<span class="lineno"> 44</span>  <span class="py-line">            <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+</div><span class="lineno"> 45</span>  <span class="py-line"> </span>
+<a name="Family.kid_instance"></a><div id="Family.kid_instance-def"><span class="lineno"> 46</span> <a class="pysrc-toggle" href="#" id="Family.kid_instance-toggle" onclick="toggle('Family.kid_instance'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#kid_instance">kid_instance</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">klass</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.kid_instance-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.kid_instance-expanded"><span class="lineno"> 47</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 48</span>  <span class="py-line"><span class="py-docstring">        kid_instance(self, klass) -&gt; Cell</span> </span>
+<span class="lineno"> 49</span>  <span class="py-line"><span class="py-docstring">        </span> </span>
+<span class="lineno"> 50</span>  <span class="py-line"><span class="py-docstring">        Creates a new instance of a Cell based on the passed class (in</span> </span>
+<span class="lineno"> 51</span>  <span class="py-line"><span class="py-docstring">        C{klass}) and the overrides defined in C{kid_slots}.</span> </span>
+<span class="lineno"> 52</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 53</span>  <span class="py-line"><span class="py-docstring">        @param klass: The base type for the new kid instance</span> </span>
+<span class="lineno"> 54</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno"> 55</span>  <span class="py-line">        <span id="link-3" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-3', 'debug', 'Function cellattr.debug()=cells.cellattr-module.html#debug,Function debug()=cells.family-module.html#debug,Function model.debug()=cells.model-module.html#debug,Function observer.debug()=cells.observer-module.html#debug,Function synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-string">"making an instance of"</span><span class="py-op">,</span> <span class="py-name">str</span><span class="py-op">(</span><span class="py-name">klass</span><span class="py-op">)</span><span class="py-op">)</span> </span>
+<span class="lineno"> 56</span>  <span class="py-line">        <span class="py-comment"># first, find the attributes the kid_slots attrib actual wants to</span> </span>
+<span class="lineno"> 57</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-comment"># define:</span> </span>
+<span class="lineno"> 58</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-name">override_attrnames</span> <span class="py-op">=</span> <span class="py-op">[</span><span class="py-op">]</span> </span>
+<span class="lineno"> 59</span>  <span class="py-line">        <span class="py-keyword">for</span> <span class="py-name">attrname</span> <span class="py-keyword">in</span> <span class="py-name">dir</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kid_slots" class="py-name" href="cells.family.Family-class.html#kid_slots">kid_slots</a><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno"> 60</span>  <span class="py-line">            <span class="py-name">cvar</span> <span class="py-op">=</span> <span class="py-name">getattr</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kid_slots" class="py-name" href="cells.family.Family-class.html#kid_slots">kid_slots</a><span class="py-op">,</span> <span class="py-name">attrname</span><span class="py-op">)</span> </span>
+<span class="lineno"> 61</span>  <span class="py-line">            <span class="py-comment"># if it's a cell attribute, check to see if it's one of</span> </span>
+<span class="lineno"> 62</span>  <span class="py-line"><span class="py-comment"></span>            <span class="py-comment"># the "special", non-overriding slots (eg kids)</span> </span>
+<span class="lineno"> 63</span>  <span class="py-line"><span class="py-comment"></span>            <span class="py-keyword">if</span> <span class="py-name">isinstance</span><span class="py-op">(</span><span class="py-name">cvar</span><span class="py-op">,</span> <a title="cells.cellattr.CellAttr" class="py-name" href="cells.cellattr.CellAttr-class.html">CellAttr</a><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno"> 64</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-name">cvar</span><span class="py-op">.</span><span class="py-name">kid_overrides</span><span class="py-op">:</span> </span>
+<span class="lineno"> 65</span>  <span class="py-line">                    <span class="py-comment"># and if it isn't, add it to the list of overrides</span> </span>
+<span class="lineno"> 66</span>  <span class="py-line"><span class="py-comment"></span>                    <span class="py-name">override_attrnames</span><span class="py-op">.</span><span class="py-name">append</span><span class="py-op">(</span><span class="py-name">attrname</span><span class="py-op">)</span> </span>
+<span class="lineno"> 67</span>  <span class="py-line">            <span class="py-comment"># if it's a normal attribute, override only if it doesn't</span> </span>
+<span class="lineno"> 68</span>  <span class="py-line"><span class="py-comment"></span>            <span class="py-comment"># exist in the base class</span> </span>
+<span class="lineno"> 69</span>  <span class="py-line"><span class="py-comment"></span>            <span class="py-keyword">else</span><span class="py-op">:</span>                 </span>
+<span class="lineno"> 70</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-name">attrname</span> <span class="py-keyword">not</span> <span class="py-keyword">in</span> <span class="py-name">dir</span><span class="py-op">(</span><a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells.family.Family" class="py-name" href="cells.family.Family-class.html">Family</a><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno"> 71</span>  <span class="py-line">                    <span class="py-name">override_attrnames</span><span class="py-op">.</span><span class="py-name">append</span><span class="py-op">(</span><span class="py-name">attrname</span><span class="py-op">)</span> </span>
+<span class="lineno"> 72</span>  <span class="py-line">                     </span>
+<span class="lineno"> 73</span>  <span class="py-line">        <span class="py-comment"># now, do the overrides, bypassing normal getattrs</span> </span>
+<span class="lineno"> 74</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-keyword">for</span> <span class="py-name">attrib_name</span> <span class="py-keyword">in</span> <span class="py-name">override_attrnames</span><span class="py-op">:</span> </span>
+<span class="lineno"> 75</span>  <span class="py-line">            <span id="link-4" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-4', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-string">"overriding"</span><span class="py-op">,</span> <span class="py-name">attrib_name</span><span class="py-op">,</span> <span class="py-string">"in"</span><span class="py-op">,</span> <span class="py-name">str</span><span class="py-op">(</span><span class="py-name">klass</span><span class="py-op">)</span><span class="py-op">)</span> </span>
+<span class="lineno"> 76</span>  <span class="py-line">            <span class="py-name">setattr</span><span class="py-op">(</span><span class="py-name">klass</span><span class="py-op">,</span> <span class="py-name">attrib_name</span><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kid_slots" class="py-name" href="cells.family.Family-class.html#kid_slots">kid_slots</a><span class="py-op">.</span><span class="py-name">__dict__</span><span class="py-op">[</span><span class="py-name">attrib_name</span><span class="py-op">]</span><span class="py-op">)</span> </span>
+<span class="lineno"> 77</span>  <span class="py-line"> </span>
+<span class="lineno"> 78</span>  <span class="py-line">        <span class="py-comment"># add any observers the kid_slots class defines:</span> </span>
+<span class="lineno"> 79</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-name">klass</span><span class="py-op">.</span><a title="cells.model.Model._observernames" class="py-name" href="cells.model.Model-class.html#_observernames">_observernames</a><span class="py-op">.</span><span class="py-name">update</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kid_slots" class="py-name" href="cells.family.Family-class.html#kid_slots">kid_slots</a><span class="py-op">.</span><a title="cells.model.Model._observernames" class="py-name" href="cells.model.Model-class.html#_observernames">_observernames</a><span class="py-op">)</span> </span>
+<span class="lineno"> 80</span>  <span class="py-line"> </span>
+<span class="lineno"> 81</span>  <span class="py-line">        <span class="py-comment"># XXX: should we memoize all that work here?</span> </span>
+<span class="lineno"> 82</span>  <span class="py-line"><span class="py-comment"></span>         </span>
+<span class="lineno"> 83</span>  <span class="py-line">        <span class="py-comment"># finally, return an instance of that munged class with this obj set</span> </span>
+<span class="lineno"> 84</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-comment"># as its parent:</span> </span>
+<span class="lineno"> 85</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-name">i</span> <span class="py-op">=</span> <span class="py-name">klass</span><span class="py-op">(</span><span class="py-op">)</span> </span>
+<span class="lineno"> 86</span>  <span class="py-line">        <span class="py-name">i</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a> <span class="py-op">=</span> <span class="py-name">self</span> </span>
+<span class="lineno"> 87</span>  <span class="py-line">        <span class="py-keyword">return</span> <span class="py-name">i</span> </span>
+</div><span class="lineno"> 88</span>  <span class="py-line">     </span>
+<a name="Family.make_kid"></a><div id="Family.make_kid-def"><span class="lineno"> 89</span> <a class="pysrc-toggle" href="#" id="Family.make_kid-toggle" onclick="toggle('Family.make_kid'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#make_kid">make_kid</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">klass</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.make_kid-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.make_kid-expanded"><span class="lineno"> 90</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno"> 91</span>  <span class="py-line"><span class="py-docstring">        make_kid(self, klass) -&gt; None</span> </span>
+<span class="lineno"> 92</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 93</span>  <span class="py-line"><span class="py-docstring">        Adds a new instance of a Cell based on the passed class (in</span> </span>
+<span class="lineno"> 94</span>  <span class="py-line"><span class="py-docstring">        C{klass}) and the overrides defined in C{kid_slots} into the</span> </span>
+<span class="lineno"> 95</span>  <span class="py-line"><span class="py-docstring">        C{kids} list</span> </span>
+<span class="lineno"> 96</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno"> 97</span>  <span class="py-line"><span class="py-docstring">        @param klass: the base type for the new kid instance</span> </span>
+<span class="lineno"> 98</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno"> 99</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.add_kid" class="py-name" href="cells.family.Family-class.html#add_kid">add_kid</a><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kid_instance" class="py-name" href="cells.family.Family-class.html#kid_instance">kid_instance</a><span class="py-op">(</span><span class="py-name">klass</span><span class="py-op">)</span><span class="py-op">)</span> </span>
+</div><span class="lineno">100</span>  <span class="py-line"> </span>
+<a name="Family.add_kid"></a><div id="Family.add_kid-def"><span class="lineno">101</span> <a class="pysrc-toggle" href="#" id="Family.add_kid-toggle" onclick="toggle('Family.add_kid'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#add_kid">add_kid</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">kid</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.add_kid-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.add_kid-expanded"><span class="lineno">102</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno">103</span>  <span class="py-line"><span class="py-docstring">        add_kid(self, kid) -&gt; None</span> </span>
+<span class="lineno">104</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">105</span>  <span class="py-line"><span class="py-docstring">        Inserts the kid into this Family's C{kids} list</span> </span>
+<span class="lineno">106</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">107</span>  <span class="py-line"><span class="py-docstring">        @param kid: the Model instance to insert</span> </span>
+<span class="lineno">108</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno">109</span>  <span class="py-line">        <span class="py-name">kid</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a> <span class="py-op">=</span> <span class="py-name">self</span> </span>
+<span class="lineno">110</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">.</span><span class="py-name">append</span><span class="py-op">(</span><span class="py-name">kid</span><span class="py-op">)</span> </span>
+</div><span class="lineno">111</span>  <span class="py-line"> </span>
+<a name="Family.position"></a><div id="Family.position-def"><span class="lineno">112</span> <a class="pysrc-toggle" href="#" id="Family.position-toggle" onclick="toggle('Family.position'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#position">position</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.position-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.position-expanded"><span class="lineno">113</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno">114</span>  <span class="py-line"><span class="py-docstring">        position(self) -&gt; int</span> </span>
+<span class="lineno">115</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">116</span>  <span class="py-line"><span class="py-docstring">        Returns this instance's position in the enclosing Family's</span> </span>
+<span class="lineno">117</span>  <span class="py-line"><span class="py-docstring">        C{kids} list. Returns -1 if there is no enclosing Family.</span> </span>
+<span class="lineno">118</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">119</span>  <span class="py-line"><span class="py-docstring">        @raise FamilyTraversalError: Raises if there is no enclosing Family</span> </span>
+<span class="lineno">120</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno">121</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">:</span> </span>
+<span class="lineno">122</span>  <span class="py-line">            <span class="py-keyword">return</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">.</span><span class="py-name">index</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">)</span> </span>
+<span class="lineno">123</span>  <span class="py-line">        <span class="py-keyword">raise</span> <a title="cells.family.FamilyTraversalError" class="py-name" href="cells.family.FamilyTraversalError-class.html">FamilyTraversalError</a><span class="py-op">(</span><span class="py-string">"No enclosing Family"</span><span class="py-op">)</span> </span>
+</div><span class="lineno">124</span>  <span class="py-line">         </span>
+<a name="Family.previous_sib"></a><div id="Family.previous_sib-def"><span class="lineno">125</span> <a class="pysrc-toggle" href="#" id="Family.previous_sib-toggle" onclick="toggle('Family.previous_sib'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#previous_sib">previous_sib</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.previous_sib-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.previous_sib-expanded"><span class="lineno">126</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno">127</span>  <span class="py-line"><span class="py-docstring">        previous_sib(self) -&gt; Model</span> </span>
+<span class="lineno">128</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">129</span>  <span class="py-line"><span class="py-docstring">        Returns the Model previous to this Model in the enclosing</span> </span>
+<span class="lineno">130</span>  <span class="py-line"><span class="py-docstring">        Family's C{kids} list</span> </span>
+<span class="lineno">131</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">132</span>  <span class="py-line"><span class="py-docstring">        @raise FamilyTraversalError: Raises if there is no enclosing Family</span> </span>
+<span class="lineno">133</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno">134</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a> <span class="py-keyword">and</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.position" class="py-name" href="cells.family.Family-class.html#position">position</a><span class="py-op">(</span><span class="py-op">)</span> <span class="py-op">&gt;</span> <span class="py-number">0</span><span class="py-op">:</span> </span>
+<span class="lineno">135</span>  <span class="py-line">            <span class="py-keyword">return</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">[</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.position" class="py-name" href="cells.family.Family-class.html#position">position</a><span class="py-op">(</span><span class="py-op">)</span> <span class="py-op">-</span> <span class="py-number">1</span><span class="py-op">]</span> </span>
+<span class="lineno">136</span>  <span class="py-line">        <span class="py-keyword">raise</span> <a title="cells.family.FamilyTraversalError" class="py-name" href="cells.family.FamilyTraversalError-class.html">FamilyTraversalError</a><span class="py-op">(</span><span class="py-string">"No enclosing Family"</span><span class="py-op">)</span> </span>
+</div><span class="lineno">137</span>  <span class="py-line">     </span>
+<a name="Family.next_sib"></a><div id="Family.next_sib-def"><span class="lineno">138</span> <a class="pysrc-toggle" href="#" id="Family.next_sib-toggle" onclick="toggle('Family.next_sib'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#next_sib">next_sib</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.next_sib-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.next_sib-expanded"><span class="lineno">139</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno">140</span>  <span class="py-line"><span class="py-docstring">        previous_sib(self) -&gt; Model</span> </span>
+<span class="lineno">141</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">142</span>  <span class="py-line"><span class="py-docstring">        Returns the Model subsequent to this Model in the enclosing</span> </span>
+<span class="lineno">143</span>  <span class="py-line"><span class="py-docstring">        Family's C{kids} list</span> </span>
+<span class="lineno">144</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">145</span>  <span class="py-line"><span class="py-docstring">        @raise FamilyTraversalError: Raises if there is no enclosing Family</span> </span>
+<span class="lineno">146</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno">147</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a> <span class="py-keyword">and</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.position" class="py-name" href="cells.family.Family-class.html#position">position</a><span class="py-op">(</span><span class="py-op">)</span> <span class="py-op">&lt;</span> <span class="py-name">len</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">)</span> <span class="py-op">-</span> <span class="py-number">1</span><span class="py-op">:</span> </span>
+<span class="lineno">148</span>  <span class="py-line">            <span class="py-keyword">return</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.family.Family.kids" class="py-name" href="cells.family.Family-class.html#kids">kids</a><span class="py-op">[</span><span class="py-name">self</span><span class="py-op">.</span><a title="cells.family.Family.position" class="py-name" href="cells.family.Family-class.html#position">position</a><span class="py-op">(</span><span class="py-op">)</span> <span class="py-op">+</span> <span class="py-number">1</span><span class="py-op">]</span> </span>
+<span class="lineno">149</span>  <span class="py-line">        <span class="py-keyword">raise</span> <a title="cells.family.FamilyTraversalError" class="py-name" href="cells.family.FamilyTraversalError-class.html">FamilyTraversalError</a><span class="py-op">(</span><span class="py-string">"No enclosing Family"</span><span class="py-op">)</span> </span>
+</div><span class="lineno">150</span>  <span class="py-line">         </span>
+<a name="Family.grandparent"></a><div id="Family.grandparent-def"><span class="lineno">151</span> <a class="pysrc-toggle" href="#" id="Family.grandparent-toggle" onclick="toggle('Family.grandparent'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.Family-class.html#grandparent">grandparent</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Family.grandparent-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Family.grandparent-expanded"><span class="lineno">152</span>  <span class="py-line">        <span class="py-docstring">"""</span> </span>
+<span class="lineno">153</span>  <span class="py-line"><span class="py-docstring">        grandparent(self) -&gt; Model</span> </span>
+<span class="lineno">154</span>  <span class="py-line"><span class="py-docstring"></span> </span>
+<span class="lineno">155</span>  <span class="py-line"><span class="py-docstring">        Returns enclosing Family instance's enclosing Family instance,</span> </span>
+<span class="lineno">156</span>  <span class="py-line"><span class="py-docstring">        or None if no such object exists.</span> </span>
+<span class="lineno">157</span>  <span class="py-line"><span class="py-docstring">        """</span> </span>
+<span class="lineno">158</span>  <span class="py-line">        <span class="py-comment"># raise or just return None?</span> </span>
+<span class="lineno">159</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">:</span> </span>
+<span class="lineno">160</span>  <span class="py-line">            <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">:</span> </span>
+<span class="lineno">161</span>  <span class="py-line">                <span class="py-keyword">return</span> <span class="py-name">self</span><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a><span class="py-op">.</span><a title="cells.model.Model.parent" class="py-name" href="cells.model.Model-class.html#parent">parent</a> </span>
+<span class="lineno">162</span>  <span class="py-line">        <span class="py-keyword">return</span> <span class="py-name">None</span> </span>
+</div></div><span class="lineno">163</span>  <span class="py-line"> </span>
+<a name="FamilyTraversalError"></a><div id="FamilyTraversalError-def"><span class="lineno">164</span> <a class="pysrc-toggle" href="#" id="FamilyTraversalError-toggle" onclick="toggle('FamilyTraversalError'); return false;">-</a><span class="py-line"><span class="py-keyword">class</span> <a class="py-def-name" href="cells.family.FamilyTraversalError-class.html">FamilyTraversalError</a><span class="py-op">(</span><span class="py-base-class">Exception</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="FamilyTraversalError-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="FamilyTraversalError-expanded"><span class="lineno">165</span>  <span class="py-line">    <span class="py-docstring">"""</span> </span>
+<span class="lineno">166</span>  <span class="py-line"><span class="py-docstring">    Raised when there's some sort of error in C{L{Family}}'s traversal</span> </span>
+<span class="lineno">167</span>  <span class="py-line"><span class="py-docstring">    methods.</span> </span>
+<span class="lineno">168</span>  <span class="py-line"><span class="py-docstring">    """</span> </span>
+<a name="FamilyTraversalError.__init__"></a><div id="FamilyTraversalError.__init__-def"><span class="lineno">169</span> <a class="pysrc-toggle" href="#" id="FamilyTraversalError.__init__-toggle" onclick="toggle('FamilyTraversalError.__init__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.FamilyTraversalError-class.html#__init__">__init__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">value</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="FamilyTraversalError.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FamilyTraversalError.__init__-expanded"><span class="lineno">170</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">value</span> <span class="py-op">=</span> <span class="py-name">value</span> </span>
+</div><a name="FamilyTraversalError.__str__"></a><div id="FamilyTraversalError.__str__-def"><span class="lineno">171</span> <a class="pysrc-toggle" href="#" id="FamilyTraversalError.__str__-toggle" onclick="toggle('FamilyTraversalError.__str__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.family.FamilyTraversalError-class.html#__str__">__str__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="FamilyTraversalError.__str__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FamilyTraversalError.__str__-expanded"><span class="lineno">172</span>  <span class="py-line">        <span class="py-keyword">return</span> <span class="py-name">repr</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">value</span><span class="py-op">)</span> </span>
+</div></div><span class="lineno">173</span>  <span class="py-line"> </span><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:07 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

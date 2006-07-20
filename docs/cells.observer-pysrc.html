@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells.observer</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="cells-module.html">Package&nbsp;cells</a> ::
+        Module&nbsp;observer
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells.observer-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h2 class="py-src">Source Code for <a href="cells.observer-module.html">Module cells.observer</a></h2>
+<div class="py-src">
+<pre class="py-src">
+<span class="lineno"> 1</span>  <span class="py-line"><span class="py-keyword">import</span> <a class="py-name" href="cells-module.html">cells</a> </span>
+<span class="lineno"> 2</span>  <span class="py-line"><span class="py-keyword">from</span> <a class="py-name" href="cells-module.html">cells</a> <span class="py-keyword">import</span> <span class="py-name">Cell</span> </span>
+<span class="lineno"> 3</span>  <span class="py-line"> </span>
+<span class="lineno"> 4</span>  <span class="py-line"><a class="py-name" href="cells.observer-module.html#DEBUG">DEBUG</a> <span class="py-op">=</span> <span class="py-name">False</span> </span>
+<span class="lineno"> 5</span>  <span class="py-line"> </span>
+<a name="debug"></a><div id="debug-def"><span class="lineno"> 6</span> <a class="pysrc-toggle" href="#" id="debug-toggle" onclick="toggle('debug'); return false;">-</a><span class="py-line"><span class="py-keyword">def</span> <a class="py-def-name" href="cells.observer-module.html#debug">debug</a><span class="py-op">(</span><span class="py-op">*</span><span class="py-param">msgs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="debug-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="debug-expanded"><span class="lineno"> 7</span>  <span class="py-line">    <span class="py-name">msgs</span> <span class="py-op">=</span> <span class="py-name">list</span><span class="py-op">(</span><span class="py-name">msgs</span><span class="py-op">)</span> </span>
+<span class="lineno"> 8</span>  <span class="py-line">    <span class="py-name">msgs</span><span class="py-op">.</span><span class="py-name">insert</span><span class="py-op">(</span><span class="py-number">0</span><span class="py-op">,</span> <span class="py-string">"observer"</span><span class="py-op">.</span><span class="py-name">rjust</span><span class="py-op">(</span><a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells._DECO_OFFSET" class="py-name" href="cells-module.html#_DECO_OFFSET">_DECO_OFFSET</a><span class="py-op">)</span> <span class="py-op">+</span> <span class="py-string">" &gt; "</span><span class="py-op">)</span> </span>
+<span class="lineno"> 9</span>  <span class="py-line">    <span class="py-keyword">if</span> <span id="link-0" class="py-name"><a title="cells.DEBUG
+cells.cell.DEBUG
+cells.cellattr.DEBUG
+cells.family.DEBUG
+cells.model.DEBUG
+cells.observer.DEBUG
+cells.synapse.DEBUG" class="py-name" href="#" onclick="doclink('link-0', 'DEBUG', 'Variable DEBUG=cells-module.html#DEBUG,Variable cell.DEBUG=cells.cell-module.html#DEBUG,Variable cellattr.DEBUG=cells.cellattr-module.html#DEBUG,Variable family.DEBUG=cells.family-module.html#DEBUG,Variable model.DEBUG=cells.model-module.html#DEBUG,Variable DEBUG=cells.observer-module.html#DEBUG,Variable synapse.DEBUG=cells.synapse-module.html#DEBUG'); return false;">DEBUG</a></span></span> <span class="py-keyword">or</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><span id="link-1" class="py-name"><a title="cells.DEBUG
+cells.cell.DEBUG
+cells.cellattr.DEBUG
+cells.family.DEBUG
+cells.model.DEBUG
+cells.observer.DEBUG
+cells.synapse.DEBUG" class="py-name" href="#" onclick="doclink('link-1', 'DEBUG', 'Variable DEBUG=cells-module.html#DEBUG,Variable cell.DEBUG=cells.cell-module.html#DEBUG,Variable cellattr.DEBUG=cells.cellattr-module.html#DEBUG,Variable family.DEBUG=cells.family-module.html#DEBUG,Variable model.DEBUG=cells.model-module.html#DEBUG,Variable DEBUG=cells.observer-module.html#DEBUG,Variable synapse.DEBUG=cells.synapse-module.html#DEBUG'); return false;">DEBUG</a></span></span><span class="py-op">:</span> </span>
+<span class="lineno">10</span>  <span class="py-line">        <span class="py-keyword">print</span> <span class="py-string">" "</span><span class="py-op">.</span><span class="py-name">join</span><span class="py-op">(</span><span class="py-name">msgs</span><span class="py-op">)</span> </span>
+</div><span class="lineno">11</span>  <span class="py-line"> </span>
+<span class="lineno">12</span>  <span class="py-line"><span class="py-comment"># we want observers to be defined at the class level but have per-instance</span> </span>
+<span class="lineno">13</span>  <span class="py-line"><span class="py-comment"></span><span class="py-comment"># information. So, do the same trick as is done with CellAttr/Cells</span> </span>
+<a name="ObserverAttr"></a><div id="ObserverAttr-def"><span class="lineno">14</span> <a class="pysrc-toggle" href="#" id="ObserverAttr-toggle" onclick="toggle('ObserverAttr'); return false;">-</a><span class="py-line"><span class="py-comment"></span><span class="py-keyword">class</span> <a class="py-def-name" href="cells.observer.ObserverAttr-class.html">ObserverAttr</a><span class="py-op">(</span><span class="py-base-class">object</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="ObserverAttr-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="ObserverAttr-expanded"><a name="ObserverAttr.__init__"></a><div id="ObserverAttr.__init__-def"><span class="lineno">15</span> <a class="pysrc-toggle" href="#" id="ObserverAttr.__init__-toggle" onclick="toggle('ObserverAttr.__init__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.observer.ObserverAttr-class.html#__init__">__init__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">name</span><span class="py-op">,</span> <span class="py-op">*</span><span class="py-param">args</span><span class="py-op">,</span> <span class="py-op">**</span><span class="py-param">kwargs</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="ObserverAttr.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ObserverAttr.__init__-expanded"><span class="lineno">16</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">name</span><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">args</span><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">kwargs</span> <span class="py-op">=</span> <span class="py-name">name</span><span class="py-op">,</span> <span class="py-name">args</span><span class="py-op">,</span> <span class="py-name">kwargs</span> </span>
+</div><span class="lineno">17</span>  <span class="py-line"> </span>
+<a name="ObserverAttr.__get__"></a><div id="ObserverAttr.__get__-def"><span class="lineno">18</span> <a class="pysrc-toggle" href="#" id="ObserverAttr.__get__-toggle" onclick="toggle('ObserverAttr.__get__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.observer.ObserverAttr-class.html#__get__">__get__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">owner</span><span class="py-op">,</span> <span class="py-param">ownertype</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="ObserverAttr.__get__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ObserverAttr.__get__-expanded"><span class="lineno">19</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-keyword">not</span> <span class="py-name">owner</span><span class="py-op">:</span> <span class="py-keyword">return</span> <span class="py-name">self</span> </span>
+<span class="lineno">20</span>  <span class="py-line">        <span class="py-comment"># if there isn't a value in owner.myname, make it an observer</span> </span>
+<span class="lineno">21</span>  <span class="py-line"><span class="py-comment"></span>        <span id="link-2" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-2', 'debug', 'Function cellattr.debug()=cells.cellattr-module.html#debug,Function family.debug()=cells.family-module.html#debug,Function model.debug()=cells.model-module.html#debug,Function debug()=cells.observer-module.html#debug,Function synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-string">"got request for observer"</span><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">name</span><span class="py-op">,</span> </span>
+<span class="lineno">22</span>  <span class="py-line">              <span class="py-string">"args ="</span><span class="py-op">,</span> <span class="py-name">str</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">args</span><span class="py-op">)</span><span class="py-op">,</span> </span>
+<span class="lineno">23</span>  <span class="py-line">              <span class="py-string">"kwargs ="</span><span class="py-op">,</span> <span class="py-name">str</span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">kwargs</span><span class="py-op">)</span><span class="py-op">)</span> </span>
+<span class="lineno">24</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">name</span> <span class="py-keyword">not</span> <span class="py-keyword">in</span> <span class="py-name">owner</span><span class="py-op">.</span><span class="py-name">__dict__</span><span class="py-op">.</span><span class="py-name">keys</span><span class="py-op">(</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">25</span>  <span class="py-line">            <span class="py-name">owner</span><span class="py-op">.</span><span class="py-name">__dict__</span><span class="py-op">[</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">name</span><span class="py-op">]</span> <span class="py-op">=</span> <a title="cells.observer.Observer" class="py-name" href="cells.observer.Observer-class.html">Observer</a><span class="py-op">(</span><span class="py-name">owner</span><span class="py-op">,</span> <span class="py-op">*</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">args</span><span class="py-op">,</span> </span>
+<span class="lineno">26</span>  <span class="py-line">                                                 <span class="py-op">**</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">kwargs</span><span class="py-op">)</span> </span>
+<span class="lineno">27</span>  <span class="py-line">        <span class="py-keyword">return</span> <span class="py-name">owner</span><span class="py-op">.</span><span class="py-name">__dict__</span><span class="py-op">[</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">name</span><span class="py-op">]</span> </span>
+</div></div><span class="lineno">28</span>  <span class="py-line"> </span>
+<a name="Observer"></a><div id="Observer-def"><span class="lineno">29</span> <a class="pysrc-toggle" href="#" id="Observer-toggle" onclick="toggle('Observer'); return false;">-</a><span class="py-line"><span class="py-keyword">class</span> <a class="py-def-name" href="cells.observer.Observer-class.html">Observer</a><span class="py-op">(</span><span class="py-base-class">object</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Observer-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Observer-expanded"><span class="lineno">30</span>  <span class="py-line">    <span class="py-docstring">"Watch."</span> </span>
+<a name="Observer.__init__"></a><div id="Observer.__init__-def"><span class="lineno">31</span> <a class="pysrc-toggle" href="#" id="Observer.__init__-toggle" onclick="toggle('Observer.__init__'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.observer.Observer-class.html#__init__">__init__</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">owner</span><span class="py-op">,</span> <span class="py-param">attrib</span><span class="py-op">,</span> <span class="py-param">oldvalue</span><span class="py-op">,</span> <span class="py-param">newvalue</span><span class="py-op">,</span> <span class="py-param">func</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Observer.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Observer.__init__-expanded"><span class="lineno">32</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">owner</span> <span class="py-op">=</span> <span class="py-name">owner</span> </span>
+<span class="lineno">33</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">attrib_name</span> <span class="py-op">=</span> <span class="py-name">attrib</span> </span>
+<span class="lineno">34</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">oldvalue</span> <span class="py-op">=</span> <span class="py-name">oldvalue</span> </span>
+<span class="lineno">35</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">newvalue</span> <span class="py-op">=</span> <span class="py-name">newvalue</span> </span>
+<span class="lineno">36</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span> <span class="py-op">=</span> <span class="py-name">func</span> </span>
+<span class="lineno">37</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">last_ran</span> <span class="py-op">=</span> <span class="py-number">0</span> </span>
+</div><span class="lineno">38</span>  <span class="py-line"> </span>
+<a name="Observer.run_if_applicable"></a><div id="Observer.run_if_applicable-def"><span class="lineno">39</span> <a class="pysrc-toggle" href="#" id="Observer.run_if_applicable-toggle" onclick="toggle('Observer.run_if_applicable'); return false;">-</a><span class="py-line">    <span class="py-keyword">def</span> <a class="py-def-name" href="cells.observer.Observer-class.html#run_if_applicable">run_if_applicable</a><span class="py-op">(</span><span class="py-param">self</span><span class="py-op">,</span> <span class="py-param">model</span><span class="py-op">,</span> <span class="py-param">attr</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+</div><div id="Observer.run_if_applicable-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Observer.run_if_applicable-expanded"><span class="lineno">40</span>  <span class="py-line">        <span id="link-3" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-3', 'debug', 'Function cellattr.debug()=cells.cellattr-module.html#debug,Function family.debug()=cells.family-module.html#debug,Function model.debug()=cells.model-module.html#debug,Function debug()=cells.observer-module.html#debug,Function synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-string">"running observer"</span><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">)</span> </span>
+<span class="lineno">41</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">last_ran</span> <span class="py-op">==</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells._dp" class="py-name" href="cells-module.html#_dp">_dp</a><span class="py-op">:</span>   <span class="py-comment"># never run twice in one DP</span> </span>
+<span class="lineno">42</span>  <span class="py-line">            <span id="link-4" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-4', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"already ran in this dp"</span><span class="py-op">)</span> </span>
+<span class="lineno">43</span>  <span class="py-line">            <span class="py-keyword">return</span> </span>
+<span class="lineno">44</span>  <span class="py-line">         </span>
+<span class="lineno">45</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">attrib_name</span><span class="py-op">:</span> </span>
+<span class="lineno">46</span>  <span class="py-line">            <span class="py-keyword">if</span> <span class="py-name">isinstance</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">,</span> <span class="py-name">Cell</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">47</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-name">attr</span><span class="py-op">.</span><span class="py-name">name</span> <span class="py-op">!=</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">attrib_name</span><span class="py-op">:</span> </span>
+<span class="lineno">48</span>  <span class="py-line">                    <span id="link-5" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-5', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"wants a cell named '"</span> <span class="py-op">+</span> </span>
+<span class="lineno">49</span>  <span class="py-line">                          <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">attrib_name</span> <span class="py-op">+</span> <span class="py-string">"', got a cell named '"</span> <span class="py-op">+</span> </span>
+<span class="lineno">50</span>  <span class="py-line">                          <span class="py-name">attr</span><span class="py-op">.</span><span class="py-name">name</span> <span class="py-op">+</span> <span class="py-string">"'"</span><span class="py-op">)</span> </span>
+<span class="lineno">51</span>  <span class="py-line">                    <span class="py-keyword">return</span> </span>
+<span class="lineno">52</span>  <span class="py-line">            <span class="py-keyword">elif</span> <span class="py-name">getattr</span><span class="py-op">(</span><a title="cells.model" class="py-name" href="cells.model-module.html">model</a><span class="py-op">,</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">attrib_name</span><span class="py-op">)</span> <span class="py-keyword">is</span> <span class="py-keyword">not</span> <span class="py-name">attr</span><span class="py-op">:</span> </span>
+<span class="lineno">53</span>  <span class="py-line">                <span id="link-6" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-6', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"looked in its model for an attrib"</span> <span class="py-op">+</span> </span>
+<span class="lineno">54</span>  <span class="py-line">                      <span class="py-string">"with its desired name; didn't match passed attr."</span><span class="py-op">)</span> </span>
+<span class="lineno">55</span>  <span class="py-line">                <span class="py-keyword">return</span> </span>
+<span class="lineno">56</span>  <span class="py-line">             </span>
+<span class="lineno">57</span>  <span class="py-line">        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">newvalue</span><span class="py-op">:</span> </span>
+<span class="lineno">58</span>  <span class="py-line">            <span class="py-keyword">if</span> <span class="py-name">isinstance</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">,</span> <span class="py-name">Cell</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">59</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-keyword">not</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">newvalue</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">.</span><span class="py-name">value</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">60</span>  <span class="py-line">                    <span id="link-7" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-7', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> </span>
+<span class="lineno">61</span>  <span class="py-line">                          <span class="py-string">"function didn't match cell's new value"</span><span class="py-op">)</span> </span>
+<span class="lineno">62</span>  <span class="py-line">                    <span class="py-keyword">return</span> </span>
+<span class="lineno">63</span>  <span class="py-line">            <span class="py-keyword">else</span><span class="py-op">:</span> </span>
+<span class="lineno">64</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-keyword">not</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">newvalue</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">65</span>  <span class="py-line">                    <span id="link-8" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-8', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"function didn't match non-cell"</span><span class="py-op">)</span> </span>
+<span class="lineno">66</span>  <span class="py-line">                    <span class="py-keyword">return</span> </span>
+<span class="lineno">67</span>  <span class="py-line"> </span>
+<span class="lineno">68</span>  <span class="py-line">        <span class="py-comment"># since this is immediately post-value change, the last_value attr</span> </span>
+<span class="lineno">69</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-comment"># of the cell is still good.</span> </span>
+<span class="lineno">70</span>  <span class="py-line"><span class="py-comment"></span>        <span class="py-keyword">if</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">oldvalue</span><span class="py-op">:</span> </span>
+<span class="lineno">71</span>  <span class="py-line">            <span class="py-keyword">if</span> <span class="py-name">isinstance</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">,</span> <span class="py-name">Cell</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">72</span>  <span class="py-line">                <span class="py-keyword">if</span> <span class="py-keyword">not</span> <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">oldvalue</span><span class="py-op">(</span><span class="py-name">attr</span><span class="py-op">.</span><span class="py-name">last_value</span><span class="py-op">)</span><span class="py-op">:</span> </span>
+<span class="lineno">73</span>  <span class="py-line">                    <span id="link-9" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-9', 'debug', 'Function cells.cellattr.debug()=cells.cellattr-module.html#debug,Function cells.family.debug()=cells.family-module.html#debug,Function cells.model.debug()=cells.model-module.html#debug,Function cells.observer.debug()=cells.observer-module.html#debug,Function cells.synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"function didn't match old value"</span><span class="py-op">)</span> </span>
+<span class="lineno">74</span>  <span class="py-line">                    <span class="py-keyword">return</span> </span>
+<span class="lineno">75</span>  <span class="py-line"> </span>
+<span class="lineno">76</span>  <span class="py-line">        <span class="py-comment"># if we're here, it passed all the tests, so</span> </span>
+<span class="lineno">77</span>  <span class="py-line"><span class="py-comment"></span>        <span id="link-10" class="py-name"><a title="cells.cellattr.debug
+cells.family.debug
+cells.model.debug
+cells.observer.debug
+cells.synapse.debug" class="py-name" href="#" onclick="doclink('link-10', 'debug', 'Function cellattr.debug()=cells.cellattr-module.html#debug,Function family.debug()=cells.family-module.html#debug,Function model.debug()=cells.model-module.html#debug,Function debug()=cells.observer-module.html#debug,Function synapse.debug()=cells.synapse-module.html#debug'); return false;">debug</a></span></span><span class="py-op">(</span><span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">.</span><span class="py-name">__name__</span><span class="py-op">,</span> <span class="py-string">"running"</span><span class="py-op">)</span> </span>
+<span class="lineno">78</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">func</span><span class="py-op">(</span><a title="cells.model" class="py-name" href="cells.model-module.html">model</a><span class="py-op">)</span> </span>
+<span class="lineno">79</span>  <span class="py-line">        <span class="py-name">self</span><span class="py-op">.</span><span class="py-name">last_ran</span> <span class="py-op">=</span> <a title="cells" class="py-name" href="cells-module.html">cells</a><span class="py-op">.</span><a title="cells._dp" class="py-name" href="cells-module.html#_dp">_dp</a> </span>
+</div></div><span class="lineno">80</span>  <span class="py-line"> </span><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Thu Jul 20 12:24:03 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>
