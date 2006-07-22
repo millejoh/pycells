@@ -74,7 +74,7 @@ class Observer(object):
         @param attr: the attribute which "asked" this observer to run.
         """
         _debug("running observer", self.func.__name__)
-        if self.last_ran == cells._dp:   # never run twice in one DP
+        if self.last_ran == cells.cellenv.dp:   # never run twice in one DP
             _debug(self.func.__name__, "already ran in this dp")
             return
         
@@ -113,4 +113,4 @@ class Observer(object):
         # if we're here, it passed all the tests, so
         _debug(self.func.__name__, "running")
         self.func(model)
-        self.last_ran = cells._dp
+        self.last_ran = cells.cellenv.dp

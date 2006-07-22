@@ -13,11 +13,14 @@ DEBUG = False
 
 _DECO_OFFSET = 9                 # for the debug '  module > ' messages
 
-_dp = 0
-_curr = None
-_curr_propogator = None
-_queued_updates = []
-_deferred_sets = []
+import threading
+
+cellenv = threading.local()
+cellenv.dp = 0
+cellenv.curr = None
+cellenv.curr_propogator = None
+cellenv.queued_updates = []
+cellenv.deferred_sets = []
 
 from cellattr import CellAttr
 
@@ -144,12 +147,12 @@ def reset():
     the currently-instantiated cells' values, but quite useful while
     fooling around in an ipython session.
     """
-    global _dp, _curr, _curr_propogator, _queued_updates, _deferred_sets
+    global cellenv
     
-    _dp = 1
-    _curr = None
-    _curr_propogator = None
-    _queued_updates = []
-    _deferred_sets = []
+    cellenv.dp = 1
+    cellenv.curr = None
+    cellenv.curr_propogator = None
+    cellenv.queued_updates = []
+    cellenv.deferred_sets = []
 
 reset()

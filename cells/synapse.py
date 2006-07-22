@@ -75,8 +75,8 @@ class Synapse(cell.Cell):
         """
         debug(self.name, "running")
         # call stack manipulation
-        oldcurr = cells._curr
-        cells._curr = self
+        oldcurr = cells.cellenv.curr
+        cells.cellenv.curr = self
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
@@ -85,12 +85,12 @@ class Synapse(cell.Cell):
             cell.remove_cb(self)
         self.reset_calls()
 
-        self.dp = cells._dp                            # we're up-to-date
+        self.dp = cells.cellenv.dp                            # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         
         # restore old running cell
-        cells._curr = oldcurr
+        cells.cellenv.curr = oldcurr
 
         # return changed status
         if self.unchanged_if(self.value, newvalue):

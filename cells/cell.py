@@ -117,8 +117,8 @@ class Cell(object):
         
         if kwargs.has_key("value"):
             self.bound = True
-            self.changed_dp = cells._dp
-            self.dp = cells._dp
+            self.changed_dp = cells.cellenv.dp
+            self.dp = cells.cellenv.dp
 
     def get(self):
         """
@@ -128,9 +128,9 @@ class Cell(object):
         """
         # if there's a cell on the call stack, this get is part of a rule
         # run. so, make the appropriate changes to the cells' deps
-        if cells._curr:                  # (curr == None when not propogating)
-            cells._curr.add_calls(self)
-            self.add_called_by(cells._curr)
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
         
         self.update()
         return self.value
@@ -144,9 +144,9 @@ class Cell(object):
 
         @param value: The value to set this cell's value to.
         """
-        if cells._curr_propogator:       # if a propogation is happening
+        if cells.cellenv.curr_propogator:       # if a propogation is happening
             _debug(self.name, "sees in-progress propogation; deferring set.")
-            cells._deferred_sets.append((self, value)) # defer the set
+            cells.cellenv.deferred_sets.append((self, value)) # defer the set
         else:
             _debug(self.name, "setting")        
             if not self.unchanged_if(self.value, value):
@@ -154,8 +154,8 @@ class Cell(object):
                 self.last_value = self.value
                 self.value = value
 
-                cells._dp += 1
-                self.dp = cells._dp
+                cells.cellenv.dp += 1
+                self.dp = cells.cellenv.dp
 
                 if self.owner:
                     self.owner._run_observers(self)
@@ -183,13 +183,13 @@ class Cell(object):
         if self.changed():                # if this cell was changed in this DP
             _debug(self.name, "changed, telling queryer to recalc")
             return True                 # the asking cell must recalculate.
-        if self.dp == cells._dp:         # if this cell is current,
+        if self.dp == cells.cellenv.dp:         # if this cell is current,
             _debug(self.name, "is current.")
             return False                # it's current.
-        if not cells._curr_propogator:   # if the system isn't propogating,
+        if not cells.cellenv.curr_propogator: # if the system isn't propogating,
             if not self.lazy:           # and we're not lazy,
                 _debug(self.name, "sees system is not propogating; is current.")
-                self.dp = cells._dp
+                self.dp = cells.cellenv.dp
                 return False            # this cell is current.
 
         # otherwise, verify we're current: (by the above ifs, the
@@ -198,7 +198,7 @@ class Cell(object):
             _debug(self.name, "asking", cell.name, "to update")
             if cell.update(self):       # if any called cell requires us,
                 _debug(self.name, "got recalc command from", cell.name)
-                if not self.dp == cells._dp:
+                if not self.dp == cells.cellenv.dp:
                     if self.run():          # we need to re-run
                         # the run changed the value of this cell, so
                         # propogate the change, starting at the cell which
@@ -220,7 +220,7 @@ class Cell(object):
         _debug(self.name,
               "finished asking called cells to update without getting recalc;",
               "is current.")
-        self.dp = cells._dp
+        self.dp = cells.cellenv.dp
         return False
 
     def propogate(self, propogate_first=None):
@@ -235,14 +235,14 @@ class Cell(object):
             call), it must propogate to C{A} first, before any of the
             other cells which call C{B}.
         """
-        if cells._curr_propogator:
+        if cells.cellenv.curr_propogator:
             _debug(self.name, "propogating. Old propogator was",
-                  cells._curr_propogator.name)
+                  cells.cellenv.curr_propogator.name)
         else:
             _debug(self.name, "propogating. No old propogator")
-        prev_propogator = cells._curr_propogator
-        cells._curr_propogator = self
-        self.changed_dp = cells._dp
+        prev_propogator = cells.cellenv.curr_propogator
+        cells.cellenv.curr_propogator = self
+        self.changed_dp = cells.cellenv.dp
         self.notifying = True
 
         # first, notify the 'propogate_first' cell
@@ -252,7 +252,7 @@ class Cell(object):
             deferrals = list(self.called_by() - set([propogate_first]))
             _debug(self.name, "deferring update of",
                   str([ c.name for c in deferrals ]))
-            cells._queued_updates.extend(deferrals)
+            cells.cellenv.queued_updates.extend(deferrals)
             
             _debug(self.name, "asking", propogate_first.name, "to update first")
             propogate_first.update()
@@ -269,34 +269,34 @@ class Cell(object):
                     cell.update()
                 
         self.notifying = False
-        cells._curr_propogator = prev_propogator
+        cells.cellenv.curr_propogator = prev_propogator
 
-        if cells._curr_propogator:
+        if cells.cellenv.curr_propogator:
             _debug(self.name, "finished propogating; switching to propogating",
-                  str(cells._curr_propogator.name))
+                  str(cells.cellenv.curr_propogator.name))
         else:
             _debug(self.name, "finished propogating. No old propogator")
         
         # run deferred stuff if no cell is currently propogating
-        if not cells._curr_propogator:
+        if not cells.cellenv.curr_propogator:
             # first, updates:            
             # okay, this is a little hacky:
-            cells._curr_propogator = cells.Cell(None,
+            cells.cellenv.curr_propogator = cells.Cell(None,
                                               name="queued propogation dummy")
             
             _debug("no cell propogating! running deferred updates.")
-            to_update = cells._queued_updates
-            cells._queued_updates = []
+            to_update = cells.cellenv.queued_updates
+            cells.cellenv.queued_updates = []
             for cell in to_update:
                 _debug("Running deferred update on", cell.name)
                 cell.update()
                 
-            cells._curr_propogator = None
+            cells.cellenv.curr_propogator = None
 
             # next, deferred sets:
             _debug("running deferred sets")
-            to_set = cells._deferred_sets
-            cells._deferred_sets = []
+            to_set = cells.cellenv.deferred_sets
+            cells.cellenv.deferred_sets = []
             for cell, value in to_set:
                 cell.set(value)
 
@@ -322,20 +322,20 @@ class Cell(object):
         """
         _debug(self.name, "running")
         # call stack manipulation
-        oldcurr = cells._curr
-        cells._curr = self
+        oldcurr = cells.cellenv.curr
+        cells.cellenv.curr = self
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
         self.remove_called_bys()
         self.reset_calls()
 
-        self.dp = cells._dp                             # we're up-to-date
+        self.dp = cells.cellenv.dp                             # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         
         # restore old running cell
-        cells._curr = oldcurr
+        cells.cellenv.curr = oldcurr
 
         # return changed status
         if self.unchanged_if(self.value, newvalue):
@@ -368,7 +368,7 @@ class Cell(object):
 
         Did this cell's value change in this DP (datapulse)?
         """
-        return cells._dp == self.changed_dp
+        return cells.cellenv.dp == self.changed_dp
 
     def calls_list(self):
         """
