@@ -73,7 +73,9 @@ object --+
 A class in which CellAttrs may be used. Models automatically bring 
   their cells up-to-date at <code><a 
   href="cells.model.Model-class.html#__init__" 
-  class="link">__init__</a></code>-time.<br /><br />
+  class="link">__init__</a></code>-time. Cells may be altered at runtime by
+  passing <code>attrname=value</code>, or <code>attrname=hash</code> to the
+  constructor.<br /><br />
 
 <!-- ==================== NESTED CLASSES ==================== -->
 <a name="section-NestedClasses"></a>
@@ -125,8 +127,8 @@ A class in which CellAttrs may be used. Models automatically bring
     <span class="sig"><a href="cells.model.Model-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
         <span class="sig-arg">*args</span>,
         <span class="sig-arg">**kwargs</span>)</span>
-    <br />x.__init__(...) initializes x; see x.__class__.__doc__ for 
-      signature
+    <br />__init__(self, [&lt;attrname&gt;=&lt;value, rule or dict&gt;], 
+      ...) -&gt; None
   </td>
 </tr>
 <tr>
@@ -149,7 +151,7 @@ A class in which CellAttrs may be used. Models automatically bring
         <span class="sig-arg">name</span>,
         <span class="sig-arg">*args</span>,
         <span class="sig-arg">**kwargs</span>)</span>
-    <br />Creates a new cell of the appropriate type
+    
   </td>
 </tr>
 <tr class="private">
@@ -201,11 +203,10 @@ A class in which CellAttrs may be used. Models automatically bring
     &nbsp;
    </td>
   <td>
-    <span class="sig"><a href="cells.model.Model-class.html#observer" class="sig-name">observer</a>(<span class="sig-arg">klass</span>,
-        <span class="sig-arg">attrib</span>=<span class="sig-default">None</span>,
+    <span class="sig"><a href="cells.model.Model-class.html#observer" class="sig-name">observer</a>(<span class="sig-arg">attrib</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">oldvalue</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">newvalue</span>=<span class="sig-default">None</span>)</span>
-    
+    <br />A classmethod to add an observer attribute to a Model.
   </td>
 </tr>
 </table>
@@ -243,21 +244,6 @@ A class in which CellAttrs may be used. Models automatically bring
     <strong><a href="cells.model.Model-class.html#_observernames">_observernames</a></strong></td>
   <td>&nbsp;</td>
 </tr>
-<tr>
-  <td width="15%">
-    <strong><a href="cells.model.Model-class.html#model_name">model_name</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr>
-  <td width="15%">
-    <strong><a href="cells.model.Model-class.html#model_value">model_value</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr>
-  <td width="15%">
-    <strong><a href="cells.model.Model-class.html#parent">parent</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
   <tr>
     <td colspan="2">
     <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
@@ -265,6 +251,42 @@ A class in which CellAttrs may be used. Models automatically bring
       </p>
     </td>
   </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.model.Model-class.html#model_name">model_name</a></strong></td>
+  <td>The name of this Model.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.model.Model-class.html#model_value">model_value</a></strong></td>
+  <td>The value of this Model.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.model.Model-class.html#parent">parent</a></strong></td>
+  <td>For <code><a href="cells.family.Family-class.html" 
+      class="link">Family</a></code> graph traversal.</td>
+</tr>
 </table>
 
 <br />
@@ -301,12 +323,71 @@ A class in which CellAttrs may be used. Models automatically bring
     ></td>
   </table>
   
-  x.__init__(...) initializes x; see x.__class__.__doc__ for 
-  signature
+  <p>__init__(self, [&lt;attrname&gt;=&lt;value, rule or dict&gt;], ...) 
+  -&gt; None</p>
+  Initialize a Model with optional overrides. By passing a parameter 
+  with the same name as a cell attribute, you may override that cell 
+  attribute. For example:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=1)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a1 = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a1.x</span>
+<span class="py-output">1</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a2 = A(x=<span class="py-string">&quot;blah&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>a2.x</span>
+<span class="py-output">'blah'</span></pre>
+  This override can be arbitrarily complex; for instance, you can make a
+  RuleCell into a ValueCell, change a attribute's celltype ... In short, 
+  anything you can do at Model defintion time you can alter at 
+  instantiation time:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> B(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(rule=<span class="py-keyword">lambda</span> s,p: 3 * s.y)
+<span class="py-prompt">... </span>    y = cells.makecell(value=2)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>b = B()
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y = 1
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b = B(y=10)
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">30</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y</span>
+<span class="py-output">10</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b = B(x={<span class="py-string">'celltype'</span>: cells.RuleThenInputCell})
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y</span>
+<span class="py-output">2</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.x = 5
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">5</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y = 1
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">5</span></pre>
   <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>attrname</code></strong> - The name of the attribute you wish to override. If this is set
+          to a callable, it will override the rule for the cell. If it's 
+          set to a dictionary with one or more of 'rule', 'value', or 
+          'celltype', those attributes will be overridden in the cell. 
+          Otherwise, it will override the value of the target cell.</li>
+    </ul>
     <dl><dt>Overrides:
       object.__init__
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -349,7 +430,7 @@ A class in which CellAttrs may be used. Models automatically bring
     ></td>
   </table>
   
-  Creates a new cell of the appropriate type
+  
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -378,8 +459,7 @@ A class in which CellAttrs may be used. Models automatically bring
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3><span class="sig"><span class="sig-name">observer</span>(<span class="sig-arg">klass</span>,
-        <span class="sig-arg">attrib</span>=<span class="sig-default">None</span>,
+  <h3><span class="sig"><span class="sig-name">observer</span>(<span class="sig-arg">attrib</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">oldvalue</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">newvalue</span>=<span class="sig-default">None</span>)</span>
   </h3>
@@ -388,8 +468,27 @@ A class in which CellAttrs may be used. Models automatically bring
     ></td>
   </table>
   
-  
+  A classmethod to add an observer attribute to a Model. The observer 
+  may be set to fire on any change in the model, any change in an 
+  attribute, or when a function testing the new or old value of a cell 
+  returns true.
   <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>attrib</code></strong> - An attribute name to attach the observer to</li>
+        <li><strong class="pname"><code>oldvalue</code></strong> - A function to run on the now-out-of-date value of a cell which
+          changed in this datapulse; if the function returns True, the 
+          observer will fire. The signature for the function must be 
+          <code>f(val) -&gt; bool</code></li>
+        <li><strong class="pname"><code>newvalue</code></strong> - A function to run on up-to-date value; if the function returns
+          True, the observer will fire. The signature for the function must
+          be <code>f(val) -&gt; bool</code></li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+decorator
+
+</pre></dd></dl>
   </dd></dl>
 </td></tr></table>
 </div>
@@ -455,15 +554,34 @@ set([])
   </dd></dl>
 </td></tr></table>
 </div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Instance Variable Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
 <a name="model_name"></a>
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>model_name</h3>
-  
+  The name of this Model. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x24cd50&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x248d30&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x24cd50&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x248d30&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -473,11 +591,11 @@ set([])
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>model_value</h3>
-  
+  The value of this Model. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x24ce30&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x24dc30&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x24ce30&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x24dc30&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -487,11 +605,12 @@ set([])
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>parent</h3>
-  
+  For <code><a href="cells.family.Family-class.html" 
+  class="link">Family</a></code> graph traversal. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x24ce50&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x24dc50&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x24ce50&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x24dc50&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -524,7 +643,7 @@ set([])
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+        3.0alpha2 on Sat Jul 22 08:51:57 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

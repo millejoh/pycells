@@ -65,7 +65,13 @@ object --+
 </pre>
 
 <hr />
-Watch.<br /><br />
+Wrapper for a function which fires when a <code><a 
+  href="cells.model.Model-class.html" class="link">Model</a></code> updates
+  and certain conditions are met. Observers may be bound to specific 
+  attributes or whether a function returns true when handed a cell's old 
+  value or new value, or any combination of the above. An observer that has
+  no conditions on its running runs whenever the Model updates. Observers 
+  run at most once per datapulse.<br /><br />
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -90,7 +96,6 @@ Watch.<br /><br />
    </td>
   <td>
     <span class="sig"><a href="cells.observer.Observer-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">owner</span>,
         <span class="sig-arg">attrib</span>,
         <span class="sig-arg">oldvalue</span>,
         <span class="sig-arg">newvalue</span>,
@@ -107,7 +112,8 @@ Watch.<br /><br />
     <span class="sig"><a href="cells.observer.Observer-class.html#run_if_applicable" class="sig-name">run_if_applicable</a>(<span class="sig-arg">self</span>,
         <span class="sig-arg">model</span>,
         <span class="sig-arg">attr</span>)</span>
-    
+    <br />Determine whether this observer should fire, and fire if 
+      appropriate.
   </td>
 </tr>
   <tr>
@@ -155,6 +161,55 @@ Watch.<br /><br />
 </table>
 
 <br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.observer.Observer-class.html#attrib_name">attrib_name</a></strong></td>
+  <td>(optional) The cell name this observer watches.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.observer.Observer-class.html#func">func</a></strong></td>
+  <td>The function to run when the observer fires.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.observer.Observer-class.html#last_ran">last_ran</a></strong></td>
+  <td>The DP this observer last ran in.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.observer.Observer-class.html#newvalue">newvalue</a></strong></td>
+  <td>A function (signature: <code>f(val) -&gt; bool</code>) which, if 
+      it returns <code>True</code> when passed a changed cell's out-of-date
+      value, allows the observer to fire.</td>
+</tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.observer.Observer-class.html#oldvalue">oldvalue</a></strong></td>
+  <td>A function (signature: <code>f(val) -&gt; bool</code>) which, if 
+      it returns <code>True</code> when passed a changed cell's out-of-date
+      value, allows the observer to fire.</td>
+</tr>
+</table>
+
+<br />
 <!-- ==================== METHOD DETAILS ==================== -->
 <a name="section-MethodDetails"></a>
 <table class="details" border="1" cellpadding="3"
@@ -179,7 +234,6 @@ Watch.<br /><br />
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">owner</span>,
         <span class="sig-arg">attrib</span>,
         <span class="sig-arg">oldvalue</span>,
         <span class="sig-arg">newvalue</span>,
@@ -215,7 +269,84 @@ Watch.<br /><br />
     ></td>
   </table>
   
-  
+  Determine whether this observer should fire, and fire if 
+  appropriate.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>model</code></strong> - the model instance to search for matching cells within.</li>
+        <li><strong class="pname"><code>attr</code></strong> - the attribute which &quot;asked&quot; this observer to 
+          run.</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Instance Variable Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="attrib_name"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>attrib_name</h3>
+  (optional) The cell name this observer watches. Only when a cell with 
+  this name changes will the observer fire.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="func"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>func</h3>
+  The function to run when the observer fires. Signature: 
+  <code>f(model_instance) -&gt; (ignored)</code>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="last_ran"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>last_ran</h3>
+  The DP this observer last ran in.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="newvalue"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>newvalue</h3>
+  A function (signature: <code>f(val) -&gt; bool</code>) which, if it 
+  returns <code>True</code> when passed a changed cell's out-of-date value,
+  allows the observer to fire.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="oldvalue"></a>
+<div>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+  <h3>oldvalue</h3>
+  A function (signature: <code>f(val) -&gt; bool</code>) which, if it 
+  returns <code>True</code> when passed a changed cell's out-of-date value,
+  allows the observer to fire.
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -247,7 +378,7 @@ Watch.<br /><br />
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+        3.0alpha2 on Sat Jul 22 08:51:57 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

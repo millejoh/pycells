@@ -16,6 +16,9 @@ Input Cells:
 Rule Cells:
 1. Trying to set a rule cell throws an exception
 
+Rule Then Input Cells:
+1. Evaluates once at init, sets its value, and then acts like an InputCell
+
 Lazy Rule Cell, Once-asked flavor:
 1. Evaluates during model initialization (if it's housed in a model)
 2. Does not evaluate immediately when changes are propogated to it
@@ -68,11 +71,21 @@ class CellTypeTests_Input(unittest.TestCase):
         self.failUnlessRaises(cells.InputCellRunError, self.x.run)
 
 class CellTypeTests_Rule(unittest.TestCase):
-    def test_1_Nonsettability(self):
+    def test_1a_Nonsettability(self):
         "Rule 1: Rule cells may not be set"
         cells.reset()
         x = cells.RuleCell(None, lambda s,p: 0, name="x")
-        self.failUnlessRaises(cells.RuleCellSetError, x.set, 5)
+        self.failUnlessRaises(cells.RuleCellSetError, x.set, 5)        
+
+class CellTypeTests_RuleThenInput(unittest.TestCase):
+    def test_1b_RunRaisesAfterEval(self):
+        """Rule 1: 1. Evaluates once at init, sets its value, and then
+        acts like an InputCell.
+        """
+        cells.reset()
+        x = cells.RuleThenInputCell(None, rule=lambda s,p: 0, name="x")
+        x.get()
+        self.failUnlessRaises(cells.InputCellRunError, x.run)
 
 class CellTypeTests_OnceAskedLazy(unittest.TestCase):
     def setUp(self):

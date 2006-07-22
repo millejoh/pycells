@@ -53,19 +53,81 @@ class ModelMetatype(type):
 class Model(object):
     """
     A class in which CellAttrs may be used. Models automatically bring
-    their cells up-to-date at C{L{__init__}}-time.
+    their cells up-to-date at C{L{__init__}}-time. Cells may be
+    altered at runtime by passing C{attrname=value}, or
+    C{attrname=hash} to the constructor.
+
+    @ivar model_name: The name of this Model. By default, None.
+
+    @ivar model_value: The value of this Model. By default, None.
+
+    @ivar parent: For C{L{Family}} graph traversal. By default, None.
     """
     __metaclass__ = ModelMetatype
 
     _initialized = False
 
-    # default cells for Model, currently partially hidden
     model_name = cells.makecell(value=None, kid_overrides=False)
     model_value = cells.makecell(value=None, kid_overrides=False)
     parent = cells.makecell(value=None, kid_overrides=False)
 
     def __init__(self, *args, **kwargs):
-        # initialize cells based on kwargs
+        """
+        __init__(self, [<attrname>=<value, rule or dict>], ...) -> None
+
+        Initialize a Model with optional overrides. By passing a
+        parameter with the same name as a cell attribute, you may
+        override that cell attribute. For example:
+
+            >>> class A(cells.Model):
+            ...     x = cells.makecell(value=1)
+            ... 
+            >>> a1 = A()
+            >>> a1.x
+            1
+            >>> a2 = A(x="blah")
+            >>> a2.x
+            'blah'
+
+        This override can be arbitrarily complex; for instance, you
+        can make a RuleCell into a ValueCell, change a attribute's
+        celltype ... In short, anything you can do at Model defintion
+        time you can alter at instantiation time:
+
+            >>> class B(cells.Model):
+            ...     x = cells.makecell(rule=lambda s,p: 3 * s.y)
+            ...     y = cells.makecell(value=2)
+            ... 
+            >>> b = B()
+            >>> b.x
+            6
+            >>> b.y = 1
+            >>> b.x
+            3
+            >>> b = B(y=10)
+            >>> b.x
+            30
+            >>> b.y
+            10
+            >>> b = B(x={'celltype': cells.RuleThenInputCell})
+            >>> b.x
+            6
+            >>> b.y
+            2
+            >>> b.x = 5
+            >>> b.x
+            5
+            >>> b.y = 1
+            >>> b.x
+            5
+
+        @param attrname: The name of the attribute you wish to
+            override. If this is set to a callable, it will override
+            the rule for the cell. If it's set to a dictionary with
+            one or more of 'rule', 'value', or 'celltype', those
+            attributes will be overridden in the cell. Otherwise, it
+            will override the value of the target cell.
+        """
         self._initregistry = {}
         klass = self.__class__
 
@@ -75,10 +137,16 @@ class Model(object):
                 # normalize the input
                 if callable(v):
                     cellinit = {'rule': v}
-                elif 'keys' in dir(v) and \
-                         ('rule' in v.keys() or
-                          'value' in v.keys()):
-                    cellinit = v
+                elif 'keys' in dir(v):
+                    # kinda ran out of synonyms/shortened versions of
+                    # keys, here. I just want to see if any of 'rule',
+                    # 'value', or 'celltype' are in the keys of the
+                    # dict in v:
+                    quays = v.keys()
+                    for qui in ('rule', 'value', 'celltype'):
+                        if qui in quays:
+                            cellinit = v
+                            break
                 else:
                     cellinit = {'value': v}
                     
@@ -134,14 +202,16 @@ class Model(object):
             observer.run_if_applicable(self, attribute)
 
     def _buildcell(self, name, *args, **kwargs):
-        """Creates a new cell of the appropriate type"""
+        """
+        
+        """
         debug("Building cell: owner:", str(self))
         debug("                name:", name)
         debug("                args:", str(args))
         debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
-        if kwargs.has_key('type'):
-            celltype = kwargs["type"]
+        if kwargs.has_key('celltype'):
+            celltype = kwargs["celltype"]
         elif kwargs.has_key('rule'):  # it's a rule-cell.
             celltype = cells.RuleCell
         elif kwargs.has_key('value'):     # it's a value-cell
@@ -158,6 +228,25 @@ class Model(object):
 
     @classmethod
     def observer(klass, attrib=None, oldvalue=None, newvalue=None):
+        """
+        observer(attrib=None, oldvalue=None, newvalue=None) -> decorator
+
+        A classmethod to add an observer attribute to a Model. The
+        observer may be set to fire on any change in the model, any
+        change in an attribute, or when a function testing the new or
+        old value of a cell returns true.
+
+        @param attrib: An attribute name to attach the observer to
+
+        @param oldvalue: A function to run on the now-out-of-date
+            value of a cell which changed in this datapulse; if the
+            function returns True, the observer will fire. The
+            signature for the function must be C{f(val) -> bool}
+
+        @param newvalue: A function to run on up-to-date value; if the
+            function returns True, the observer will fire. The
+            signature for the function must be C{f(val) -> bool}
+        """
         def observer_decorator(func):
             klass._observernames.add(func.__name__)
             setattr(klass, func.__name__, ObserverAttr(func.__name__, attrib,
@@ -167,6 +256,9 @@ class Model(object):
 
 
 class NonCellSetError(Exception):
+    """
+    You may not set a non-cell Model attribute after initialization.
+    """
     def __init__(self, value):
         self.value = value
     def __str__(self):

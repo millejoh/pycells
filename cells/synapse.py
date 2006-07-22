@@ -9,9 +9,31 @@ def debug(*msgs):
         print " ".join(msgs)
 
 class Synapse(cell.Cell):
+    """
+    A very specialized Cell variant. Synapses are filters for
+    Cells. They can be applied to any type of Cell, and they simply
+    process the cell to build a value which is provided to dependent
+    cells as the filtered cell's value. They live within the cell
+    which defines them, and as such are only referenceable in that
+    rule.
+    """
     initialized = False
     
     def __new__(cls, owner, name=None, **kwargs):
+        """
+        Create a new synapse instance within the calling Cell, if
+        neccessary.
+
+        @param cls: Class this synapse is being called from.
+        
+        @param owner: Model instance this synapse is being created in
+            / retrieved from
+
+        @param name: Name of the synapse to retrieve; used as a lookup
+            on the enclosing Cell's synapse space.
+
+        @param kwargs: standard C{L{Cell}} keyword arguments.
+        """
         # first, check to see if there's already a synapse with this name in
         # the owner Cell
         if not owner.synapse_space.has_key(name): # and if there isn't
@@ -24,6 +46,15 @@ class Synapse(cell.Cell):
         return owner.synapse_space[name]
 
     def __init__(self, owner, name=None, **kwargs):
+        """
+        Initialize the synapse Cell, if neccessary.
+
+        @param owner: The model instance to pass to this synapse's rule
+
+        @param name: This synapse's name
+
+        @param kwargs: Standard C{L{Cell}} keyword arguments
+        """
         # at this point we're guaranteed to have a Synapse in the
         # owner, and self points at that Synapse. We don't know if
         # it's been initialized, though. so:
@@ -33,9 +64,15 @@ class Synapse(cell.Cell):
             self.initialized = True
         
     def __call__(self):
+        """
+        Run C{L{Cell.get}(self)} when a synapse is called as a function.
+        """
         return self.get()
 
     def run(self):
+        """
+        Slightly modified version of C{L{Cell.run}()}.
+        """
         debug(self.name, "running")
         # call stack manipulation
         oldcurr = cells._curr
@@ -48,7 +85,7 @@ class Synapse(cell.Cell):
             cell.remove_cb(self)
         self.reset_calls()
 
-        self.dp = cells._dp                             # we're up-to-date
+        self.dp = cells._dp                            # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         

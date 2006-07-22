@@ -106,9 +106,11 @@ class CellAttr(object):
         debug("got request for cell in", self.name)
         if self.name not in owner.__dict__.keys():
             # first, find out if this object has overrides on this cell's init
-            override = owner._initregistry.get(self.name)            
+            override = owner._initregistry.get(self.name)
             if override:                # it does, use the override
-                newcell = self.buildcell(owner, **override)
+                newkwargs = self.kwargs.copy()
+                newkwargs.update(override)
+                newcell = self.buildcell(owner, *self.args, **newkwargs)
             else:                       # it doesn't, use class's default
                 newcell = self.buildcell(owner, *self.args, **self.kwargs)
                 

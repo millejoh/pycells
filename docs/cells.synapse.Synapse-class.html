@@ -72,6 +72,12 @@ object --+
 </dd></dl>
 
 <hr />
+A very specialized Cell variant. Synapses are filters for Cells. They 
+  can be applied to any type of Cell, and they simply process the cell to 
+  build a value which is provided to dependent cells as the filtered cell's
+  value. They live within the cell which defines them, and as such are only
+  referenceable in that rule.<br /><br />
+
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -98,7 +104,7 @@ object --+
         <span class="sig-arg">owner</span>,
         <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">**kwargs</span>)</span>
-    <br />Initializes a Cell object.
+    <br />Initialize the synapse Cell, if neccessary.
   </td>
 </tr>
 <tr>
@@ -107,7 +113,8 @@ object --+
    </td>
   <td>
     <span class="sig"><a href="cells.synapse.Synapse-class.html#__call__" class="sig-name">__call__</a>(<span class="sig-arg">self</span>)</span>
-    
+    <br />Run <code>Cell.get(self)</code> when a synapse is called as a 
+      function.
   </td>
 </tr>
 <tr>
@@ -116,7 +123,7 @@ object --+
    </td>
   <td>
     <span class="sig"><a href="cells.synapse.Synapse-class.html#run" class="sig-name">run</a>(<span class="sig-arg">self</span>)</span>
-    <br />Runs the backing function (rule) for this cell.
+    <br />Slightly modified version of <code>Cell.run()</code>.
   </td>
 </tr>
 <tr>
@@ -141,6 +148,7 @@ object --+
       <code>get</code>,
       <code>propogate</code>,
       <code>propogation_list</code>,
+      <code>remove_called_bys</code>,
       <code>remove_cb</code>,
       <code>reset_calls</code>,
       <code>set</code>,
@@ -187,7 +195,8 @@ object --+
         <span class="sig-arg">owner</span>,
         <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">**kwargs</span>)</span>
-    
+    <br />Create a new synapse instance within the calling Cell, if 
+      neccessary.
   </td>
 </tr>
 </table>
@@ -258,8 +267,18 @@ object --+
     ></td>
   </table>
   
-  
+  Create a new synapse instance within the calling Cell, if 
+  neccessary.
   <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>cls</code></strong> - Class this synapse is being called from.</li>
+        <li><strong class="pname"><code>owner</code></strong> - Model instance this synapse is being created in / retrieved 
+          from</li>
+        <li><strong class="pname"><code>name</code></strong> - Name of the synapse to retrieve; used as a lookup on the 
+          enclosing Cell's synapse space.</li>
+        <li><strong class="pname"><code>kwargs</code></strong> - standard <code>Cell</code> keyword arguments.</li>
+    </ul>
     <dl><dt>Returns:</dt>
         <dd><pre class="literalblock">
 a new object with type S, a subtype of T
@@ -267,7 +286,6 @@ a new object with type S, a subtype of T
 </pre></dd></dl>
     <dl><dt>Overrides:
       object.__new__
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -288,9 +306,14 @@ a new object with type S, a subtype of T
     ></td>
   </table>
   
-  Initializes a Cell object. You must not specify both <code>rule</code>
-  and <code>value</code>.
+  Initialize the synapse Cell, if neccessary.
   <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>owner</code></strong> - The model instance to pass to this synapse's rule</li>
+        <li><strong class="pname"><code>name</code></strong> - This synapse's name</li>
+        <li><strong class="pname"><code>kwargs</code></strong> - Standard <code>Cell</code> keyword arguments</li>
+    </ul>
     <dl><dt>Returns:</dt>
         <dd><pre class="literalblock">
 None
@@ -298,7 +321,6 @@ None
 </pre></dd></dl>
     <dl><dt>Overrides:
       cell.Cell.__init__
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -316,7 +338,8 @@ None
     ></td>
   </table>
   
-  
+  Run <code>Cell.get(self)</code> when a synapse is called as a 
+  function.
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -333,26 +356,7 @@ None
     ></td>
   </table>
   
-  Runs the backing function (rule) for this cell. The sequence is:
-  <ol start="1">
-    <li>
-      Remove this cell from all other cell's called-by sets
-    </li>
-    <li>
-      Empty this cell's calls set.
-    </li>
-    <li>
-      Run the function, which as a side effect may add this cell to 
-      other cells' called-by sets and add links in this cell's calls 
-      set
-    </li>
-    <li>
-      <p>If this cell's value changes,</p>
-      <p>4.1 Run any <a href="cells.observer-module.html" 
-      class="link">observer</a>s in this cell's Model</p>
-      4.2 Return <code>True</code>
-    </li>
-  </ol>
+  Slightly modified version of <code>Cell.run()</code>.
   <dl><dt></dt><dd>
     <dl><dt>Returns:</dt>
         <dd><pre class="literalblock">
@@ -361,7 +365,6 @@ bool
 </pre></dd></dl>
     <dl><dt>Overrides:
       cell.Cell.run
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -445,7 +448,7 @@ False
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+        3.0alpha2 on Sat Jul 22 08:51:58 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

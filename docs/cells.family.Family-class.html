@@ -125,7 +125,8 @@
     <span class="sig"><a href="cells.family.Family-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
         <span class="sig-arg">*args</span>,
         <span class="sig-arg">**kwargs</span>)</span>
-    
+    <br />__init__(self, [&lt;attrname&gt;=&lt;value, rule or dict&gt;], 
+      ...) -&gt; None
   </td>
 </tr>
 <tr>
@@ -277,11 +278,6 @@
 </tr>
   <tr>
     <td colspan="2">
-    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
-      <code><a href="cells.model.Model-class.html#model_name">model_name</a></code>,
-      <code><a href="cells.model.Model-class.html#model_value">model_value</a></code>,
-      <code><a href="cells.model.Model-class.html#parent">parent</a></code>
-      </p>
     <div class="private">    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span> (private):
       <code><a href="cells.model.Model-class.html#_initialized">_initialized</a></code>,
       <code><a href="cells.model.Model-class.html#_observernames">_observernames</a></code>
@@ -323,6 +319,15 @@
   <td>An override definition for the Cells inserted into the 
       <code>kids</code> list.</td>
 </tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.model.Model-class.html">model.Model</a></code></span>:
+      <code><a href="cells.model.Model-class.html#model_name">model_name</a></code>,
+      <code><a href="cells.model.Model-class.html#model_value">model_value</a></code>,
+      <code><a href="cells.model.Model-class.html#parent">parent</a></code>
+      </p>
+    </td>
+  </tr>
 </table>
 
 <br />
@@ -359,10 +364,64 @@
     ></td>
   </table>
   
-  
+  <p>__init__(self, [&lt;attrname&gt;=&lt;value, rule or dict&gt;], ...) 
+  -&gt; None</p>
+  Initialize a Model with optional overrides. By passing a parameter 
+  with the same name as a cell attribute, you may override that cell 
+  attribute. For example:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=1)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a1 = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a1.x</span>
+<span class="py-output">1</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a2 = A(x=<span class="py-string">&quot;blah&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>a2.x</span>
+<span class="py-output">'blah'</span></pre>
+  This override can be arbitrarily complex; for instance, you can make a
+  RuleCell into a ValueCell, change a attribute's celltype ... In short, 
+  anything you can do at Model defintion time you can alter at 
+  instantiation time:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> B(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(rule=<span class="py-keyword">lambda</span> s,p: 3 * s.y)
+<span class="py-prompt">... </span>    y = cells.makecell(value=2)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>b = B()
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y = 1
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">3</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b = B(y=10)
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">30</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y</span>
+<span class="py-output">10</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b = B(x={<span class="py-string">'celltype'</span>: cells.RuleThenInputCell})
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">6</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y</span>
+<span class="py-output">2</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.x = 5
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">5</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>b.y = 1
+<span class="py-prompt">&gt;&gt;&gt; </span>b.x</span>
+<span class="py-output">5</span></pre>
   <dl><dt></dt><dd>
     <dl><dt>Overrides:
       <a href="cells.model.Model-class.html#__init__">model.Model.__init__</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -618,9 +677,9 @@ c__', '__init__'])
   A list of Models which are guaranteed to have the attribute overrides 
   defined in <code>kid_slots</code>
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x4081f0&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x405290&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x4081f0&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x405290&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -635,9 +694,9 @@ c__', '__init__'])
   defined in the class in <code>kid_slots</code> minus the attributes 
   defined in every Model.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x408230&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x4052d0&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x408230&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x4052d0&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -670,7 +729,7 @@ c__', '__init__'])
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 20 12:24:02 2006</td>
+        3.0alpha2 on Sat Jul 22 08:51:56 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

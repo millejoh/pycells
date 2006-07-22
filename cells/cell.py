@@ -327,9 +327,7 @@ class Cell(object):
 
         # the rule run may rewrite the dep graph; prepare for that by nuking
         # c-b links to this cell and calls links from this cell:
-        for cell in self.calls_list():
-            _debug(self.name, "removing c-b link from", cell.name)
-            cell.remove_cb(self)
+        self.remove_called_bys()
         self.reset_calls()
 
         self.dp = cells._dp                             # we're up-to-date
@@ -354,6 +352,15 @@ class Cell(object):
             
             return True
 
+    def remove_called_bys(self):
+        """
+        remove_called_bys(self) -> None
+
+        Remove this cell from the called_by lists of all cells this cell calls
+        """
+        for cell in self.calls_list():
+            _debug(self.name, "removing c-b link from", cell.name)
+            cell.remove_cb(self)
 
     def changed(self):
         """
@@ -522,6 +529,7 @@ class RuleThenInputCell(Cell):
 
         Cell.__init__(self, *args, **kwargs)
         self.run()
+        self.remove_called_bys()
         self.rule = None
         self.bound = True
 
@@ -529,13 +537,16 @@ class RuleThenInputCell(Cell):
         """
         run(self) -> None
 
-        You may not C{run()} an L{InputCell}
+        You may not C{run()} an L{RuleThenInputCell} after the initial
+        C{run()}
 
-        @raise InputCellRunError: Always raises
+        @raise InputCellRunError: Raises if instance has been bound
         """
         if self.bound:
             raise InputCellRunError("attempt to run RuleThenInputCell '" +
                                     self.name + "'")
+        else:
+            Cell.run(self)
 
 
 class LazyCell(RuleCell):

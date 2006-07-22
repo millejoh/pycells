@@ -69,7 +69,9 @@
     <li> <strong class="uidlink">exceptions.Exception</strong>:
       <em class="summary">Common base class for all exceptions.</em>
     <ul>
-    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>
+    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>:
+      <em class="summary">You may not set a non-cell Model attribute after 
+        initialization.</em>
     </li>
     <li> <strong class="uidlink"><a href="cells.family.FamilyTraversalError-class.html">cells.family.FamilyTraversalError</a></strong>:
       <em class="summary">Raised when there's some sort of error in <code><a 
@@ -86,6 +88,9 @@
       <em class="summary">An attempt to <code><code class="link">run</code>()</code> an 
         InputCell was made.</em>
     </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
+      <em class="summary">RuleCells may not be set.</em>
+    </li>
     <li> <strong class="uidlink"><a href="cells.cell.SetDuringNotificationError-class.html">cells.cell.SetDuringNotificationError</a></strong>:
       <em class="summary">An attempt at a non-deferred <code><code 
         class="link">set</code>()</code> happened during propogation.</em>
@@ -95,9 +100,6 @@
         <code><a href="cells.cell._CellException-class.html#__init__" 
         class="link">__init__</a></code>.</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
-      <em class="summary">RuleCells may not be set.</em>
-    </li>
     </ul>
     </li>
     </ul>
@@ -106,7 +108,9 @@
       <em class="summary">The most base type</em>
     <ul>
     <li> <strong class="uidlink"><a href="cells.observer.Observer-class.html">cells.observer.Observer</a></strong>:
-      <em class="summary">Watch.</em>
+      <em class="summary">Wrapper for a function which fires when a <code><a 
+        href="cells.model.Model-class.html" class="link">Model</a></code> 
+        updates and certain conditions are met.</em>
     </li>
     <li> <strong class="uidlink">type</strong>:
       <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
@@ -115,6 +119,20 @@
     <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
     </li>
     </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>:
+      <em class="summary">Wrapper for Observers within Models.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.model.Model-class.html">cells.model.Model</a></strong>:
+      <em class="summary">A class in which CellAttrs may be used.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.family.Family-class.html">cells.family.Family</a></strong>:
+      <em class="summary">Family</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
+      <em class="summary">CellAttr</em>
     </li>
     <li> <strong class="uidlink">cells.cell.Cell</strong>:
       <em class="summary">The base Cell class.</em>
@@ -143,31 +161,19 @@
     <li> <strong class="uidlink"><a href="cells.cell.InputCell-class.html">cells.cell.InputCell</a></strong>:
       <em class="summary">A cell whose value can be set</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.synapse.Synapse-class.html">cells.synapse.Synapse</a></strong>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
+      <em class="summary">Runs the rule to determine initial value, then acts like a 
+        InputCell</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.synapse.Synapse-class.html">cells.synapse.Synapse</a></strong>:
+      <em class="summary">A very specialized Cell variant.</em>
     <ul>
     <li> <strong class="uidlink"><a href="cells.synapse.ChangeSynapse-class.html">cells.synapse.ChangeSynapse</a></strong>:
       <em class="summary">A very simple filter.</em>
     </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
-      <em class="summary">Runs the rule to determine initial value, then acts like a 
-        InputCell</em>
-    </li>
     </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.model.Model-class.html">cells.model.Model</a></strong>:
-      <em class="summary">A class in which CellAttrs may be used.</em>
-    <ul>
-    <li> <strong class="uidlink"><a href="cells.family.Family-class.html">cells.family.Family</a></strong>:
-      <em class="summary">Family</em>
-    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
-      <em class="summary">CellAttr</em>
     </li>
     </ul>
     </li>
@@ -198,7 +204,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 20 12:23:59 2006</td>
+        3.0alpha2 on Sat Jul 22 08:51:51 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>
