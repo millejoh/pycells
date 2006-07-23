@@ -79,12 +79,26 @@
   </td>
 </tr>
   <tr><td><ul>
-    <li> <strong class="uidlink"><a href="cells.cell-module.html">cells.cell</a></strong>: <em class="summary">Cell</em></li>
-    <li> <strong class="uidlink"><a href="cells.cellattr-module.html">cells.cellattr</a></strong>: <em class="summary">&nbsp;</em></li>
-    <li> <strong class="uidlink"><a href="cells.family-module.html">cells.family</a></strong>: <em class="summary">&nbsp;</em></li>
-    <li> <strong class="uidlink"><a href="cells.model-module.html">cells.model</a></strong>: <em class="summary">&nbsp;</em></li>
-    <li> <strong class="uidlink"><a href="cells.observer-module.html">cells.observer</a></strong></li>
-    <li> <strong class="uidlink"><a href="cells.synapse-module.html">cells.synapse</a></strong></li>
+    <li> <strong class="uidlink"><a href="cells.cell-module.html">cells.cell</a></strong>: <em class="summary">Cell, and subclasses of Cell.</em></li>
+    <li> <strong class="uidlink"><a href="cells.cellattr-module.html">cells.cellattr</a></strong>: <em class="summary">CellAttr, a wrapper for <code>Cell</code> objects within 
+        <code><code class="link">Models</code></code></em></li>
+    <li> <strong class="uidlink"><a href="cells.family-module.html">cells.family</a></strong>: <em class="summary">Family, a specialized <code><a 
+        href="cells.model.Model-class.html" class="link">Model</a></code> 
+        for networks of <code><a href="cells.model.Model-class.html" 
+        class="link">Model</a></code>s.</em></li>
+    <li> <strong class="uidlink"><a href="cells.model-module.html">cells.model</a></strong>: <em class="summary">Support for the <code><a href="cells.model.Model-class.html" 
+        class="link">Model</a></code> object, an object in which <code><a 
+        href="cells.cellattr.CellAttr-class.html" 
+        class="link">CellAttr</a></code>s may be embedded.</em></li>
+    <li> <strong class="uidlink"><a href="cells.observer-module.html">cells.observer</a></strong>: <em class="summary">Classes which deal with observers, bits of code which fire when 
+        a <code><a href="cells.model.Model-class.html" 
+        class="link">Model</a></code> is updated and updated cells match 
+        certain conditions of the observer, such as cell name or statements
+        about the cell's value.</em></li>
+    <li> <strong class="uidlink"><a href="cells.synapse-module.html">cells.synapse</a></strong>: <em class="summary">Synapses, cell variants which exist only within <code><a 
+        href="cells.cell.RuleCell-class.html" 
+        class="link">RuleCell</a></code>s and which mediate the propogation
+        of another cell's value.</em></li>
   </ul></td></tr>
 </table>
 
@@ -179,29 +193,9 @@
     <strong><a href="cells-module.html#_DECO_OFFSET">_DECO_OFFSET</a></strong></td>
   <td>&nbsp;</td>
 </tr>
-<tr class="private">
+<tr>
   <td width="15%">
-    <strong><a href="cells-module.html#_dp">_dp</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr class="private">
-  <td width="15%">
-    <strong><a href="cells-module.html#_curr">_curr</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr class="private">
-  <td width="15%">
-    <strong><a href="cells-module.html#_curr_propogator">_curr_propogator</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr class="private">
-  <td width="15%">
-    <strong><a href="cells-module.html#_queued_updates">_queued_updates</a></strong></td>
-  <td>&nbsp;</td>
-</tr>
-<tr class="private">
-  <td width="15%">
-    <strong><a href="cells-module.html#_deferred_sets">_deferred_sets</a></strong></td>
+    <strong><a href="cells-module.html#cellenv">cellenv</a></strong></td>
   <td>&nbsp;</td>
 </tr>
 </table>
@@ -462,71 +456,15 @@ False
   </dd></dl>
 </td></tr></table>
 </div>
-<a name="_dp"></a>
-<div class="private">
+<a name="cellenv"></a>
+<div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>_dp</h3>
+  <h3>cellenv</h3>
   
   <dl><dt></dt><dd>
-    <dl title="1"><dt>Value:</dt>
+    <dl title="&lt;thread._local object at 0xd218&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </pre></td></tr></table></dd>
-    </dl>
-  </dd></dl>
-</td></tr></table>
-</div>
-<a name="_curr"></a>
-<div class="private">
-<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>_curr</h3>
-  
-  <dl><dt></dt><dd>
-    <dl title="None"><dt>Value:</dt>
-      <dd><table><tr><td><pre class="variable">
-None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </pre></td></tr></table></dd>
-    </dl>
-  </dd></dl>
-</td></tr></table>
-</div>
-<a name="_curr_propogator"></a>
-<div class="private">
-<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>_curr_propogator</h3>
-  
-  <dl><dt></dt><dd>
-    <dl title="None"><dt>Value:</dt>
-      <dd><table><tr><td><pre class="variable">
-None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </pre></td></tr></table></dd>
-    </dl>
-  </dd></dl>
-</td></tr></table>
-</div>
-<a name="_queued_updates"></a>
-<div class="private">
-<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>_queued_updates</h3>
-  
-  <dl><dt></dt><dd>
-    <dl title="[]"><dt>Value:</dt>
-      <dd><table><tr><td><pre class="variable">
-[]                                                                     
-      </pre></td></tr></table></dd>
-    </dl>
-  </dd></dl>
-</td></tr></table>
-</div>
-<a name="_deferred_sets"></a>
-<div class="private">
-<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>_deferred_sets</h3>
-  
-  <dl><dt></dt><dd>
-    <dl title="[]"><dt>Value:</dt>
-      <dd><table><tr><td><pre class="variable">
-[]                                                                     
+&lt;thread._local object at 0xd218&gt;                                       
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -559,7 +497,7 @@ None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Sat Jul 22 08:51:52 2006</td>
+        3.0alpha2 on Sun Jul 23 14:37:55 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>
