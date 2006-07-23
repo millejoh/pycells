@@ -1,3 +1,30 @@
+# PyCells: Automatic dataflow management for Python
+# Copyright (C) 2006, Ryan Forsythe
+
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# See LICENSE for the full license text.
+
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+"""
+Synapses, cell variants which exist only within C{L{RuleCell}}s and
+which mediate the propogation of another cell's value. For instance, a
+cell C{a} could use cell C{b}'s value, but only if it had changed more
+than 5% since the last time C{a} used it.
+
+@var DEBUG: Turns on debugging messages for the synapse module.
+"""
+
 import cells, cell
 
 DEBUG = False
