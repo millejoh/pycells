@@ -85,7 +85,7 @@ class Synapse(cell.Cell):
             cell.remove_cb(self)
         self.reset_calls()
 
-        self.dp = cells.cellenv.dp                            # we're up-to-date
+        self.dp = cells.cellenv.dp                     # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         

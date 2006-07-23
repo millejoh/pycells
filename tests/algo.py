@@ -240,7 +240,7 @@ class AlgoTests_Rule4(unittest.TestCase):
         self.x.propogation_list = lambda s,e: [ self.a, self.c ]
         self.c.propogation_list = lambda s,e: [ self.b, self.j ]
         self.b.propogation_list = lambda s,e: [ self.a, self.i ]
-        
+
         self.x.set(3)
 
     def testA_QueryingCellRecalcsFirst(self):
@@ -263,9 +263,8 @@ class AlgoTests_Rule4(unittest.TestCase):
         recalculation must run after all querying cells have been run,
         FIFO."""
         # (continuing from test_4_QueriedCellQueuesRecalcs) ... then
-        # b's, then a's. Verify that bit.  (note, h isn't deferred so
-        # it's run first, then c's (j), then b's deferred (i).)
-        self.failUnless(self.runlog[3:] == ["h", "j", "i"])
+        # b's, then a's. Verify that bit.
+        self.failUnless(self.runlog[3:] == ["j", "i", "h"])
 
 class AlgoTests_Rule9999(unittest.TestCase):
     """All the 'trivial' rules go in here"""

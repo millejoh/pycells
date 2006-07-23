@@ -24,7 +24,7 @@ def _debug(*msgs):
 
     Prints debug messages.
     """
-    msgs = list(msgs)
+    msgs = [ str(_) for _ in msgs ]
     msgs.insert(0, "cell".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
         print " ".join(msgs)
@@ -240,6 +240,7 @@ class Cell(object):
                   cells.cellenv.curr_propogator.name)
         else:
             _debug(self.name, "propogating. No old propogator")
+            
         prev_propogator = cells.cellenv.curr_propogator
         cells.cellenv.curr_propogator = self
         self.changed_dp = cells.cellenv.dp
@@ -248,17 +249,26 @@ class Cell(object):
         # first, notify the 'propogate_first' cell
         if propogate_first:
             # append everything but the propogate_first cell onto the deferred
-            # propogation FIFO
-            deferrals = list(self.called_by() - set([propogate_first]))
-            _debug(self.name, "deferring update of",
-                  str([ c.name for c in deferrals ]))
-            cells.cellenv.queued_updates.extend(deferrals)
+            # propogation FIFO            
+            cells.cellenv.queued_updates.extend(
+                Cell.propogation_list(self, propogate_first))
+
+            _debug(self.name, "first propogating to", propogate_first.name,
+                   "then adding",
+                  [ cell.name for cell in
+                    Cell.propogation_list(self, propogate_first) ],
+                   "to deferred")
             
             _debug(self.name, "asking", propogate_first.name, "to update first")
             propogate_first.update()
             _debug(self.name, "finished propogating to first update",
               propogate_first.name)
+            
         else:
+            _debug(self.name, "propogating to",
+                   [ cell.name for cell in
+                     Cell.propogation_list(self, propogate_first) ])
+
             # weird for testing
             for cell in Cell.propogation_list(self, propogate_first):
                 if cell.lazy:
@@ -266,7 +276,7 @@ class Cell(object):
                           ", but it's lazy -- not updating")
                 else:
                     _debug(self.name, "asking", cell.name, "to update")
-                    cell.update()
+                    cell.update(self)
                 
         self.notifying = False
         cells.cellenv.curr_propogator = prev_propogator
@@ -289,7 +299,7 @@ class Cell(object):
             cells.cellenv.queued_updates = []
             for cell in to_update:
                 _debug("Running deferred update on", cell.name)
-                cell.update()
+                cell.update(self)
                 
             cells.cellenv.curr_propogator = None
 
