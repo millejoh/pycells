@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+# PyCells: Automatic dataflow management for Python
+# Copyright (C) 2006, Ryan Forsythe
+
+from setuptools import setup, find_packages
+
+setup(name='PyCells',
+      version='0.1a2',
+      packages=find_packages(),
+      extras_require = { 'Epydoc': ['epydoc>=2.1'], },
+    
+      description='Automatic dataflow management',
+      author='Ryan Forsythe',
+      author_email='ryan@pdxcb.net',
+      url='http://pycells.pdxcb.net/',
+      license="LGPL",
+     )
+

@@ -114,8 +114,8 @@ class Cell(object):
         self.value = kwargs.get("value", None)
         self.unchanged_if = kwargs.get("unchanged_if", lambda o,n: o == n)
         
-        self.called_by = set([])     # the cells whose rules call this cell
-        self.calls = set([])         # the cells which this cell's rule calls
+        self.called_by = set([]) #: the cells whose rules call this cell
+        self.calls = set([])     #: the cells which this cell's rule calls
 
         self.dp = 0
         self.changed_dp = 0
@@ -128,8 +128,8 @@ class Cell(object):
         self.lazy = False
         self.last_value = None
 
-        self.synapse_space = {}         # storage for synapses used in this
-                                        # cell's (possible) rule
+        #: storage for synapses used in this cell's (possible) rule
+        self.synapse_space = {}         
         
         if kwargs.has_key("value"):
             self.bound = True

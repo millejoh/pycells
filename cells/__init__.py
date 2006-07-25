@@ -29,7 +29,7 @@ call them, and notify those cells of changes.
 """
 DEBUG = False
 
-_DECO_OFFSET = 9                 # for the debug '  module > ' messages
+_DECO_OFFSET = 9                 #: for the debug '  module > ' messages
 
 import threading
 

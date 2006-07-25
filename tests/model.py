@@ -27,11 +27,9 @@ And now, the model:
    * type of old value (as above)
    * bound value (that is, if a cell had a previous value)
 
-7. (To research/ask about: post-propogation task queue?)
+7. (TODO: post-propogation task queue)
 
-8. (To research/ask about: all observers run only once per DP change?)
-
-9. A model provides the following cells:
+8. A model provides the following cells:
    * model_name: the name of this Model object   
    * model_value: a way to reduce the Model to a single value; returns
      None by default     
