@@ -32,7 +32,10 @@ instantiate these into objects for you.
 
 DEBUG = False
 
-import cells, weakref
+import cells
+import weakref
+import copy
+import UserDict
 
 def _debug(*msgs):
     """
@@ -324,7 +327,10 @@ class Cell(object):
             to_set = cells.cellenv.deferred_sets
             cells.cellenv.deferred_sets = []
             for cell, value in to_set:
-                cell.set(value)
+                if isinstance(cell, DictCell):
+                    cell.__setitem__(value[0], value[1])
+                else:
+                    cell.set(value)
 
     def run(self):
         """
@@ -628,6 +634,132 @@ class UntilAskedLazyCell(LazyCell):
             self.lazy = False
 
         return v
+
+class DictCell(InputCell, UserDict.DictMixin):
+    """
+    A input cell whose value is initialized to {}. An ordinary
+    InputCell doesn't act like we'd like it to in this case:
+
+        >>> class A(cells.Model):
+        ...     x = cells.makecell(value={})
+        ...     @cells.fun2cell()
+        ...     def xkeys(self, prev):
+        ...         return self.x.keys()
+        ... 
+        >>> a = A()
+        >>> a.x
+        {}
+        >>> a.xkeys  
+        []
+        >>> a.x['foo'] = 'bar'
+        >>> a.x
+        {'foo': 'bar'}
+        >>> a.xkeys
+        []
+
+    But if we use a DictCell, this will act like we'd like it to:
+
+        >>> class A(cells.Model):
+        ...     x = cells.makecell(value={}, type=DictCell)
+        ...     @cells.fun2cell()
+        ...     def xkeys(self, prev):
+        ...         return self.x.keys()
+        ... 
+        >>> a = A()
+        >>> a.x
+        {}
+        >>> a.xkeys  
+        []
+        >>> a.x['foo'] = 'bar'
+        >>> a.x
+        {'foo': 'bar'}
+        >>> a.xkeys
+        ['foo']
+    
+    """
+    def __init__(self, owner, value={}, *args, **kwargs):
+        """
+        __init__(self, owner, name=None, rule=None, value=None,
+        unchanged_if=None) -> None
+
+        Initializes an InputCell object. You may not pass a C{rule}.
+
+        @param name: This cell's name. When using a C{Cell} with
+            C{L{Model}}s, this parameter is assigned automatically.
+
+        @param value: Define a value for this cell. 
+
+        @param unchanged_if: Sets a function to determine if a cell's
+            value has changed. The signature for the passed function
+            is C{f(old, new) -> bool}.
+
+        @raise InputCellRunError: If C{rule} is passed as a parameter
+        """
+        if kwargs.get("rule", None):
+            raise InputCellRunError("You may not give an InputCell a rule")
+        Cell.__init__(self, owner, value=value, *args, **kwargs)
+
+    def get(self):
+        return self
+    
+    def __setitem__(self, key, value):
+        """
+        __setitem__(self, key, value) -> None
+
+        Sets this cell's value's key's value and begins propogation of
+        the change to the dict, if neccessary.
+
+        @param key: The value to get out of the cell.value dict
+        
+        @param value: The value to set this cell's value's key's value to.
+        """
+        _debug(self.name, "getting setitem as dictcell")
+        if cells.cellenv.curr_propogator:       # if a propogation is happening
+            _debug(self.name, "sees in-progress propogation; deferring set.")
+            # defer the set
+            cells.cellenv.deferred_sets.append((self, (key, value)))
+        else:
+            _debug(self.name, "setting")        
+            if not self.value.get(key, None) or \
+                   not self.unchanged_if(self.value[key], value):
+                _debug(self.name, "new value is different; propogating change")
+                self.last_value = copy.copy(self.value)
+                self.value[key] = value
+
+                cells.cellenv.dp += 1
+                self.dp = cells.cellenv.dp
+
+                if self.owner:
+                    self.owner._run_observers(self)
+                
+                self.propogate()
+
+    def __getitem__(self, key):
+        """
+        __getitem__(self, key) -> value
+
+        Gets the value in self.value[key]
+
+        @param key: lookup
+        """
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+        
+        self.update()
+        return self.value[key]
+
+    def keys(self):
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+
+        return self.value.keys()
+
+    def __delitem__(self, key):
+        del(self.value[key])
+        
+
 
 class _CellException(Exception):
     def __init__(self, value):

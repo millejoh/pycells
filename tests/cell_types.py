@@ -13,6 +13,11 @@ Input Cells:
 2. A set during propogation must defer until the propogation is complete
 3. Trying to .run() a input cell raises an exception
 
+DictCells:
+1. Act like InputCells
+2. Also propogate changes if the hash is changed -- ie, if a key is
+   set to a different value.
+
 Rule Cells:
 1. Trying to set a rule cell throws an exception
 
@@ -147,5 +152,29 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
         self.failUnless(a.value == 47)  # yadda yadda...
         self.failUnless(a.get() == 52)
 
+class CellTypeTests_DictTests(unittest.TestCase):
+    def setUp(self):
+        cells.reset()
+        self.x = cells.DictCell(None, {}, name="x")
+
+    def test_1_DictCellSettable(self):
+        try:
+            self.x.set({'blah': 'blah blippity bloo'})
+        except Exception, e:
+            self.fail()
+
+    def test_2_RunRaises(self):
+        self.failUnlessRaises(cells.InputCellRunError, self.x.run)
+
+    def test_3_ChangingKeyValuePropogates(self):
+        def y_rule(model, prev):
+            return self.x.keys()
+
+        y = cells.Cell(None, name="y", rule=y_rule)
+        y.get()                         # establish deps
+        self.failUnless(y.get() == [])  # no keys in x yet
+        self.x['foo'] = 'blah blah'     # cause propogation
+        self.failUnless(y.get() == ['foo'])
+        
 if __name__ == "__main__":
     unittest.main()

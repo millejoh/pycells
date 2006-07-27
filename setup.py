@@ -3,6 +3,8 @@
 # PyCells: Automatic dataflow management for Python
 # Copyright (C) 2006, Ryan Forsythe
 
+import ez_setup
+ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 
 setup(name='PyCells',
