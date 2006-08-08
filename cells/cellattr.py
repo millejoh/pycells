@@ -105,8 +105,13 @@ class CellAttr(object):
         @param ownertype: (unused)
         """
         if not owner: return self
-        # return the value in owner.myname
-        return self.getcell(owner).get()
+
+        cell = self.getcell(owner)
+        if isinstance(cell, cells.cell.DictCell):
+            return cell
+        else:
+            # return the value in owner.myname
+            return cell.getvalue()
         
     def getcell(self, owner):
         """

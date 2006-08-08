@@ -52,18 +52,18 @@ class CellTypeTests_Input(unittest.TestCase):
 
     def test_2_SetDuringPropogation(self):
         "Input 2: A set during propogation must defer until propogation is complete"
-        a = cells.RuleCell(None, lambda s,p: self.x.get() * 3, name="a")
+        a = cells.RuleCell(None, lambda s,p: self.x.getvalue() * 3, name="a")
 
         self.captured_x = None
         def d_rule(s,p):
             self.x.set(2)
             if not self.captured_x:
                 self.captured_x = self.x.value
-            return a.get()
+            return a.getvalue()
         d = cells.RuleCell(None, d_rule, name="d")
 
         # establish dependencies. 
-        d.get()                         # x.value = 2, now.
+        d.getvalue()                         # x.value = 2, now.
         self.captured_x = None          # set trap
         self.x.set(5)
         # that set propogates to a, and a.value = 15. a's change propogates to
@@ -89,7 +89,7 @@ class CellTypeTests_RuleThenInput(unittest.TestCase):
         """
         cells.reset()
         x = cells.RuleThenInputCell(None, rule=lambda s,p: 0, name="x")
-        x.get()
+        x.getvalue()
         self.failUnlessRaises(cells.InputCellRunError, x.run)
 
 class CellTypeTests_OnceAskedLazy(unittest.TestCase):
@@ -97,9 +97,9 @@ class CellTypeTests_OnceAskedLazy(unittest.TestCase):
         cells.reset()
         self.x = cells.InputCell(None, 4, name="x")
         self.a = cells.OnceAskedLazyCell(None, name="a",
-                                         rule=lambda s,p: self.x.get()+(p or 1))
+                                         rule=lambda s,p: self.x.getvalue()+(p or 1))
 
-        self.a.get()                         # establish dependencies
+        self.a.getvalue()                         # establish dependencies
         self.x.set(42)                       # cause propogation
         
     def test_1_EvaluateDuringMOInit(self):
@@ -113,26 +113,26 @@ class CellTypeTests_OnceAskedLazy(unittest.TestCase):
 
     def test_3_EvalOnRead(self):
         "Once-asked Lazy 3: Once-asked lazy cells with changed called cells evaluate when called"
-        self.failUnless(self.a.get() == 47)  # standard exam causes eval
+        self.failUnless(self.a.getvalue() == 47)  # standard exam causes eval
 
 class CellTypeTests_UntilAskedLazy(unittest.TestCase):
     def setUp(self):
         cells.reset()
         self.x = cells.InputCell(None, 4, name="x")
         self.a = cells.UntilAskedLazyCell(None, name="a",
-                                     rule=lambda s,p: self.x.get() + 1)
-        self.a.get(init=True)          # establish dependencies, a = 5
+                                     rule=lambda s,p: self.x.getvalue() + 1)
+        self.a.getvalue(init=True)          # establish dependencies, a = 5
         self.x.set(42)                 # cause propogation
         
     def test_1_EvalOnRead(self):
         "Until-asked Lazy 1: Until-asked lazys with changed called cells are evaluated when called"
         self.failUnless(self.a.value == 5)   # sneaky exam doesn't cause eval
-        self.failUnless(self.a.get() == 43)  # standard exam causes eval
+        self.failUnless(self.a.getvalue() == 43)  # standard exam causes eval
 
     def test_2_ActsNormalAfterEval(self):
         "Until-asked Lazy 2: Until-asked lazys act like normal rule cells after initial evaluation"
         self.failUnless(self.a.value == 5)   # sneaky exam doesn't cause eval
-        self.failUnless(self.a.get() == 43)  # standard exam causes eval
+        self.failUnless(self.a.getvalue() == 43)  # standard exam causes eval
         self.x.set(5)                        # cause another propogation
         self.failUnless(self.a.value == 6)   # should have caused a's evaluation
 
@@ -142,15 +142,15 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
         cells.reset()
         x = cells.InputCell(None, 4, name="x")
         a = cells.AlwaysLazyCell(None, name="a",
-                                 rule=lambda s,p: x.get() + (p or 1))
+                                 rule=lambda s,p: x.getvalue() + (p or 1))
 
-        a.get()                         # establish dependencies
+        a.getvalue()                         # establish dependencies
         x.set(42)                       # cause propogation
         self.failUnless(a.value == 5)   # sneaky exam doesn't cause lazy eval
-        self.failUnless(a.get() == 47)  # standard eval causes lazy eval
+        self.failUnless(a.getvalue() == 47)  # standard eval causes lazy eval
         x.set(5)                        # cause another propogation
         self.failUnless(a.value == 47)  # yadda yadda...
-        self.failUnless(a.get() == 52)
+        self.failUnless(a.getvalue() == 52)
 
 class CellTypeTests_DictTests(unittest.TestCase):
     def setUp(self):
@@ -171,10 +171,10 @@ class CellTypeTests_DictTests(unittest.TestCase):
             return self.x.keys()
 
         y = cells.Cell(None, name="y", rule=y_rule)
-        y.get()                         # establish deps
-        self.failUnless(y.get() == [])  # no keys in x yet
+        y.getvalue()                         # establish deps
+        self.failUnless(y.getvalue() == [])  # no keys in x yet
         self.x['foo'] = 'blah blah'     # cause propogation
-        self.failUnless(y.get() == ['foo'])
+        self.failUnless(y.getvalue() == ['foo'])
         
 if __name__ == "__main__":
     unittest.main()

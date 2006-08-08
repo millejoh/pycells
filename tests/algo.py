@@ -62,7 +62,7 @@ class AlgoTests_Rule0(unittest.TestCase):
         """
         cells.cellenv.curr = None
         x = cells.Cell(None, name="x", rule=lambda s,p: (p or 39) + 3)
-        self.failUnless(x.get() == x.get())  # should not calculate twice
+        self.failUnless(x.getvalue() == x.getvalue())  # should not calculate twice
 
 class AlgoTests_Rule1(unittest.TestCase):
     """1. If a cell is a value cell, setting it changes its value, advances
@@ -82,7 +82,7 @@ class AlgoTests_Rule1(unittest.TestCase):
     def testB_SettingChangesValue(self):
         """Rule 1 part b: A cell being set changes its value"""
         self.x.set(42)
-        self.failUnless(self.x.get() == 42)
+        self.failUnless(self.x.getvalue() == 42)
 
     def testC_SettingChangesCellsDP(self):
         """Rule 1 part c: A cell being set advances its DP to the global DP
@@ -103,21 +103,21 @@ class AlgoTests_Rule2(unittest.TestCase):
         self.captured_notify_flag = None
         def a_rule(s, p):
             self.captured_notify_flag = self.x.notifying
-            return self.x.get() * 2
+            return self.x.getvalue() * 2
         self.a = cells.Cell(None, name="a", rule=a_rule)
 
     def testA_SettingNotifications(self):
         """Rule 2 part a: A cell with a changed value must tell the
         cells which call it to recalculate"""
-        self.a.get()                         # a is now dependent on x
+        self.a.getvalue()                         # a is now dependent on x
         self.x.set(42)
-        self.failUnless(self.a.get() == 84)
+        self.failUnless(self.a.getvalue() == 84)
 
     def testB_SettingRecalcNotificationFlag(self):
         """Rule 2 part b: A cell with a changed value must flag itself
         as 'notifying' until all cells which call it have finished
         recalculating"""
-        self.a.get()                    # a is now dependent on x
+        self.a.getvalue()                    # a is now dependent on x
         self.x.set(42)         # x causes a to run, capturing x's flag
         self.failUnless(self.captured_notify_flag == True)
 
@@ -134,17 +134,17 @@ class AlgoTests_Rule3(unittest.TestCase):
         self.x = cells.Cell(None, name="x", value=1)
         self.b = cells.Cell(None, name="b", rule=lambda s,p: (p or 40) + 2)
         self.a = cells.Cell(None, name="a",
-                            rule=lambda s,p: self.b.get() * self.x.get())
+                            rule=lambda s,p: self.b.getvalue() * self.x.getvalue())
         
     def testA_QueriedCellWithNoOODUpdates(self):
         """Rule 3 part a: A cell which depends on no out-of-date cell
         updates itself to the global DP"""
-        self.x.get()                    # x is current
-        b_prev = self.b.get()           # b is current
-        self.a.get()                    # initialize deps on b and x
+        self.x.getvalue()                    # x is current
+        b_prev = self.b.getvalue()           # b is current
+        self.a.getvalue()                    # initialize deps on b and x
         
         cells.cellenv.dp += 1           # advance DP
-        self.a.get()                    # no dependencies are out-of-date, so
+        self.a.getvalue()                    # no dependencies are out-of-date, so
         # fail unless its DP count = global DP count
         self.failUnless(self.a.dp == cells.cellenv.dp)
 
@@ -157,7 +157,7 @@ class AlgoTests_Rule3(unittest.TestCase):
         # b should not be recalculated, but its DP should be == global
         # DP after equalization since it was queried to check if it
         # was up to date
-        self.a.get()               # links set up, b initialized to 42
+        self.a.getvalue()               # links set up, b initialized to 42
         self.x.set(2)                   # a out of date, recalculates
         self.failUnless(self.b.dp == cells.cellenv.dp) # b up-to-date
         self.failUnless(self.b.value == 42) # but it did not recalculate
@@ -170,7 +170,7 @@ class AlgoTests_Rule3(unittest.TestCase):
         # we're gonna have to jury-rig this, since we can't let b
         # recalculate first naturally
         self.b = cells.Cell(None, name="b",
-                            rule=lambda s,p: (p or 2) * self.x.get())
+                            rule=lambda s,p: (p or 2) * self.x.getvalue())
         
         self.b.add_calls(self.x)             # set up dependencies for b by hand
         self.b.add_called_by(self.a)
@@ -182,13 +182,13 @@ class AlgoTests_Rule3(unittest.TestCase):
         self.x.value = 3               #   TODO: verify everything's done here
         self.x.changed_dp = cells.cellenv.dp
         self.x.dp = cells.cellenv.dp
-        self.a.update()               # causes b.update() to run
+        self.a.updatecell()               # causes b.updatecell() to run
         self.failUnless(self.b.value == 6) # which causes b's rule to run
         self.x.changed = False
         
         # but now that x's change has propogated, further updates on a:
-        self.a.update()
-        # which will call b.update(), won't cause b.run()
+        self.a.updatecell()
+        # which will call b.updatecell(), won't cause b.run()
         self.failUnless(self.b.value == 6)
 
 class AlgoTests_Rule4(unittest.TestCase):
@@ -214,7 +214,7 @@ class AlgoTests_Rule4(unittest.TestCase):
         def anon_rule(name, getfrom):
             def rule(s,p):
                 self.runlog.append(name)
-                return getfrom.get() + (p or 0)
+                return getfrom.getvalue() + (p or 0)
             return rule
 
         self.c = cells.Cell(None, name="c", rule=anon_rule('c', self.x))
@@ -222,7 +222,7 @@ class AlgoTests_Rule4(unittest.TestCase):
 
         def a_rule(s,p):
             self.runlog.append("a")
-            return self.b.get() + self.x.get() + (p or 0)
+            return self.b.getvalue() + self.x.getvalue() + (p or 0)
         self.a = cells.Cell(None, name="a", rule=a_rule)
 
         self.h = cells.Cell(None, name="h", rule=anon_rule('h', self.a))
@@ -230,9 +230,9 @@ class AlgoTests_Rule4(unittest.TestCase):
         self.j = cells.Cell(None, name="j", rule=anon_rule('j', self.c))
 
         # build dependencies
-        self.h.get()
-        self.i.get()
-        self.j.get()
+        self.h.getvalue()
+        self.i.getvalue()
+        self.j.getvalue()
 
         self.runlog = []
 
@@ -273,13 +273,13 @@ class AlgoTests_Rule9999(unittest.TestCase):
         for equality of the previous & new values."""
         x = cells.Cell(None, name="x", value=5,
                        unchanged_if=lambda old,new: abs(old - new) < 5)
-        a = cells.Cell(None, name="a", rule=lambda s,p: x.get() * 2)
+        a = cells.Cell(None, name="a", rule=lambda s,p: x.getvalue() * 2)
 
-        self.failUnless(a.get() == 10)
+        self.failUnless(a.getvalue() == 10)
         x.set(7)                        # will *not* set, since |5-7| < 5
-        self.failUnless(a.get() == 10)  # and so no propogation happens
+        self.failUnless(a.getvalue() == 10)  # and so no propogation happens
         x.set(11)                       # will set, since |5-11| > 5
-        self.failUnless(a.get() == 22)
+        self.failUnless(a.getvalue() == 22)
 
     def testB_DelWorks(self):
         """6. A cell must be garbage collected appropriately; that is,
@@ -289,10 +289,10 @@ class AlgoTests_Rule9999(unittest.TestCase):
         import weakref
         
         self.x = cells.Cell(None, value=3)
-        a = cells.Cell(None, rule=lambda s,p: self.x.get() + 1)
+        a = cells.Cell(None, rule=lambda s,p: self.x.getvalue() + 1)
 
         ref_x = weakref.ref(self.x)
-        a.get()
+        a.getvalue()
         del(self.x)
         self.failIf(ref_x())
         

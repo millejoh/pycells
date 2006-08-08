@@ -139,9 +139,9 @@ class Cell(object):
             self.changed_dp = cells.cellenv.dp
             self.dp = cells.cellenv.dp
 
-    def get(self):
+    def getvalue(self):
         """
-        get(self, init=False) -> value
+        getvalue(self, init=False) -> value
 
         Returns this cell's up-to-date value.
         """
@@ -151,7 +151,7 @@ class Cell(object):
             cells.cellenv.curr.add_calls(self)
             self.add_called_by(cells.cellenv.curr)
         
-        self.update()
+        self.updatecell()
         return self.value
 
     def set(self, value):
@@ -176,14 +176,14 @@ class Cell(object):
                 cells.cellenv.dp += 1
                 self.dp = cells.cellenv.dp
 
-                if self.owner:
-                    self.owner._run_observers(self)
+#                 if self.owner:
+#                     self.owner._run_observers(self)
                 
                 self.propogate()
 
-    def update(self, queryer=None):
+    def updatecell(self, queryer=None):
         """
-        update(self, queryer=None) -> bool
+        updatecell(self, queryer=None) -> bool
 
         Updates this cell to the current global DP (datapulse),
         returning True if it changed, False otherwise.
@@ -215,7 +215,7 @@ class Cell(object):
         # system is propogating and this cell is not current)
         for cell in self.calls_list():
             _debug(self.name, "asking", cell.name, "to update")
-            if cell.update(self):       # if any called cell requires us,
+            if cell.updatecell(self):       # if any called cell requires us,
                 _debug(self.name, "got recalc command from", cell.name)
                 if not self.dp == cells.cellenv.dp:
                     if self.run():          # we need to re-run
@@ -246,7 +246,7 @@ class Cell(object):
         """
         propogate(self, propogate_first=None) -> None
 
-        Propogates an update command to the set of cells which call
+        Propogates an updatecell command to the set of cells which call
         this cell.
 
         @param propogate_first: If cell C{A} asks cell C{B} to update,
@@ -265,6 +265,8 @@ class Cell(object):
         self.changed_dp = cells.cellenv.dp
         self.notifying = True
 
+	self.owner._run_observers(self)
+	
         # first, notify the 'propogate_first' cell
         if propogate_first:
             # append everything but the propogate_first cell onto the deferred
@@ -279,7 +281,7 @@ class Cell(object):
                    "to deferred")
             
             _debug(self.name, "asking", propogate_first.name, "to update first")
-            propogate_first.update()
+            propogate_first.updatecell()
             _debug(self.name, "finished propogating to first update",
               propogate_first.name)
             
@@ -295,7 +297,7 @@ class Cell(object):
                           ", but it's lazy -- not updating")
                 else:
                     _debug(self.name, "asking", cell.name, "to update")
-                    cell.update(self)
+                    cell.updatecell(self)
                 
         self.notifying = False
         cells.cellenv.curr_propogator = prev_propogator
@@ -318,7 +320,7 @@ class Cell(object):
             cells.cellenv.queued_updates = []
             for cell in to_update:
                 _debug("Running deferred update on", cell.name)
-                cell.update(self)
+                cell.updatecell(self)
                 
             cells.cellenv.curr_propogator = None
 
@@ -628,8 +630,8 @@ class UntilAskedLazyCell(LazyCell):
     A LazyCell who converts to a normal RuleCell after its first
     post-init C{L{get}()}
     """
-    def get(self, init=False, *args, **kwargs):
-        v = LazyCell.get(self, *args, **kwargs)
+    def getvalue(self, init=False, *args, **kwargs):
+        v = LazyCell.getvalue(self, *args, **kwargs)
         if not init:
             self.lazy = False
 
@@ -675,7 +677,9 @@ class DictCell(InputCell, UserDict.DictMixin):
         {'foo': 'bar'}
         >>> a.xkeys
         ['foo']
-    
+
+    Note that C{unchanged_if} now operates on dictionary values,
+    rather than the dictionary itself.
     """
     def __init__(self, owner, value={}, *args, **kwargs):
         """
@@ -689,9 +693,9 @@ class DictCell(InputCell, UserDict.DictMixin):
 
         @param value: Define a value for this cell. 
 
-        @param unchanged_if: Sets a function to determine if a cell's
-            value has changed. The signature for the passed function
-            is C{f(old, new) -> bool}.
+        @param unchanged_if: Sets a function to determine if the
+            dictionary's value has changed. The signature for the
+            passed function is C{f(old, new) -> bool}.
 
         @raise InputCellRunError: If C{rule} is passed as a parameter
         """
@@ -699,8 +703,21 @@ class DictCell(InputCell, UserDict.DictMixin):
             raise InputCellRunError("You may not give an InputCell a rule")
         Cell.__init__(self, owner, value=value, *args, **kwargs)
 
-    def get(self):
-        return self
+    def get(self, key, default=None):
+        # if there's a cell on the call stack, this get is part of a rule
+        # run. so, make the appropriate changes to the cells' deps
+        _debug(self.name, "getting", repr(key))
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+        
+        self.updatecell()
+
+        return self.value.get(key, default)
+
+    def setdefault(self, key, value):
+        _debug(self.name, "got setdefault")
+        self.value.setdefault(key, value)
     
     def __setitem__(self, key, value):
         """
@@ -713,14 +730,14 @@ class DictCell(InputCell, UserDict.DictMixin):
         
         @param value: The value to set this cell's value's key's value to.
         """
-        _debug(self.name, "getting setitem as dictcell")
+        _debug(self.name, "setting setitem as dictcell")
         if cells.cellenv.curr_propogator:       # if a propogation is happening
             _debug(self.name, "sees in-progress propogation; deferring set.")
             # defer the set
             cells.cellenv.deferred_sets.append((self, (key, value)))
         else:
             _debug(self.name, "setting")        
-            if not self.value.get(key, None) or \
+            if not self.value.has_key(key) or \
                    not self.unchanged_if(self.value[key], value):
                 _debug(self.name, "new value is different; propogating change")
                 self.last_value = copy.copy(self.value)
@@ -734,6 +751,17 @@ class DictCell(InputCell, UserDict.DictMixin):
                 
                 self.propogate()
 
+    def __delitem__(self, key):
+        del(self.value[key])
+        cells.cellenv.dp += 1
+        self.dp = cells.cellenv.dp
+        
+        if self.owner:
+            self.owner._run_observers(self)
+                
+        self.propogate()
+
+                
     def __getitem__(self, key):
         """
         __getitem__(self, key) -> value
@@ -746,7 +774,7 @@ class DictCell(InputCell, UserDict.DictMixin):
             cells.cellenv.curr.add_calls(self)
             self.add_called_by(cells.cellenv.curr)
         
-        self.update()
+        self.updatecell()
         return self.value[key]
 
     def keys(self):
@@ -754,12 +782,32 @@ class DictCell(InputCell, UserDict.DictMixin):
             cells.cellenv.curr.add_calls(self)
             self.add_called_by(cells.cellenv.curr)
 
+        self.updatecell()
         return self.value.keys()
 
-    def __delitem__(self, key):
-        del(self.value[key])
-        
+    def __contains__(self, key):
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
 
+        self.updatecell()
+        return self.value.__contains__(key)
+    
+    def __iter__(self):
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+
+        self.updatecell()
+        return self.value.__iter__()
+    
+    def iteritems(self):
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+
+        self.updatecell()
+        return self.value.iteritems()
 
 class _CellException(Exception):
     def __init__(self, value):

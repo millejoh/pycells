@@ -94,7 +94,7 @@ class Synapse(cell.Cell):
         """
         Run C{L{Cell.get}(self)} when a synapse is called as a function.
         """
-        return self.get()
+        return self.getvalue()
 
     def run(self):
         """
@@ -146,7 +146,7 @@ class ChangeSynapse(Synapse):
 
     def synapse_rule(self, owner, oldvalue):
         debug("running ChangeSynapse rule")
-        newval = self.readvar.get()
+        newval = self.readvar.getvalue()
         if not oldvalue or abs(newval - oldvalue) > self.delta:
             debug("returning new value", str(newval))
             return newval

@@ -37,19 +37,19 @@ class SynapseTests(unittest.TestCase):
         self.b = cells.RuleCell(None, b_rule, name="b")
 
         # and then we build the deps
-        curr_b = self.b.get()
+        curr_b = self.b.getvalue()
 
         # and we increment the filtered cell a bit
-        self.a.set(self.a.get() + 3)              # not enough
-        self.failUnless(self.b.get() == curr_b)
-        self.a.set(self.a.get() + 3)              # closer....
-        self.failUnless(self.b.get() == curr_b)
-        self.a.set(self.a.get() + 3)              # almost there...
-        self.failUnless(self.b.get() == curr_b)
+        self.a.set(self.a.getvalue() + 3)              # not enough
+        self.failUnless(self.b.getvalue() == curr_b)
+        self.a.set(self.a.getvalue() + 3)              # closer....
+        self.failUnless(self.b.getvalue() == curr_b)
+        self.a.set(self.a.getvalue() + 3)              # almost there...
+        self.failUnless(self.b.getvalue() == curr_b)
 
         # then we go over the threshold:
-        self.a.set(self.a.get() + 3)
+        self.a.set(self.a.getvalue() + 3)
         # and we should see b change
-        self.failIf(self.b.get() == curr_b)
+        self.failIf(self.b.getvalue() == curr_b)
 
 if __name__ == "__main__": unittest.main()

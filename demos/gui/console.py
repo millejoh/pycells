@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """A Tkinter-based console for conversing with the Python interpreter,
 featuring more tolerant pasting of code from other interactive sessions,
 better handling of continuations than the standard Python interpreter,
@@ -16,14 +18,20 @@ use, modify, or distribute the software for any purpose is hereby granted."""
 # TODO: delete the prompt when joining lines; allow a way to break lines
 
 from Tkinter import *
+from WCK import Widget
 import sys, string, traceback, types, __builtin__
+
+import cells
+import copy
+import random
+
+#cells.cell.DEBUG = True
 
 REVISION = "$Revision: 1.4 $"
 VERSION = string.split(REVISION)[1]
 
 class OutputPipe:
     """A substitute file object for redirecting output to a function."""
-
     def __init__(self, writer):
         self.writer = writer
         self.closed = 0
@@ -40,45 +48,126 @@ class OutputPipe:
     def close(self):
         self.closed = 1
 
+class CellWatcher(cells.Model):
+    widget = cells.makecell(value=None)
+    
+    @cells.fun2cell()
+    def models(self, prev):
+        """
+        A dict of modelnames:models in the console's environment
+        """
+        d = {}
+	if self.parent:
+	    for k, v in self.parent.dict.iteritems():
+		if k is "console":
+		    continue	# inhibit looking at the console Model
+		if isinstance(v, cells.Model):
+		    d[k] = v
 
-class Console(Frame):
-    def __init__(self, parent=None, dict={}, **options):
+        return d
+
+    @cells.fun2cell()
+    def cells(self, prev):
+        """
+        A dict of cellnames:cell in the console's environment
+        """
+        d = []
+        for k, v in self.models.iteritems():
+            for attrname in dir(v):		
+                # I'm exploiting the fact that I know Cells are in the
+                # instance, here. Ordinarily this wouldn't be
+                # sufficient to get everything the instance can
+                # "find". The other thing to note about this is that
+                # because I'm using get() on the dict, I'm bypassing
+                # the CellAttr and getting at the Cell itself, rather
+                # than its value.
+                attrib = v.__dict__.get(attrname)
+                if isinstance(attrib, cells.Cell):
+                    d.append(attrib)
+
+        return d
+
+@CellWatcher.observer(attrib="models")
+def models_obs(model):
+    print "models:", repr(model.models)
+
+@CellWatcher.observer(attrib="cells")
+def cells_obs(model):
+    print "cells:", repr(model.cells)
+    if model.widget:
+	model.widget.ui_damage()
+	
+
+class CellDisplay(Widget):
+    def __init__(self, console, *args, **kwargs):
+	Widget.__init__(self, *args, **kwargs)
+	self.watcher = CellWatcher(parent={ "value": console },
+				   widget={ "value": self })
+
+	self.seen_cells = {}
+
+    def ui_handle_repair(self, draw, x0, y0, x1, y1):
+	pixmap = self.ui_pixmap(x1, y1)
+	pixmap.rectangle((x0, y0, x1, y1), self.ui_brush("white"))
+	for cell in self.seen_cells:
+	    if cell not in self.watcher.cells:
+		self.seen_cells.pop(cell)
+		
+	for cell in self.watcher.cells:
+	    print repr(cell)
+	    if not self.seen_cells.get(cell, None):
+		xpos = random.randint(x0, x1)
+		ypos = random.randint(y0, y1)
+		self.seen_cells[cell] = [ xpos, ypos, xpos + 20, ypos + 20 ]
+
+	    print repr(self.seen_cells[cell])
+	    pixmap.ellipse(self.seen_cells[cell],
+			   self.ui_brush("red"), self.ui_pen("black"))
+
+	draw.paste(pixmap)
+	    
+        
+class Console(Frame, cells.Model):
+    # Continuation state.
+    
+    continuation = cells.makecell(value=0)
+    error = cells.makecell(value=0)
+    intraceback = cells.makecell(value=0)
+    pasted = cells.makecell(value=0)
+    
+    # The command history.
+        
+    history = cells.makecell(value=[])
+    historyindex = cells.makecell(value=None)
+    current = cells.makecell(value="")
+
+    # Completion state.
+
+    compmenus = cells.makecell(value=[])
+    compindex = cells.makecell(value=None)
+    compfinish = cells.makecell(value="")
+    
+    # Redirection.
+            
+    stdout = cells.makecell(value=None)
+    stderr = cells.makecell(value=None)        
+
+    dict = cells.makecell(value={}, celltype=cells.DictCell)
+    celldisp = cells.makecell(value=None)
+    
+    def __init__(self, parent=None, **options):
         """Construct from a parent widget, an optional dictionary to use
         as the namespace for execution, and any configuration options."""
         Frame.__init__(self, parent)
-
-        # Continuation state.
-
-        self.continuation = 0
-        self.error = 0
-        self.intraceback = 0
-        self.pasted = 0
-
-        # The command history.
-
-        self.history = []
-        self.historyindex = None
-        self.current = ""
-
-        # Completion state.
-
-        self.compmenus = []
-        self.compindex = None
-        self.compfinish = ""
-
-        # Redirection.
-            
-        self.stdout = OutputPipe(lambda data, w=self.write: w(data, "stdout"))
-        self.stderr = OutputPipe(lambda data, w=self.write: w(data, "stderr"))
 
         # Interpreter state.
 
         if not hasattr(sys, "ps1"): sys.ps1 = ">>> "
         if not hasattr(sys, "ps2"): sys.ps2 = "... "
+
         self.prefixes = [sys.ps1, sys.ps2, ">> ", "> "]
         self.startup = "Python %s\n%s\n" % (sys.version, sys.copyright) + \
             "Python Console v%s by Ka-Ping Yee <ping@lfw.org>\n" % VERSION
-        self.dict = dict
 
         # The text box.
 
@@ -106,7 +195,6 @@ class Console(Frame):
         self.text.bind("<Alt-h>", self.cb_help)
 
         # The scroll bar.
-
         self.scroll = Scrollbar(self, command=self.text.yview)
         self.text.config(yscrollcommand=self.scroll.set)
         self.scroll.pack(side=RIGHT, fill=Y)
@@ -122,6 +210,12 @@ class Console(Frame):
                         "runcolour": "#90d090"}
         apply(self.config, (), self.options)
         apply(self.config, (), options)
+
+        cells.Model.__init__(self)
+
+        # Redirection
+        self.stdout = OutputPipe(lambda data, w=self.write: w(data, "stdout"))
+        self.stderr = OutputPipe(lambda data, w=self.write: w(data, "stderr"))	
 
     def __getitem__(self, key):
         return self.options[key]
@@ -439,13 +533,13 @@ class Console(Frame):
 
         if not object:
             try:
-                object = self.dict[word]
+                object = self.dict
                 skip = len(word) - len(ident)
             except: pass
 
         if not object:
             try:
-                object = self.dict[ident]
+                object = self.evn[ident]
             except: pass
 
         if not object:
@@ -742,7 +836,9 @@ class Console(Frame):
         sys.stdout, sys.stderr = self.stdout, self.stderr
 
         try:
-            exec code in self.dict
+            a = dict(self.dict)
+            exec code in a
+            self.dict.update(a)
         except:
             self.error = 1
             sys.last_type = sys.exc_type
@@ -756,7 +852,10 @@ class Console(Frame):
         self.stdout, self.stderr = sys.stdout, sys.stderr
         sys.stdout, sys.stderr = oldout, olderr
 
-
+@Console.observer(attrib="continuation")
+def cont_obs(model):
+    print "continuation is", model.continuation
+        
 # Helpers for the completion mechanism.
 
 def scanclass(klass, result):
@@ -826,12 +925,15 @@ def finisher(object):
         return "."
     return " "
 
-
 # Main program.
 
 if __name__ == "__main__":
-    c = Console(dict={})
+    root = Tk()
+    c = Console(root)
     c.dict["console"] = c
     c.pack(fill=BOTH, expand=1)
     c.master.title("Python Console v%s" % VERSION)
+    w = CellDisplay(c, root)
+    w.pack(fill="both", expand=1)
+    
     mainloop()

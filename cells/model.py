@@ -170,6 +170,9 @@ class Model(object):
                             break
                 else:
                     cellinit = {'value': v}
+
+		if not cellinit:
+		    raise BadInitError("A cell initialization dictionary was not built. Try wrapping your value or rule assignment in a dictionary.")
                     
                 # set the new init in the registry for this cell name; to be
                 # read at cell-build time
@@ -280,6 +283,12 @@ class NonCellSetError(Exception):
     """
     You may not set a non-cell Model attribute after initialization.
     """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class BadInitError(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
