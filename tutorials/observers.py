@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     print "Setting ratio to -3"
     r.ratio = -3
-    # This, however, will pass the subzero test, firing the observer:
+    # This will pass the subzero test, firing the observer:
     #     >>> r.ratio = -3
     #     The rectangle updated!
     #     Woah, that's not a legal ratio! Resetting to default.
@@ -85,16 +85,14 @@ if __name__ == "__main__":
     # reset!  What the heck? Well, in order to preserve the integrity
     # of an update, they happen atomically -- so, each assignment to
     # an InputCell matches up with a single update to the cells
-    # environment. When the rectangle's ratio is reset to the golden
-    # ratio, that set is deferred until the current update is
-    # finished. So, the ratio is changed to -3, that change progates
-    # through the system, and when the observer tries to set the ratio
-    # back to the golden ratio that set is deferred until the -3
-    # propogation completes. The -3 propgation makes the area change
-    # to -3, firing area's observer. After that propgation finishes,
-    # the set back to the golden ratio happens and the model propgates
-    # that change through the system.
+    # environment. When the observer sets the rectangle's ratio to the
+    # golden ratio, that set is deferred until the current update to
+    # -3 is finished. The -3 propgation makes the area change to -3,
+    # firing area's observer. After that propgation finishes, the set
+    # back to the golden ratio happens and the model propgates that
+    # change through the system.
 
     # So observers changing cells may lead to somewhat unexpected
     # behavior. Make sure you know what's going on in your system
-    # before you start adding observers that do that.
+    # before you start adding observers that change the Model they
+    # observe.

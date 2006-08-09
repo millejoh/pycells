@@ -102,8 +102,13 @@ class Cell(object):
             The signature for the passed function is C{f(old, new) ->
             bool}.
 
+        @param ephemeral: Causes the cell to reset its value to None
+            after propogating when it is set. Only makes sense when
+            applied to InputCells
+
         @raise RuleAndValueInitError: If both C{rule} and C{value} are
             passed, raise an exception
+    
         """
         _debug("running cell init for", kwargs.get("name") or 'anonymous')
 
@@ -115,6 +120,7 @@ class Cell(object):
         self.name = kwargs.get("name", None)
         self.rule = kwargs.get("rule", lambda s,p: None)
         self.value = kwargs.get("value", None)
+	self.ephemeral = kwargs.get("ephemeral", False)
         self.unchanged_if = kwargs.get("unchanged_if", lambda o,n: o == n)
         
         self.called_by = set([]) #: the cells whose rules call this cell
@@ -176,10 +182,10 @@ class Cell(object):
                 cells.cellenv.dp += 1
                 self.dp = cells.cellenv.dp
 
-#                 if self.owner:
-#                     self.owner._run_observers(self)
-                
                 self.propogate()
+
+	if self.ephemeral:
+	    self.value = None
 
     def updatecell(self, queryer=None):
         """
@@ -265,7 +271,8 @@ class Cell(object):
         self.changed_dp = cells.cellenv.dp
         self.notifying = True
 
-	self.owner._run_observers(self)
+	if self.owner:
+	    self.owner._run_observers(self)
 	
         # first, notify the 'propogate_first' cell
         if propogate_first:
@@ -319,9 +326,13 @@ class Cell(object):
             to_update = cells.cellenv.queued_updates
             cells.cellenv.queued_updates = []
             for cell in to_update:
-                _debug("Running deferred update on", cell.name)
-                cell.updatecell(self)
-                
+                if cell.lazy:
+                    _debug(self.name, "saw", cell.name,
+                          ", but it's lazy -- not running deferred updated")
+                else:
+		    _debug("Running deferred update on", cell.name)
+                    cell.updatecell(self)
+
             cells.cellenv.curr_propogator = None
 
             # next, deferred sets:
@@ -701,7 +712,10 @@ class DictCell(InputCell, UserDict.DictMixin):
         """
         if kwargs.get("rule", None):
             raise InputCellRunError("You may not give an InputCell a rule")
-        Cell.__init__(self, owner, value=value, *args, **kwargs)
+        Cell.__init__(self, owner, value=copy.copy(value), *args, **kwargs)
+
+    def __repr__(self):
+	return repr(self.value)
 
     def get(self, key, default=None):
         # if there's a cell on the call stack, this get is part of a rule

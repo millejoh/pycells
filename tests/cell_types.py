@@ -36,6 +36,9 @@ Lazy Rule Cell, Until-asked flavor:
 
 Lazy Rule Cell, Always-lazy flavor:
 1. Evaluates only when read, and is unbound or a dependency has changed.
+
+Ephemeral Cells:
+1. After propogation, their value is returned to None
 """
 
 class CellTypeTests_Input(unittest.TestCase):
@@ -175,6 +178,17 @@ class CellTypeTests_DictTests(unittest.TestCase):
         self.failUnless(y.getvalue() == [])  # no keys in x yet
         self.x['foo'] = 'blah blah'     # cause propogation
         self.failUnless(y.getvalue() == ['foo'])
-        
+
+class CellTypeTests_Ephemerals(unittest.TestCase):
+    def test_Ephemeral(self):
+	x = cells.InputCell(None, name="x", value=None, ephemeral=True)
+	y = cells.RuleCell(None, name="y", rule=lambda s,p: x.getvalue())
+
+	y.getvalue()		# establish dep
+	s = "Foobar"
+	x.set(s)		# propogate change
+	self.failUnless(y.getvalue() == s) # y should have got the new value
+	self.failUnless(x.getvalue() is None) # but x should be back to None
+	
 if __name__ == "__main__":
     unittest.main()
