@@ -26,7 +26,7 @@ class NamedAddressBook(cells.Family):
 @NamedAddressBook.observer(attrib="entries")
 def entry_obs(model):
     if model.entries:
-	print "Added a new name to the '" + model.name + "' address book"
+        print "Added a new name to the '" + model.name + "' address book"
 
 # Now we'll specify that class in the AdressBooks class as the
 # kid_slots attribute. The class in this slot acts as a mixin to any
@@ -41,11 +41,11 @@ class AddressBooks(cells.Family):
     # of the address books:
     @cells.fun2cell()
     def entries(self, prev):
-	d = {}
-	for model in self.kids:
-	    d.update(model.entries)
+        d = {}
+        for model in self.kids:
+            d.update(model.entries)
 
-	return d
+        return d
 
     # And also get all the names:
     names = cells.makecell(rule=lambda s,p: s.entries.keys())
@@ -53,12 +53,12 @@ class AddressBooks(cells.Family):
     # Let's also get all the address book names & indexes
     @cells.fun2cell()
     def booknames(self, prev):
-	d = {}
-	for model in self.kids:
-	    # I'll use one of the Family convenience methods, position
-	    d[model.name] = model.position()
+        d = {}
+        for model in self.kids:
+            # I'll use one of the Family convenience methods, position
+            d[model.name] = model.position()
 
-	return d
+        return d
 
 # And, so we can easily see what's happening I'll add some observers
 # to the AddressBooks model:
@@ -69,12 +69,12 @@ def entries_obs(model):
 @AddressBooks.observer(attrib="names")
 def names_obs(model):
     if model.names:
-	print "All names, in all address books:", repr(model.names)
+        print "All names, in all address books:", repr(model.names)
 
 @AddressBooks.observer(attrib="booknames")
 def booknames_obs(model):
     if model.booknames:
-	print "Your address books are:", repr(model.booknames)
+        print "Your address books are:", repr(model.booknames)
 
 # That should do it. Let's see it in action:
 if __name__ == "__main__":
@@ -100,8 +100,8 @@ if __name__ == "__main__":
     # methods, as defined in kid_slots. For instance:
 
     class SomeContainer(cells.Family):
-	entries = cells.makecell(value=[], celltype=cells.ListCell)
-	size = cells.makecell(rule=lambda s,p: len(s.entries))
+        entries = cells.makecell(value=[], celltype=cells.ListCell)
+        size = cells.makecell(rule=lambda s,p: len(s.entries))
 
     # SomeContainer has one cell which is named the same as a cell in
     # AddressBooks' kid_slots Model, NamedAddressBook:
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     # continue to work properly. Watch:
 
     a.make_kid(SomeContainer)
-    a.kids[2].name = "Family"	# It was given the 'name' attribute,
+    a.kids[2].name = "Family"   # It was given the 'name' attribute,
     a.kids[2].entries["Dad"] = "dad@example.net" # and 'entries' was overridden,
     # but unique attribs are kept.
     print "Size of new address book:", a.kids[2].size 

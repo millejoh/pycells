@@ -60,16 +60,16 @@ class StorableAddressBook(WorkingAddressBook):
     # We'll build this autoloading entry db with a RuleThenInputCell:
     @cells.fun2cell(celltype=cells.RuleThenInputCell)
     def entries(self, prev):
-	# These are written like RuleCells. First we'll look for an
-	# extant entry file:
-	if not os.path.isfile(self.entry_file):
-	    # And if it doesn't exist, we'll just return an empty dictionary.
-	    return {}
-	else:
-	    # If there is a file there, we'll load it into memory
-	    # using the pickle module.
-	    return pickle.load(open(self.entry_file, 'r'))
-	
+        # These are written like RuleCells. First we'll look for an
+        # extant entry file:
+        if not os.path.isfile(self.entry_file):
+            # And if it doesn't exist, we'll just return an empty dictionary.
+            return {}
+        else:
+            # If there is a file there, we'll load it into memory
+            # using the pickle module.
+            return pickle.load(open(self.entry_file, 'r'))
+        
 # What a RuleThenInputCell does is run the rule, which should generate
 # a value for the cell, then transform into an InputCell which may be
 # altered. In this case, it loads the previous address book dictionary
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     print "Altering address book..."
     # Let's change the names ...
     a.entries = { "Truman Capote": "capote@example.net",
-		  "Robert Sullivan": "ratguy@example.net" }
+                  "Robert Sullivan": "ratguy@example.net" }
     # to see that it's now acting like an InputCell:
     print "Address book is", repr(a.entries)
 
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # entries:
     print "Writing some new entries out to the file"
     new_entries = { "David Sedaris": "dave@example.net",
-		    "Michael Chabon": "chabon@example.net" }
+                    "Michael Chabon": "chabon@example.net" }
     pickle.dump(new_entries, open(a.entry_file, 'w'))
 
     # now we'll make a new StorableAddressBook object, which, upon
@@ -115,23 +115,23 @@ class AlternateInputAddressBook(WorkingAddressBook):
     # and a RuleCell to build a dictionary with the entries
     @cells.fun2cell()
     def entries(self, prev):
-	d = copy.copy(prev)	# prevent the old == new dict issue
-	if not d:
-	    d = {}
+        d = copy.copy(prev)     # prevent the old == new dict issue
+        if not d:
+            d = {}
 
-	if self.entry:
-	    d[self.entry[0]] = self.entry[1]
-	return d
+        if self.entry:
+            d[self.entry[0]] = self.entry[1]
+        return d
 
 @AlternateInputAddressBook.observer(attrib="entry")
 def entry_obs(self):
     if self.entry:
-	print "New entry:", repr(self.entry)
+        print "New entry:", repr(self.entry)
 
 @AlternateInputAddressBook.observer(attrib="entries")
 def entries_obs(self):
     if self.entries:
-	print "The address book is now:", repr(self.entries)
+        print "The address book is now:", repr(self.entries)
 
 if __name__ == "__main__":    
     print "Creating an AlternateInputAddressBook, then adding an entry."
@@ -160,13 +160,13 @@ class MonitoringAddressBook(WorkingAddressBook):
     # lazy:
     @cells.fun2cell(celltype=cells.AlwaysLazyCell)
     def isthere(self, prev):
-	d = {}
-	print "Querying security system"
-	for person in self.names:
-	    # here's where my expensive calculation goes...
-	    d[person] = random.choice([True, False])
+        d = {}
+        print "Querying security system"
+        for person in self.names:
+            # here's where my expensive calculation goes...
+            d[person] = random.choice([True, False])
 
-	return d
+        return d
 
 # And, again, let's see it in action
 if __name__ == "__main__":

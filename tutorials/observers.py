@@ -15,10 +15,10 @@ from basic import Rectangle, GOLDEN
 
 # Now, we can use one of cells.Model's class methods, observer, to add
 # an observer to the Rectangle:
-@Rectangle.observer()		# Without arguments, this Observer attaches to
-				# the whole Model. It will be run whenever any
-				# Cell in the Model updates
-def rectangle_observer(self):	# 'self' here refers to the Rectangle instance
+@Rectangle.observer()           # Without arguments, this Observer attaches to
+                                # the whole Model. It will be run whenever any
+                                # Cell in the Model updates
+def rectangle_observer(self):   # 'self' here refers to the Rectangle instance
     print "The rectangle updated!"
 
 # As I said, Observers may be attached to specific Cell attributes:
@@ -37,25 +37,25 @@ def area_obs(self):
 # Let's say we want to reset the ratio to the default (the golden
 # ratio) if it's set to a value below 0. We can do this with an
 # observer. First, I'll make a function to test for below-zeroness:
-def subzero(value):		# The signature for value tests is
-				# f(value) (depending on what the test
-				# is attached to, this could be the
-				# out-of-date or up-to-date value for the cell.
-    return value < 0	        # It returns a boolean to say whether the 
-				# observer should run on this cell
+def subzero(value):             # The signature for value tests is
+                                # f(value) (depending on what the test
+                                # is attached to, this could be the
+                                # out-of-date or up-to-date value for the cell.
+    return value < 0            # It returns a boolean to say whether the 
+                                # observer should run on this cell
 
 # Now I'll add another observer, looking for an attribute named
 # "ratio" and an up-to-date value which passes the subzero test:
 @Rectangle.observer(attrib="ratio", newvalue=subzero)
-def zeroratio_observer(self):	# and if it's run
+def zeroratio_observer(self):   # and if it's run
     print "Woah, that's not a legal ratio! Resetting to default."
-    self.ratio = GOLDEN		# reset the ratio to the golden ratio
+    self.ratio = GOLDEN         # reset the ratio to the golden ratio
 
 # So, in order to show the problems with the observer method, I'll
 # need to run an instance of the Rectangle:
 if __name__ == "__main__":
     print "Making a new Rectangle"
-    r = Rectangle()		# makes a new Rectangle instance.
+    r = Rectangle()             # makes a new Rectangle instance.
     # This will trigger the whole-model observer and the ratio & area observers:
     #    >>> from observers import Rectangle
     #    >>> r = Rectangle()
