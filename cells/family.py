@@ -27,6 +27,7 @@ DEBUG = False
 import cells
 from model import Model, ModelMetatype
 from cellattr import CellAttr
+from cell import ListCell
 
 def debug(*msgs):
     """
@@ -55,7 +56,7 @@ class Family(Model):
         attribute defined in the class in C{kid_slots} minus the
         attributes defined in every Model.
     """
-    kids = cells.makecell(value=None, kid_overrides=False)
+    kids = cells.makecell(value=[], celltype=ListCell, kid_overrides=False)
     kid_slots = cells.makecell(value=Model, kid_overrides=False)
 
     def __init__(self, *args, **kwargs):
@@ -63,7 +64,7 @@ class Family(Model):
         if not self.kids:
             self.kids = []
 
-    def kid_instance(self, klass):
+    def kid_instance(self, klass=None):
         """
         kid_instance(self, klass) -> Cell
         
@@ -72,6 +73,8 @@ class Family(Model):
 
         @param klass: The base type for the new kid instance
         """
+	if not klass:
+	    klass = self.kid_slots
         debug("making an instance of", str(klass))
         # first, find the attributes the kid_slots attrib actual wants to
         # define:

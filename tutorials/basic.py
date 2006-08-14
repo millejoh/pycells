@@ -35,20 +35,20 @@ class Rectangle(cells.Model):
     # called a Rule cell, and I can make it like this:
     @cells.fun2cell()
     def length(self, prev):
-	# The signature of the rule which defines a RuleCell's value
-	# must be f(self, prev); self will be passed an instance of
-	# this Model (just like you'd expect), and prev will be passed
-	# the cell's previous (aka out-of-date) value.
+        # The signature of the rule which defines a RuleCell's value
+        # must be f(self, prev); self will be passed an instance of
+        # this Model (just like you'd expect), and prev will be passed
+        # the cell's previous (aka out-of-date) value.
 
-	# For this Rule I'm going to be ignoring the previous value,
-	# and just using this instance's ratio and width to get the
-	# new length:
-	return float(self.width) * float(self.ratio)
+        # For this Rule I'm going to be ignoring the previous value,
+        # and just using this instance's ratio and width to get the
+        # new length:
+        return float(self.width) * float(self.ratio)
 
     # There's another way to make RuleCells. We can pass anonymous
     # functions to the cells.makecell function:
     area = cells.makecell(rule=lambda self, p:
-			  float(self.length) * float(self.width))
+                          float(self.length) * float(self.width))
 
 # So now we've got our Model. Let's test it out:
 if __name__ == "__main__":

@@ -171,7 +171,9 @@ class Cell(object):
         """
         if cells.cellenv.curr_propogator:       # if a propogation is happening
             _debug(self.name, "sees in-progress propogation; deferring set.")
-            cells.cellenv.deferred_sets.append((self, value)) # defer the set
+	     # ... defer the set
+            cells.cellenv.deferred_sets.append((self, ("set",
+						       ((value,), {}))))
         else:
             _debug(self.name, "setting")        
             if not self.unchanged_if(self.value, value):
@@ -335,15 +337,17 @@ class Cell(object):
 
             cells.cellenv.curr_propogator = None
 
-            # next, deferred sets:
+            # next, deferred set-ish commands:
             _debug("running deferred sets")
             to_set = cells.cellenv.deferred_sets
             cells.cellenv.deferred_sets = []
-            for cell, value in to_set:
-                if isinstance(cell, DictCell):
-                    cell.__setitem__(value[0], value[1])
-                else:
-                    cell.set(value)
+            for cell, cmdargtuple in to_set:
+		cmd, argtuple = cmdargtuple
+		args, kwargs = argtuple
+		_debug("running deferred", cmd, "on", cell.name)
+		args, kwargs = argtuple
+		getattr(cell, cmd)(*args, **kwargs)
+
 
     def run(self):
         """
@@ -697,12 +701,13 @@ class DictCell(InputCell, UserDict.DictMixin):
         __init__(self, owner, name=None, rule=None, value=None,
         unchanged_if=None) -> None
 
-        Initializes an InputCell object. You may not pass a C{rule}.
+        Initializes an DictCell object. You may not pass a C{rule}.
 
         @param name: This cell's name. When using a C{Cell} with
             C{L{Model}}s, this parameter is assigned automatically.
 
-        @param value: Define a value for this cell. 
+        @param value: Define a value for this cell. This must be a
+            dictionary.
 
         @param unchanged_if: Sets a function to determine if the
             dictionary's value has changed. The signature for the
@@ -713,21 +718,6 @@ class DictCell(InputCell, UserDict.DictMixin):
         if kwargs.get("rule", None):
             raise InputCellRunError("You may not give an InputCell a rule")
         Cell.__init__(self, owner, value=copy.copy(value), *args, **kwargs)
-
-    def __repr__(self):
-	return repr(self.value)
-
-    def get(self, key, default=None):
-        # if there's a cell on the call stack, this get is part of a rule
-        # run. so, make the appropriate changes to the cells' deps
-        _debug(self.name, "getting", repr(key))
-        if cells.cellenv.curr:   # (curr == None when not propogating)
-            cells.cellenv.curr.add_calls(self)
-            self.add_called_by(cells.cellenv.curr)
-        
-        self.updatecell()
-
-        return self.value.get(key, default)
 
     def setdefault(self, key, value):
         _debug(self.name, "got setdefault")
@@ -748,7 +738,8 @@ class DictCell(InputCell, UserDict.DictMixin):
         if cells.cellenv.curr_propogator:       # if a propogation is happening
             _debug(self.name, "sees in-progress propogation; deferring set.")
             # defer the set
-            cells.cellenv.deferred_sets.append((self, (key, value)))
+            cells.cellenv.deferred_sets.append((self, ("__setitem__",
+						       ((key, value), {}))))
         else:
             _debug(self.name, "setting")        
             if not self.value.has_key(key) or \
@@ -775,7 +766,21 @@ class DictCell(InputCell, UserDict.DictMixin):
                 
         self.propogate()
 
-                
+    def __repr__(self):
+	return repr(self.value)
+
+    def get(self, key, default=None):
+        # if there's a cell on the call stack, this get is part of a rule
+        # run. so, make the appropriate changes to the cells' deps
+        _debug(self.name, "getting", repr(key))
+        if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+        
+        self.updatecell()
+
+        return self.value.get(key, default)
+
     def __getitem__(self, key):
         """
         __getitem__(self, key) -> value
@@ -823,6 +828,167 @@ class DictCell(InputCell, UserDict.DictMixin):
         self.updatecell()
         return self.value.iteritems()
 
+class ListCell(InputCell):
+    """
+    A input cell whose value is initialized to []. An ordinary
+    InputCell doesn't act like we'd like it to in this case:
+
+	>>> import cells
+	>>> class A(cells.Model):
+	...     x = cells.makecell(value=[])
+	...     @cells.fun2cell()
+	...     def xlen(self, prev):
+	...         return len(self.x)
+	... 
+	>>> a = A()
+	>>> a.x
+	[]
+	>>> a.xlen
+	0
+	>>> a.x.append("foo")
+	>>> a.x
+	['foo']
+	>>> a.xlen
+	0
+
+    But if we specify a ListCell, it should work as we expect it:
+
+	>>> import cells
+	>>> class A(cells.Model):
+	...     x = cells.makecell(value=[])
+	...     @cells.fun2cell()
+	...     def xlen(self, prev):
+	...         return len(self.x)
+	... 
+	>>> a = A()
+	>>> a.x
+	[]
+	>>> a.xlen
+	0
+	>>> a.x.append("foo")
+	>>> a.x
+	['foo']
+	>>> a.xlen
+	1
+
+    Note that C{unchanged_if} acts on list elements rather than the
+    entire value.
+    """
+       
+    def __init__(self, owner, value={}, *args, **kwargs):
+        """
+        __init__(self, owner, name=None, rule=None, value=None,
+        unchanged_if=None) -> None
+
+        Initializes an DictCell object. You may not pass a C{rule}.
+
+        @param name: This cell's name. When using a C{Cell} with
+            C{L{Model}}s, this parameter is assigned automatically.
+
+        @param value: Define a value for this cell. This must be a
+            dictionary.
+
+        @param unchanged_if: Sets a function to determine if the
+            dictionary's value has changed. The signature for the
+            passed function is C{f(old, new) -> bool}.
+
+        @raise InputCellRunError: If C{rule} is passed as a parameter
+        """
+        if kwargs.get("rule", None):
+            raise InputCellRunError("You may not give an InputCell a rule")
+        Cell.__init__(self, owner, value=copy.copy(value), *args, **kwargs)
+
+    def _onchanges(self):
+	if self.owner: self.owner._run_observers(self)
+	self.propogate()
+
+    def _pregets(self):
+	if cells.cellenv.curr:   # (curr == None when not propogating)
+            cells.cellenv.curr.add_calls(self)
+            self.add_called_by(cells.cellenv.curr)
+
+        self.updatecell()
+
+    def _should_defer(self, name, argtuple):
+        _debug(self.name, "wonders if it should defer a", name)
+        if cells.cellenv.curr_propogator:       # if a propogation is happening
+            _debug(self.name, "sees in-progress propogation; deferring set.")
+            # defer the set
+            cells.cellenv.deferred_sets.append((self, (name, argtuple)))
+	    return True
+	
+	return False
+	
+    # "get"-ish calls
+    def count(self, v):
+	self._pregets()
+	return self.value.count(v)
+
+    def index(self, v, start=None, stop=None):
+	self._pregets()
+	if start is None: start = 0
+	if stop is None: stop = len(self.value)
+	    
+	return self.value.index(v, start, stop)
+
+    def __getitem__(self, k):
+	self._pregets()
+	return self.value.__getitem__(k)
+
+    def __iter__(self):
+	self._pregets()
+	return self.value.__iter__()
+
+    def __len__(self):
+	self._pregets()
+	return self.value.__len__()
+
+    # "set"-ish calls
+    def pop(self, index=None):
+	"""
+	Warning: ListCell.pop() does not act quite like you may expect
+	it in certain circumstances. If a pop occurs during a
+	propogation, the value will be returned, but the list will not
+	be altered until the end of the propogation (thus ensuring all
+	cells "see" the same value of this cell during the DP).
+	"""
+	if not self._should_defer("pop", (index,)):
+	    # not deferred, so do a real pop
+	    r = self.value.pop(index)
+	    self._onchanges()
+	else:
+	    # deferred. grab the asked-for element of the list
+	    if index is None:
+		index = -1
+	    r = self.value[index]
+
+	return r
+
+    def _make_listfun(name):
+	def fn(self, *args, **kwargs):
+	    if not self._should_defer(name, (args, kwargs)):
+		getattr(self.value, name)(*args, **kwargs)
+		cells.cellenv.dp += 1
+		self.dp = cells.cellenv.dp
+		self._onchanges()
+	fn.__name__ = name
+	return fn
+
+    append = _make_listfun("append")
+    extend = _make_listfun("extend")
+    insert = _make_listfun("insert")
+    remove = _make_listfun("remove")
+    reverse = _make_listfun("reverse")
+    sort = _make_listfun("sort")
+    __add__ = _make_listfun("__add__")
+    __iadd__ = _make_listfun("__iadd__")
+    __mul__ = _make_listfun("__mul__")
+    __rmul__ = _make_listfun("__rmul__")
+    __imul__ = _make_listfun("__imul__")
+    __setitem__ = _make_listfun("__setitem__")
+    __delitem__ = _make_listfun("__delitem__")
+
+    
 class _CellException(Exception):
     def __init__(self, value):
         self.value = value

@@ -107,7 +107,7 @@ class CellAttr(object):
         if not owner: return self
 
         cell = self.getcell(owner)
-        if isinstance(cell, cells.cell.DictCell):
+        if isinstance(cell, (cells.cell.ListCell, cells.cell.DictCell)):
             return cell
         else:
             # return the value in owner.myname
@@ -186,9 +186,9 @@ class CellAttr(object):
         debug("                args:", str(args))
         debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
-        if kwargs.has_key('celltype'):
+        if kwargs.has_key('celltype'):    # user-specified cell
             celltype = kwargs["celltype"]
-        elif kwargs.has_key('rule'):  # it's a rule-cell.
+        elif kwargs.has_key('rule'):      # it's a rule-cell.
             celltype = RuleCell
         elif kwargs.has_key('value'):     # it's a value-cell
             celltype = InputCell
