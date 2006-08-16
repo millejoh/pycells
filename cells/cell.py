@@ -696,7 +696,7 @@ class DictCell(InputCell, UserDict.DictMixin):
     Note that C{unchanged_if} now operates on dictionary values,
     rather than the dictionary itself.
     """
-    def __init__(self, owner, value={}, *args, **kwargs):
+    def __init__(self, owner, *args, **kwargs):
         """
         __init__(self, owner, name=None, rule=None, value=None,
         unchanged_if=None) -> None
@@ -717,7 +717,8 @@ class DictCell(InputCell, UserDict.DictMixin):
         """
         if kwargs.get("rule", None):
             raise InputCellRunError("You may not give an InputCell a rule")
-        Cell.__init__(self, owner, value=copy.copy(value), *args, **kwargs)
+        Cell.__init__(self, owner, value=kwargs.pop("value", {}),
+		      *args, **kwargs)
 
     def setdefault(self, key, value):
         _debug(self.name, "got setdefault")
@@ -875,7 +876,7 @@ class ListCell(InputCell):
     entire value.
     """
        
-    def __init__(self, owner, value={}, *args, **kwargs):
+    def __init__(self, owner, *args, **kwargs):
         """
         __init__(self, owner, name=None, rule=None, value=None,
         unchanged_if=None) -> None
@@ -896,7 +897,9 @@ class ListCell(InputCell):
         """
         if kwargs.get("rule", None):
             raise InputCellRunError("You may not give an InputCell a rule")
-        Cell.__init__(self, owner, value=copy.copy(value), *args, **kwargs)
+	    
+        Cell.__init__(self, owner, value=kwargs.pop("value", []),
+		      *args, **kwargs)
 
     def _onchanges(self):
 	if self.owner: self.owner._run_observers(self)

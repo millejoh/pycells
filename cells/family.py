@@ -29,7 +29,7 @@ from model import Model, ModelMetatype
 from cellattr import CellAttr
 from cell import ListCell
 
-def debug(*msgs):
+def _debug(*msgs):
     """
     debug() -> None
 
@@ -56,13 +56,11 @@ class Family(Model):
         attribute defined in the class in C{kid_slots} minus the
         attributes defined in every Model.
     """
-    kids = cells.makecell(value=[], celltype=ListCell, kid_overrides=False)
+    kids = cells.makecell(celltype=ListCell, kid_overrides=False)
     kid_slots = cells.makecell(value=Model, kid_overrides=False)
 
     def __init__(self, *args, **kwargs):
         Model.__init__(self, *args, **kwargs)
-        if not self.kids:
-            self.kids = []
 
     def kid_instance(self, klass=None):
         """
@@ -75,7 +73,7 @@ class Family(Model):
         """
 	if not klass:
 	    klass = self.kid_slots
-        debug("making an instance of", str(klass))
+        _debug("making an instance of", str(klass))
         # first, find the attributes the kid_slots attrib actual wants to
         # define:
         override_attrnames = []
@@ -95,7 +93,7 @@ class Family(Model):
                     
         # now, do the overrides, bypassing normal getattrs
         for attrib_name in override_attrnames:
-            debug("overriding", attrib_name, "in", str(klass))
+            _debug("overriding", attrib_name, "in", str(klass))
             setattr(klass, attrib_name, self.kid_slots.__dict__[attrib_name])
 
         # add any observers the kid_slots class defines:
@@ -119,6 +117,7 @@ class Family(Model):
 
         @param klass: the base type for the new kid instance
         """
+	_debug("make_kid called with", str(klass))
         self.add_kid(self.kid_instance(klass))
 
     def add_kid(self, kid):
