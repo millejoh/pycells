@@ -23,11 +23,21 @@ def integer(value=0, *args, **kwargs):
 def primary_key(value=0, *args, **kwargs):
     return cells.CellAttr(value=PrimaryKey(value=value), *args, **kwargs)
 
+def string(value="", *args, **kwargs):
+    return cells.CellAttr(value=String(value=value), *args, **kwargs)
+
+def blob(value=None, *args, **kwargs):
+    return cells.CellAttr(value=Column(value=value), *args, **kwargs)
+
+def real(value=0.0, *args, **kwargs):
+    return cells.CellAttr(value=Real(value=value), *args, **kwargs)
+
+
 class Column(cells.Model):
     value = cells.makecell(value=None)
     name = cells.makecell(value="anonymous")
     table = cells.makecell(value=None)
-    translate_from_sql = cells.makecell(value=lambda v: pickle.loads(v))
+    translate_from_sql = cells.makecell(value=lambda v: pickle.loads(str(v)))
 
     @cells.fun2cell()
     def create_column_string(self, prev):
@@ -58,6 +68,32 @@ class PrimaryKey(Integer):
 	return self.name + " INTEGER PRIMARY KEY"
 
 
+class String(Column):
+    value = cells.makecell(value="")
+    translate_from_sql = cells.makecell(value=lambda v: v)
+
+    @cells.fun2cell()
+    def create_column_string(self, prev):
+	return self.name + " TEXT"
+
+    @cells.fun2cell()
+    def sql_value(self, prev):
+	return self.value
+
+
+class Real(Column):
+    value = cells.makecell(value=0.0)
+    translate_from_sql = cells.makecell(value=lambda v: float(v))
+
+    @cells.fun2cell()
+    def create_column_string(self, prev):
+	return self.name + " REAL"
+
+    @cells.fun2cell()
+    def sql_value(self, prev):
+	return str(self.value)
+    
+    
 class RowList(cells.ListCell):
     def __init__(self, *args, **kwargs):
 	cells.ListCell.__init__(self, *args, **kwargs)
@@ -197,7 +233,7 @@ class RowList(cells.ListCell):
 		raise Exception()
 
 	    cur = self.db._rawcon.cursor()
-	    cur.execute(table.insert_string)
+	    cur.execute(table.insert_string, table.insert_values)
 	    self.db._rawcon.commit()
 	    
 	    cells.cellenv.dp += 1
@@ -212,7 +248,7 @@ class RowList(cells.ListCell):
 		    raise Exception()
 
 		cur = self.db._rawcon.cursor()
-		cur.execute(table.insert_string)
+		cur.execute(table.insert_string, table.insert_values)
 		self.db._rawcon.commit()
 	    
 	    cells.cellenv.dp += 1
@@ -227,17 +263,18 @@ class RowList(cells.ListCell):
 
 	    v.pk.value = i
 	    cur = self.db._rawcon.cursor()
-	    # first try to alter that row
+	    # first try to insert that row
 	    try:
+		_debug("__setitem__ executing:", v.insert_string)
+		cur.execute(v.insert_string, v.insert_values)
+		self.db._rawcon.commit()
+	    except self.db._rdbmsmodule.IntegrityError, e:
+		_debug(e)
+		# might exist. try to update that pk instead
 		_debug("__setitem__ executing:", v.update_string)
 		cur.execute(v.update_string)
 		self.db._rawcon.commit()
-	    except self.db._rdbmsmodule.OperationalError, e:
-		_debug(e)
-		# might just not exist. try to insert at that pk instead
-		cur.execute(v.insert_string)
-		self.db._rawcon.commit()
-
+		
     # insert not implemented
     
     remove = _make_listfun("remove")
@@ -301,9 +338,14 @@ class Table(cells.Family):
 	return " ".join(("INSERT INTO", self.name, "(",
 			 ",".join([ _.name for _ in self.columns ]),
 			 ") VALUES (",
-			 ",".join([ getattr(self, column.name).sql_value
-				    for column in self.columns ]),
+			 ",".join(['?'] * len(self.columns)),
 			 ")"))
+
+    # we'll also need a list of values for the rdbms to use with the
+    # insert string
+    @cells.fun2cell()
+    def insert_values(self, prev):
+	return [ _.sql_value for _ in self.columns ]
 
     # We'll also need an update string when objects change
     @cells.fun2cell()

@@ -183,6 +183,47 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	self.failUnless(l[0][0] == 13)
 	# tada!
 
+    def test_RowTypesInsertAndRetrieve(self):
+	class Test(cellql.Table):
+	    s = cellql.string()
+	    r = cellql.real()
+	    b = cellql.blob()
+	    i = cellql.integer()
+
+	db = cellql.Database(connection="sqlite://" + TESTDB)
+	db.addtable(Test)
+
+	orig_s = "Foo"
+	orig_r = 3.14
+	orig_b = { "complex": "objects",
+		   "can": "be",
+		   "stored in": "blobs!" }
+	orig_i = 5
+	
+	newrow = Test()
+	newrow.s.value = orig_s
+	newrow.r.value = orig_r
+	newrow.b.value = orig_b
+	newrow.i.value = orig_i
+	db.tables["Test"].rows[0] = newrow
+
+	self.cur.execute("SELECT s,r,b,i FROM Test WHERE pk=0")
+	db_s, db_r, db_b, db_i = self.cur.fetchall()[0]
+
+	retrieved_row = Test()
+	self.failUnless(orig_s ==
+			retrieved_row.s.translate_from_sql(db_s))
+	self.failUnless(round(orig_r, 3) ==
+			round(retrieved_row.r.translate_from_sql(db_r), 3))
+	self.failUnless(orig_i ==
+			retrieved_row.i.translate_from_sql(db_i))
+
+	translated_db_b = retrieved_row.b.translate_from_sql(db_b)
+	self.failUnless(set(translated_db_b.keys()) == set(orig_b.keys()))
+	for key, value in orig_b.iteritems():
+	    self.failUnless(translated_db_b[key] == value)
+	
+	
 	
 if __name__ == "__main__":
     unittest.main()
