@@ -65,9 +65,9 @@ class Observer(object):
     observer that has no conditions on its running runs whenever the
     Model updates. Observers run at most once per datapulse.
 
-    @ivar attrib_name: (optional) The cell name this observer
-        watches. Only when a cell with this name changes will the
-        observer fire.
+    @ivar attrib: (optional) The cell name this observer watches. Only
+        when a cell with this name changes will the observer fire. You
+        may also pass a list of cell names to "watch".
 
     @ivar oldvalue: A function (signature: C{f(val) -> bool}) which,
         if it returns C{True} when passed a changed cell's out-of-date
@@ -105,17 +105,25 @@ class Observer(object):
             return
         
         if self.attrib_name:
-            if isinstance(attr, Cell):
-                if attr.name != self.attrib_name:
-                    _debug(self.func.__name__, "wants a cell named '" +
-                          self.attrib_name + "', got a cell named '" +
-                          attr.name + "'")
-                    return
-            elif getattr(model, self.attrib_name) is not attr:
-                _debug(self.func.__name__, "looked in its model for an attrib" +
-                      "with its desired name; didn't match passed attr.")
-                return
-            
+	    if isinstance(self.attrib_name, str):
+		attrs = (self.attrib_name,)
+	    else:
+		attrs = self.attrib_name
+
+	    for attrib_name in attrs:
+		if isinstance(attr, Cell):
+		    if attr.name == attrib_name:
+			_debug("found a cell with matching name!")
+			break
+		elif getattr(model, attrib_name) is attr:
+		    _debug(self.func.__name__, "looked in its model for an " +
+			   "attrib with its desired name; found one that " +
+			   "matched passed attr.")
+		    break
+	    else:
+		_debug("Attribute name tests failed")
+		return
+
         if self.newvalue:
             if isinstance(attr, Cell):
                 if not self.newvalue(attr.value):

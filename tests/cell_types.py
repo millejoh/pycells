@@ -158,7 +158,7 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
 class CellTypeTests_DictTests(unittest.TestCase):
     def setUp(self):
         cells.reset()
-        self.x = cells.DictCell(None, {}, name="x")
+        self.x = cells.DictCell(None, name="x")
 
     def test_1_DictCellSettable(self):
         try:

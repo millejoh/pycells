@@ -47,7 +47,7 @@ class Sqlite_CellQLTests(unittest.TestCase):
 
 	db = TestDB()
 	db.make_kid(Test)
-	self.failUnless([ _.name for _ in db.tables["Test"].columns ] == ["i"])
+	self.failUnless("i" in [ _.name for _ in db.tables["Test"].columns ])
 
     def test_CellQLTableCreatesDBTable(self):
 	class Test(cellql.Table):
@@ -132,22 +132,65 @@ class Sqlite_CellQLTests(unittest.TestCase):
 
 	class TestDB(cellql.Database):
 	    connection = cells.makecell(value="sqlite://" + TESTDB)
-	
+
 	con = sqlite.connect(TESTDB)
 	cur = con.cursor()
 	cur.execute("CREATE TABLE Test (i INTEGER, " + \
-		    "Test_index INTEGER PRIMARY KEY)")
+		    "pk INTEGER PRIMARY KEY)")
 	con.commit()
-	cur.execute("INSERT INTO Test (i, Test_index) VALUES (5, 0)")
-	cur.execute("INSERT INTO Test (i, Test_index) VALUES (42, 1)")
+	cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
+	cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
+	con.commit()
 
 	db = TestDB()
-	db.loadtable(Test)
+	db.addtable(Test)
 	self.failUnless(len(db.tables["Test"].rows) == 2)
 	row = db.tables["Test"].rows[0]
+	print "--->", row.i.value
 	self.failUnless(row.i.value == 5)
 	row = db.tables["Test"].rows[1]
 	self.failUnless(row.i.value == 42)
+
+    def test_ModifyExtantRow(self):
+	class Test(cellql.Table):
+	    i = cellql.integer(value=0)
+
+	class TestDB(cellql.Database):
+	    connection = cells.makecell(value="sqlite://" + TESTDB)
+
+	# first i'll manually create a db
+	con = sqlite.connect(TESTDB)
+	cur = con.cursor()
+	cur.execute("CREATE TABLE Test (i INTEGER, " + \
+		    "pk INTEGER PRIMARY KEY)")
+	con.commit()
+	cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
+	cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
+	con.commit()
+
+	cellql.DEBUG = True
+
+	# then i'll get a cellql db object
+	db = TestDB()
+	db.addtable(Test)	# and connect it to the premade table
+
+	# and show the connection found the extant rows
+	self.failIf(db.tables["Test"].rows[0] is None)
+
+	# now i'll make a new row
+	newrow = Test()
+	newrow.i.value = 13
+
+	# and insert it into the db at a currently-occupied position
+	db.tables["Test"].rows[0] = newrow
+
+	# now i'll go in the back door again to see if it was
+	# reflected in the actual db
+	cur.execute("SELECT i FROM Test WHERE pk=0")
+	l = cur.fetchall()
+	self.failUnless(len(l) == 1)
+	self.failUnless(l[0][0] == 13)
+	# tada!	
 	
 	
 if __name__ == "__main__":

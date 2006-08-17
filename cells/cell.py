@@ -958,6 +958,8 @@ class ListCell(InputCell):
 	if not self._should_defer("pop", (index,)):
 	    # not deferred, so do a real pop
 	    r = self.value.pop(index)
+	    cells.cellenv.dp += 1
+	    self.dp = cells.cellenv.dp
 	    self._onchanges()
 	else:
 	    # deferred. grab the asked-for element of the list

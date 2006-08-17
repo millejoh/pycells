@@ -103,8 +103,7 @@ class Family(Model):
         
         # finally, return an instance of that munged class with this obj set
         # as its parent:
-        i = klass()
-        i.parent = self
+        i = klass(parent=self)
         return i
     
     def make_kid(self, klass):
