@@ -12,7 +12,13 @@ from pysqlite2 import dbapi2 as sqlite
 TESTDB = "TestDB"
 
 class Sqlite_CellQLTests(unittest.TestCase):
+    def setUp(self):
+	self.con = sqlite.connect(TESTDB)
+	self.cur = self.con.cursor()
+    
     def tearDown(self):
+	self.cur.close()
+	self.con.close()
 	cells.cell.DEBUG = False
 	os.unlink(TESTDB)
 	
@@ -59,10 +65,8 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	db = TestDB()
 	db.addtable(Test)
 
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
 	try:
-	    cur.execute("select * from Test")
+	    self.cur.execute("select * from Test")
 	except sqlite.OperationalError, e:
 	    self.fail("Caught OperationalError: " + str(e))
 	
@@ -76,10 +80,8 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	db = TestDB()
 	db.addtable(Test)
 
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
 	try:
-	    cur.execute("select i from Test")
+	    self.cur.execute("select i from Test")
 	except sqlite.OperationalError, e:
 	    self.fail("Caught OperationalError: " + str(e))
 
@@ -96,10 +98,8 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	newrow.i.value = 5
 	db.tables["Test"].rows.append(newrow)
 
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
-	cur.execute("select i from Test")
-	l = cur.fetchall()
+	self.cur.execute("select i from Test")
+	l = self.cur.fetchall()
 	self.failUnless(len(l) == 1)
 	self.failUnless(l[0][0] == 5)
 
@@ -118,10 +118,8 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	newrow.j.value = 42
 	db.tables["Test"].rows.append(newrow)
 
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
-	cur.execute("select i, j from Test")
-	l = cur.fetchall()
+	self.cur.execute("select i, j from Test")
+	l = self.cur.fetchall()
 	self.failUnless(len(l) == 1)
 	self.failUnless(l[0][0] == 5)
 	self.failUnless(l[0][1] == 42)
@@ -133,25 +131,22 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	class TestDB(cellql.Database):
 	    connection = cells.makecell(value="sqlite://" + TESTDB)
 
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
-	cur.execute("CREATE TABLE Test (i INTEGER, " + \
+	self.cur.execute("CREATE TABLE Test (i INTEGER, " + \
 		    "pk INTEGER PRIMARY KEY)")
-	con.commit()
-	cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
-	cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
-	con.commit()
+	self.con.commit()
+	self.cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
+	self.cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
+	self.con.commit()
 
 	db = TestDB()
 	db.addtable(Test)
 	self.failUnless(len(db.tables["Test"].rows) == 2)
-	row = db.tables["Test"].rows[0]
-	print "--->", row.i.value
-	self.failUnless(row.i.value == 5)
-	row = db.tables["Test"].rows[1]
-	self.failUnless(row.i.value == 42)
+	row1 = db.tables["Test"].rows[0]
+	self.failUnless(row1.i.value == 5)
+	row2 = db.tables["Test"].rows[1]
+	self.failUnless(row2.i.value == 42)
 
-    def test_ModifyExtantRow(self):
+    def test_SetExtantRow(self):
 	class Test(cellql.Table):
 	    i = cellql.integer(value=0)
 
@@ -159,16 +154,12 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	    connection = cells.makecell(value="sqlite://" + TESTDB)
 
 	# first i'll manually create a db
-	con = sqlite.connect(TESTDB)
-	cur = con.cursor()
-	cur.execute("CREATE TABLE Test (i INTEGER, " + \
+	self.cur.execute("CREATE TABLE Test (i INTEGER, " + \
 		    "pk INTEGER PRIMARY KEY)")
-	con.commit()
-	cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
-	cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
-	con.commit()
-
-	cellql.DEBUG = True
+	self.con.commit()
+	self.cur.execute("INSERT INTO Test (i, pk) VALUES (5, 0)")
+	self.cur.execute("INSERT INTO Test (i, pk) VALUES (42, 1)")
+	self.con.commit()
 
 	# then i'll get a cellql db object
 	db = TestDB()
@@ -186,12 +177,12 @@ class Sqlite_CellQLTests(unittest.TestCase):
 
 	# now i'll go in the back door again to see if it was
 	# reflected in the actual db
-	cur.execute("SELECT i FROM Test WHERE pk=0")
-	l = cur.fetchall()
+	self.cur.execute("SELECT i FROM Test WHERE pk=0")
+	l = self.cur.fetchall()
 	self.failUnless(len(l) == 1)
 	self.failUnless(l[0][0] == 13)
-	# tada!	
-	
+	# tada!
+
 	
 if __name__ == "__main__":
     unittest.main()

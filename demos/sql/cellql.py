@@ -229,9 +229,11 @@ class RowList(cells.ListCell):
 	    cur = self.db._rawcon.cursor()
 	    # first try to alter that row
 	    try:
+		_debug("__setitem__ executing:", v.update_string)
 		cur.execute(v.update_string)
 		self.db._rawcon.commit()
-	    except self.db._rdbmsmodule.OperationalError:
+	    except self.db._rdbmsmodule.OperationalError, e:
+		_debug(e)
 		# might just not exist. try to insert at that pk instead
 		cur.execute(v.insert_string)
 		self.db._rawcon.commit()
@@ -309,7 +311,7 @@ class Table(cells.Family):
 	return " ".join(("UPDATE", self.name, "SET",
 			 ",".join([ col.name + "=" + col.sql_value
 				    for col in self.columns]),
-			 "WHERE pk=" + str(self.pk)))
+			 "WHERE pk=" + str(self.pk.sql_value)))
 			
 @Table.observer(attrib=("ready", "create_table_string"))
 def rebuild_observer(model):    
@@ -374,6 +376,9 @@ class Database(cells.Family):
     supported_rdbms = ("sqlite",)
 
     addtable = cells.Family.make_kid
+
+    def __del__(self):
+	self._rawcon.close()
 
     # Public Cells
     connection = cells.makecell(value="")
