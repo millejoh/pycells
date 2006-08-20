@@ -78,11 +78,14 @@ class Model(object):
     altered at runtime by passing C{attrname=value}, or
     C{attrname=hash} to the constructor.
 
-    @ivar model_name: The name of this Model. By default, None.
+    @ivar model_name: A cell holding The name of this Model. By
+        default, None.
 
-    @ivar model_value: The value of this Model. By default, None.
+    @ivar model_value: A cell holding the value of this Model. By
+        default, None.
 
-    @ivar parent: For C{L{Family}} graph traversal. By default, None.
+    @ivar parent: A cell for C{L{Family}} graph traversal. By default,
+        None.
     """
     __metaclass__ = ModelMetatype
 
@@ -200,6 +203,12 @@ class Model(object):
         self._initialized = True
 
     def __setattr__(self, key, value):
+	"""
+	Per KT's spec, Models may not set non-cell attributes after
+	__init__.
+
+	@raise NonCellSetError: If you try to set a non-cell attribute
+	"""
          # always set Cells
         if isinstance(self.__dict__.get(key), Cell):
                 object.__setattr__(self, key, value)
@@ -259,6 +268,23 @@ class Model(object):
         observer may be set to fire on any change in the model, any
         change in an attribute, or when a function testing the new or
         old value of a cell returns true.
+
+	    >>> import cells
+	    >>> class A(cells.Model):
+	    ...     x = cells.makecell(value=4)
+	    ... 
+	    >>> @A.observer(attrib="x", newvalue=lambda a: a % 2)
+	    ... def odd_x_obs(model):
+	    ...     print "New value of x is odd!"
+	    ... 
+	    >>> a = A()
+	    >>> a.x
+	    4
+	    >>> a.x = 5
+	    New value of x is odd!
+	    >>> a.x = 42
+	    >>> a.x = 11
+	    New value of x is odd!
 
         @param attrib: An attribute name to attach the observer to
 

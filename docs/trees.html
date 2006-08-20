@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -90,6 +96,15 @@
     <li> <strong class="uidlink">exceptions.Exception</strong>:
       <em class="summary">Common base class for all exceptions.</em>
     <ul>
+    <li> <strong class="uidlink"><a href="cells.family.FamilyTraversalError-class.html">cells.family.FamilyTraversalError</a></strong>:
+      <em class="summary">Raised when there's some sort of error in <code><a 
+        href="cells.family.Family-class.html" 
+        class="link">Family</a></code>'s traversal methods.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>:
+      <em class="summary">You may not set a non-cell Model attribute after 
+        initialization.</em>
+    </li>
     <li> <strong class="uidlink"><a href="cells.cell._CellException-class.html">cells.cell._CellException</a></strong>
     <ul>
     <li> <strong class="uidlink"><a href="cells.cell.EphemeralCellUnboundError-class.html">cells.cell.EphemeralCellUnboundError</a></strong>:
@@ -100,41 +115,37 @@
       <em class="summary">An attempt to <code><code class="link">run</code>()</code> an 
         InputCell was made.</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleAndValueInitError-class.html">cells.cell.RuleAndValueInitError</a></strong>:
-      <em class="summary">Both <code>rule</code> and <code>value</code> were passed to 
-        <code><a href="cells.cell._CellException-class.html#__init__" 
-        class="link">__init__</a></code>.</em>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
+      <em class="summary">RuleCells may not be set.</em>
     </li>
     <li> <strong class="uidlink"><a href="cells.cell.SetDuringNotificationError-class.html">cells.cell.SetDuringNotificationError</a></strong>:
       <em class="summary">An attempt at a non-deferred <code><code 
         class="link">set</code>()</code> happened during propogation.</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
-      <em class="summary">RuleCells may not be set.</em>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleAndValueInitError-class.html">cells.cell.RuleAndValueInitError</a></strong>:
+      <em class="summary">Both <code>rule</code> and <code>value</code> were passed to 
+        <code><a href="cells.cell._CellException-class.html#__init__" 
+        class="link">__init__</a></code>.</em>
     </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="cells.family.FamilyTraversalError-class.html">cells.family.FamilyTraversalError</a></strong>:
-      <em class="summary">Raised when there's some sort of error in <code><a 
-        href="cells.family.Family-class.html" 
-        class="link">Family</a></code>'s traversal methods.</em>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>:
-      <em class="summary">You may not set a non-cell Model attribute after 
-        initialization.</em>
+    <li> <strong class="uidlink"><a href="cells.model.BadInitError-class.html">cells.model.BadInitError</a></strong>
     </li>
     </ul>
     </li>
     <li> <strong class="uidlink">object</strong>:
       <em class="summary">The most base type</em>
     <ul>
-    <li> <strong class="uidlink">type</strong>:
-      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
-        -&gt; a new type</em>
+    <li> <strong class="uidlink"><a href="cells.model.Model-class.html">cells.model.Model</a></strong>:
+      <em class="summary">A class in which CellAttrs may be used.</em>
     <ul>
-    <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
+    <li> <strong class="uidlink"><a href="cells.family.Family-class.html">cells.family.Family</a></strong>:
+      <em class="summary">Family</em>
     </li>
     </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>:
+      <em class="summary">Wrapper for Observers within Models.</em>
     </li>
     <li> <strong class="uidlink">cells.cell.Cell</strong>:
       <em class="summary">The base Cell class.</em>
@@ -148,13 +159,9 @@
     <li> <strong class="uidlink"><a href="cells.cell.AlwaysLazyCell-class.html">cells.cell.AlwaysLazyCell</a></strong>:
       <em class="summary">A LazyCell variant that is *always* Lazy</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.OnceAskedLazyCell-class.html">cells.cell.OnceAskedLazyCell</a></strong>
-    </li>
     <li> <strong class="uidlink"><a href="cells.cell.UntilAskedLazyCell-class.html">cells.cell.UntilAskedLazyCell</a></strong>:
       <em class="summary">A LazyCell who converts to a normal RuleCell after its first 
-        post-init <code><a 
-        href="cells.cell.UntilAskedLazyCell-class.html#get" 
-        class="link">get</a>()</code></em>
+        post-init <code><code class="link">get</code>()</code></em>
     </li>
     </ul>
     </li>
@@ -166,11 +173,10 @@
     <li> <strong class="uidlink"><a href="cells.cell.DictCell-class.html">cells.cell.DictCell</a></strong>:
       <em class="summary">A input cell whose value is initialized to {}.</em>
     </li>
-    </ul>
+    <li> <strong class="uidlink"><a href="cells.cell.ListCell-class.html">cells.cell.ListCell</a></strong>:
+      <em class="summary">A input cell whose value is initialized to [].</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
-      <em class="summary">Runs the rule to determine initial value, then acts like a 
-        InputCell</em>
+    </ul>
     </li>
     <li> <strong class="uidlink"><a href="cells.synapse.Synapse-class.html">cells.synapse.Synapse</a></strong>:
       <em class="summary">A very specialized Cell variant.</em>
@@ -180,10 +186,11 @@
     </li>
     </ul>
     </li>
-    </ul>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
+      <em class="summary">Runs the rule to determine initial value, then acts like a 
+        InputCell</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>:
-      <em class="summary">Wrapper for Observers within Models.</em>
+    </ul>
     </li>
     <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
       <em class="summary">CellAttr</em>
@@ -193,11 +200,11 @@
         href="cells.model.Model-class.html" class="link">Model</a></code> 
         updates and certain conditions are met.</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.model.Model-class.html">cells.model.Model</a></strong>:
-      <em class="summary">A class in which CellAttrs may be used.</em>
+    <li> <strong class="uidlink">type</strong>:
+      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
+        -&gt; a new type</em>
     <ul>
-    <li> <strong class="uidlink"><a href="cells.family.Family-class.html">cells.family.Family</a></strong>:
-      <em class="summary">Family</em>
+    <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
     </li>
     </ul>
     </li>
@@ -224,13 +231,19 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:38 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:28 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

@@ -23,9 +23,32 @@ PyCells is a port of Ken Tilton's Cells extenstion to Common
 Lisp. Cells are objects which automatically discover the cells which
 call them, and notify those cells of changes.
 
+A short example:
+
+    >>> import cells
+    >>> class Rectangle(cells.Model):
+    ...     width = cells.makecell(value=1)
+    ...     ratio = cells.makecell(value=1.618)
+    ...     @cells.fun2cell()
+    ...     def length(self, prev):
+    ...         print "Length updating..."
+    ...         return float(self.width) * float(self.ratio)
+    ... 
+    >>> r = Rectangle()
+    Length updating...
+    >>> r.length
+    1.6180000000000001
+    >>> r.width = 5
+    Length updating...
+    >>> r.length
+    8.0899999999999999
+
+
 @var DEBUG: Turns on debugging messages for *all* submodules. This is
     a whole lot of text, so you'll probably want to use the
     submodules' C{DEBUG} flags instead
+
+@var cellenv: Thread-local cell environment variables.
 """
 DEBUG = False
 
@@ -100,8 +123,8 @@ def fun2cell(*args, **kwargs):
     """
     fun2cell(unchanged_if=None, celltype=None) -> decorator
 
-    By default, creates a new RuleCell using the decorated function as
-    the C{rule} parameter.
+    A decorator which creates a new RuleCell using the decorated
+    function as the C{rule} parameter.
 
     @param unchanged_if: Sets a function to determine if a cell's
         value has changed. For example,
@@ -138,7 +161,7 @@ def fun2cell(*args, **kwargs):
         return CellAttr(rule=func, *args, **kwargs)
     return fun2cell_decorator
 
-from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
+from cell import Cell, InputCell, RuleCell, RuleThenInputCell
 from cell import UntilAskedLazyCell, AlwaysLazyCell, DictCell, ListCell
 from cell import _CellException, RuleCellSetError
 from cell import InputCellRunError, SetDuringNotificationError
@@ -162,7 +185,7 @@ def reset():
 
     Resets all of PyCells' globals back to their on-package-import
     values.  This is a pretty dangerous thing to do if you care about
-    the currently-instantiated cells' values, but quite useful while
+    the currently-instantiated cells' state, but quite useful while
     fooling around in an ipython session.
     """
     global cellenv

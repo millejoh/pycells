@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -65,13 +71,60 @@ object --+
 </pre>
 
 <hr />
-Wrapper for a function which fires when a <code><a 
+<p>Wrapper for a function which fires when a <code><a 
   href="cells.model.Model-class.html" class="link">Model</a></code> updates
   and certain conditions are met. Observers may be bound to specific 
   attributes or whether a function returns true when handed a cell's old 
   value or new value, or any combination of the above. An observer that has
   no conditions on its running runs whenever the Model updates. Observers 
-  run at most once per datapulse.<br /><br />
+  with multiple conditions will only fire when all the conditions pass. 
+  Observers run at most once per datapulse.</p>
+  You should use the <code><a 
+  href="cells.model.Model-class.html#observer" 
+  class="link">Model.observer</a></code> decorator to add Observers to 
+  Models:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">import</span> cells
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=4)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>@A.observer(attrib=<span class="py-string">&quot;x&quot;</span>,
+<span class="py-prompt">... </span>            newvalue=<span class="py-keyword">lambda</span> a: a % 2)
+<span class="py-prompt">... </span><span class="py-keyword">def</span> odd_x_obs(model):
+<span class="py-prompt">... </span>    <span class="py-keyword">print</span> <span class="py-string">&quot;New value of x is odd!&quot;</span>
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>@A.observer(attrib=<span class="py-string">&quot;x&quot;</span>)
+<span class="py-prompt">... </span><span class="py-keyword">def</span> x_obs(model):
+<span class="py-prompt">... </span>    <span class="py-keyword">print</span> <span class="py-string">&quot;x got changed!&quot;</span>
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>@A.observer()      
+<span class="py-prompt">... </span><span class="py-keyword">def</span> model_obs(model):
+<span class="py-prompt">... </span>    <span class="py-keyword">print</span> <span class="py-string">&quot;something in the model changed&quot;</span>
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>@A.observer(attrib=<span class="py-string">&quot;x&quot;</span>,
+<span class="py-prompt">... </span>            newvalue=<span class="py-keyword">lambda</span> a: a % 2,
+<span class="py-prompt">... </span>            oldvalue=<span class="py-keyword">lambda</span> a: <span class="py-keyword">not</span> (a % 2))
+<span class="py-prompt">... </span><span class="py-keyword">def</span> was_even_now_odd_x_obs(model):
+<span class="py-prompt">... </span>    <span class="py-keyword">print</span> <span class="py-string">&quot;New value of x is odd, and it was even!&quot;</span>
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()</span>
+<span class="py-output">something in the model changed
+x got changed!</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 5</span>
+<span class="py-output">something in the model changed
+x got changed!
+New value of x is odd!
+New value of x is odd, and it was even!</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 11</span>
+<span class="py-output">something in the model changed
+x got changed!
+New value of x is odd!</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 42</span>
+<span class="py-output">something in the model changed
+x got changed!</span></pre><br /><br />
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -100,8 +153,7 @@ Wrapper for a function which fires when a <code><a
         <span class="sig-arg">oldvalue</span>,
         <span class="sig-arg">newvalue</span>,
         <span class="sig-arg">func</span>)</span>
-    <br />x.__init__(...) initializes x; see x.__class__.__doc__ for 
-      signature
+    <br />Initializes a new Observer.
   </td>
 </tr>
 <tr>
@@ -180,7 +232,7 @@ Wrapper for a function which fires when a <code><a
 </tr>
 <tr>
   <td width="15%">
-    <strong><a href="cells.observer.Observer-class.html#attrib_name">attrib_name</a></strong></td>
+    <strong><a href="cells.observer.Observer-class.html#attrib">attrib</a></strong></td>
   <td>(optional) The cell name this observer watches.</td>
 </tr>
 <tr>
@@ -245,12 +297,13 @@ Wrapper for a function which fires when a <code><a
     ></td>
   </table>
   
-  x.__init__(...) initializes x; see x.__class__.__doc__ for 
-  signature
+  <p>Initializes a new Observer. All arguments are required, but only func 
+  is required to be anything but none.</p>
+  See attrib, oldvalue, and newvalue instance variable docs for 
+  explanation of their utility.
   <dl><dt></dt><dd>
     <dl><dt>Overrides:
       object.__init__
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -300,12 +353,13 @@ Wrapper for a function which fires when a <code><a
   </td>
 </tr>
 </table>
-<a name="attrib_name"></a>
+<a name="attrib"></a>
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
-  <h3>attrib_name</h3>
+  <h3>attrib</h3>
   (optional) The cell name this observer watches. Only when a cell with 
-  this name changes will the observer fire.
+  this name changes will the observer fire. You may also pass a list of 
+  cell names to &quot;watch&quot;.
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -324,7 +378,7 @@ Wrapper for a function which fires when a <code><a
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>last_ran</h3>
-  The DP this observer last ran in.
+  The DP this observer last ran in. Observers only run once per DP.
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -372,13 +426,19 @@ Wrapper for a function which fires when a <code><a
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:41 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:29 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

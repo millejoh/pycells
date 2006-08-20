@@ -62,9 +62,9 @@ class Family(Model):
     def __init__(self, *args, **kwargs):
         Model.__init__(self, *args, **kwargs)
 
-    def kid_instance(self, klass=None):
+    def _kid_instance(self, klass=None):
         """
-        kid_instance(self, klass) -> Cell
+        _kid_instance(self, klass) -> Cell
         
         Creates a new instance of a Cell based on the passed class (in
         C{klass}) and the overrides defined in C{kid_slots}.
@@ -117,11 +117,11 @@ class Family(Model):
         @param klass: the base type for the new kid instance
         """
 	_debug("make_kid called with", str(klass))
-        self.add_kid(self.kid_instance(klass))
+        self._add_kid(self._kid_instance(klass))
 
-    def add_kid(self, kid):
+    def _add_kid(self, kid):
         """
-        add_kid(self, kid) -> None
+        _add_kid(self, kid) -> None
 
         Inserts the kid into this Family's C{kids} list
 

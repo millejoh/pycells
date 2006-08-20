@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -57,9 +63,31 @@
 <h2 class="package">Package cells
 <br/><span class="codelink"><a href="cells-pysrc.html">source&nbsp;code</a></span></h2>
 <p>PyCells</p>
-  PyCells is a port of Ken Tilton's Cells extenstion to Common Lisp. 
+  <p>PyCells is a port of Ken Tilton's Cells extenstion to Common Lisp. 
   Cells are objects which automatically discover the cells which call them,
-  and notify those cells of changes.<br /><br />
+  and notify those cells of changes.</p>
+  A short example:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">import</span> cells
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> Rectangle(cells.Model):
+<span class="py-prompt">... </span>    width = cells.makecell(value=1)
+<span class="py-prompt">... </span>    ratio = cells.makecell(value=1.618)
+<span class="py-prompt">... </span>    @cells.fun2cell()
+<span class="py-prompt">... </span>    <span class="py-keyword">def</span> length(self, prev):
+<span class="py-prompt">... </span>        <span class="py-keyword">print</span> <span class="py-string">&quot;Length updating...&quot;</span>
+<span class="py-prompt">... </span>        <span class="py-keyword">return</span> float(self.width) * float(self.ratio)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>r = Rectangle()</span>
+<span class="py-output">Length updating...</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>r.length</span>
+<span class="py-output">1.6180000000000001</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>r.width = 5</span>
+<span class="py-output">Length updating...</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>r.length</span>
+<span class="py-output">8.0899999999999999</span></pre><br /><br />
 
 <!-- ==================== SUBMODULES ==================== -->
 <a name="section-Submodules"></a>
@@ -140,8 +168,8 @@
   <td>
     <span class="sig"><a href="cells-module.html#fun2cell" class="sig-name">fun2cell</a>(<span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">celltype</span>=<span class="sig-default">None</span>)</span>
-    <br />By default, creates a new RuleCell using the decorated function as
-      the <code>rule</code> parameter.
+    <br />A decorator which creates a new RuleCell using the decorated 
+      function as the <code>rule</code> parameter.
   </td>
 </tr>
 <tr class="private">
@@ -196,7 +224,7 @@
 <tr>
   <td width="15%">
     <strong><a href="cells-module.html#cellenv">cellenv</a></strong></td>
-  <td>&nbsp;</td>
+  <td>Thread-local cell environment variables.</td>
 </tr>
 </table>
 
@@ -312,8 +340,8 @@ CellAttr
     ></td>
   </table>
   
-  By default, creates a new RuleCell using the decorated function as the
-  <code>rule</code> parameter.
+  A decorator which creates a new RuleCell using the decorated function 
+  as the <code>rule</code> parameter.
   <dl><dt></dt><dd>
     <dl><dt>Parameters:</dt></dl>
     <ul>
@@ -396,7 +424,7 @@ None
   
   Resets all of PyCells' globals back to their on-package-import values.
   This is a pretty dangerous thing to do if you care about the 
-  currently-instantiated cells' values, but quite useful while fooling 
+  currently-instantiated cells' state, but quite useful while fooling 
   around in an ipython session.
   <dl><dt></dt><dd>
     <dl><dt>Returns:</dt>
@@ -460,11 +488,11 @@ False
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>cellenv</h3>
-  
+  Thread-local cell environment variables.
   <dl><dt></dt><dd>
-    <dl title="&lt;thread._local object at 0xd248&gt;"><dt>Value:</dt>
+    <dl title="&lt;thread._local object at 0xe290&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;thread._local object at 0xd248&gt;                                       
+&lt;thread._local object at 0xe290&gt;                                       
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -491,13 +519,19 @@ False
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:38 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:29 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

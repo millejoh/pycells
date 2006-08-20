@@ -63,7 +63,52 @@ class Observer(object):
     attributes or whether a function returns true when handed a cell's
     old value or new value, or any combination of the above. An
     observer that has no conditions on its running runs whenever the
-    Model updates. Observers run at most once per datapulse.
+    Model updates. Observers with multiple conditions will only fire
+    when all the conditions pass. Observers run at most once per
+    datapulse.
+
+    You should use the C{L{Model.observer}} decorator to add Observers
+    to Models:
+
+	>>> import cells
+	>>> class A(cells.Model):
+	...     x = cells.makecell(value=4)
+	... 
+	>>> @A.observer(attrib="x",
+	...             newvalue=lambda a: a % 2)
+	... def odd_x_obs(model):
+	...     print "New value of x is odd!"
+	... 
+	>>> @A.observer(attrib="x")
+	... def x_obs(model):
+	...     print "x got changed!"
+	... 
+	>>> @A.observer()      
+	... def model_obs(model):
+	...     print "something in the model changed"
+	... 
+	>>> @A.observer(attrib="x",
+	...             newvalue=lambda a: a % 2,
+	...             oldvalue=lambda a: not (a % 2))
+	... def was_even_now_odd_x_obs(model):
+	...     print "New value of x is odd, and it was even!"
+	... 
+	>>> a = A()
+	something in the model changed
+	x got changed!
+	>>> a.x = 5
+	something in the model changed
+	x got changed!
+	New value of x is odd!
+	New value of x is odd, and it was even!
+	>>> a.x = 11
+	something in the model changed
+	x got changed!
+	New value of x is odd!
+	>>> a.x = 42
+	something in the model changed
+	x got changed!
+
 
     @ivar attrib: (optional) The cell name this observer watches. Only
         when a cell with this name changes will the observer fire. You
@@ -80,9 +125,20 @@ class Observer(object):
     @ivar func: The function to run when the observer
         fires. Signature: C{f(model_instance) -> (ignored)}
 
-    @ivar last_ran: The DP this observer last ran in.
+    @ivar last_ran: The DP this observer last ran in. Observers only
+        run once per DP.
     """
+    
     def __init__(self, attrib, oldvalue, newvalue, func):
+	"""
+	__init__(self, attrib, oldvalue, newvalue, func)
+
+	Initializes a new Observer. All arguments are required, but
+	only func is required to be anything but none.
+
+	See attrib, oldvalue, and newvalue instance variable docs for
+	explanation of their utility.
+	"""
         self.attrib_name = attrib
         self.oldvalue = oldvalue
         self.newvalue = newvalue

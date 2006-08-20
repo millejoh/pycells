@@ -21,10 +21,24 @@ Cell, and subclasses of Cell. You will almost certainly never use
 these directly, instead relying on C{L{Model}} and its subclasses to
 instantiate these into objects for you.
 
+You should know what these do, though, as you can specify
+C{L{cells.makecell}} or C{L{cells.fun2cell}} instantiate a specific
+type of cell for you:
+
+    >>> class A(cells.Model):
+    ...     l = cells.makecell(value=[1,3,5], celltype=cells.ListCell)
+    ...     @cells.fun2cell(celltype=cells.RuleThenInputCell)
+    ...     def from_a_global(self, prev):
+    ...         global e
+    ...         return e["something"]
+
+
 @var DEBUG: Turns on debugging messages for the cell module.
 
-@group Cell Types: Cell, RuleCell, InputCell, RuleThenInputCell,
-    LazyCell, AlwaysLazyCell, OnceAskedLazyCell, UntilAskedLazyCell
+@group Only Inherited: Cell, LazyCell
+
+@group Cell Types: RuleCell, InputCell, RuleThenInputCell,
+    AlwaysLazyCell, UntilAskedLazyCell, DictCell, ListCell
 
 @group Exceptions: EphemeralCellUnboundError, InputCellRunError,
     RuleAndValueInitError, RuleCellSetError, SetDuringNotificationError
@@ -632,8 +646,8 @@ class LazyCell(RuleCell):
         RuleCell.__init__(self, *args, **kwargs)
         self.lazy = True
 
-class OnceAskedLazyCell(LazyCell):
-    pass
+# class OnceAskedLazyCell(LazyCell):
+#     pass
 
 class AlwaysLazyCell(LazyCell):
     """
@@ -799,6 +813,11 @@ class DictCell(InputCell, UserDict.DictMixin):
         return self.value[key]
 
     def keys(self):
+	"""
+	keys(self) -> list
+
+	Gets self.value.keys()
+	"""
         if cells.cellenv.curr:   # (curr == None when not propogating)
             cells.cellenv.curr.add_calls(self)
             self.add_called_by(cells.cellenv.curr)

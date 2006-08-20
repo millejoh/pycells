@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -129,13 +135,13 @@
       ...) -&gt; None
   </td>
 </tr>
-<tr>
+<tr class="private">
   <td width="15%" align="right" valign="top" class="rtype">
     &nbsp;
    </td>
   <td>
-    <span class="sig"><a href="cells.family.Family-class.html#kid_instance" class="sig-name">kid_instance</a>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">klass</span>)</span>
+    <span class="sig"><a href="cells.family.Family-class.html#_kid_instance" class="sig-name">_kid_instance</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>=<span class="sig-default">None</span>)</span>
     <br />Creates a new instance of a Cell based on the passed class (in 
       <code>klass</code>) and the overrides defined in 
       <code>kid_slots</code>.
@@ -153,12 +159,12 @@
       <code>kid_slots</code> into the <code>kids</code> list
   </td>
 </tr>
-<tr>
+<tr class="private">
   <td width="15%" align="right" valign="top" class="rtype">
     &nbsp;
    </td>
   <td>
-    <span class="sig"><a href="cells.family.Family-class.html#add_kid" class="sig-name">add_kid</a>(<span class="sig-arg">self</span>,
+    <span class="sig"><a href="cells.family.Family-class.html#_add_kid" class="sig-name">_add_kid</a>(<span class="sig-arg">self</span>,
         <span class="sig-arg">kid</span>)</span>
     <br />Inserts the kid into this Family's <code>kids</code> list
   </td>
@@ -426,16 +432,16 @@
   </dd></dl>
 </td></tr></table>
 </div>
-<a name="kid_instance"></a>
-<div>
+<a name="_kid_instance"></a>
+<div class="private">
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3><span class="sig"><span class="sig-name">kid_instance</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">klass</span>)</span>
+  <h3><span class="sig"><span class="sig-name">_kid_instance</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">klass</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="cells.family-pysrc.html#Family.kid_instance">source&nbsp;code</a></span>&nbsp;</span
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family._kid_instance">source&nbsp;code</a></span>&nbsp;</span
     ></td>
   </table>
   
@@ -484,16 +490,16 @@ None
   </dd></dl>
 </td></tr></table>
 </div>
-<a name="add_kid"></a>
-<div>
+<a name="_add_kid"></a>
+<div class="private">
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3><span class="sig"><span class="sig-name">add_kid</span>(<span class="sig-arg">self</span>,
+  <h3><span class="sig"><span class="sig-name">_add_kid</span>(<span class="sig-arg">self</span>,
         <span class="sig-arg">kid</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="cells.family-pysrc.html#Family.add_kid">source&nbsp;code</a></span>&nbsp;</span
+    ><span class="codelink"><a href="cells.family-pysrc.html#Family._add_kid">source&nbsp;code</a></span>&nbsp;</span
     ></td>
   </table>
   
@@ -640,12 +646,12 @@ Model
   <h3>_noncells</h3>
   
   <dl><dt></dt><dd>
-    <dl title="set(['__module__', 'position', '__metaclass__', 'observer', 'grandparent', '_initialized', '__setattr__', 'add_kid', 'make_kid', 'previous_sib', 'kid_instance', '_buildcell', '_run_observers', 'next_sib', '__doc__', '__init__'])"><dt>Value:</dt>
+    <dl title="set(['_add_kid', '__module__', 'position', '__metaclass__', 'observer', 'grandparent', '_initialized', '_kid_instance', '__setattr__', 'make_kid', 'previous_sib', '_buildcell', '_run_observers', 'next_sib', '__doc__', '__init__'])"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-set(['__module__', 'position', '__metaclass__', 'observer', 'grandpare<span class="variable-linewrap">\</span>
-nt', '_initialized', '__setattr__', 'add_kid', 'make_kid', 'previous_s<span class="variable-linewrap">\</span>
-ib', 'kid_instance', '_buildcell', '_run_observers', 'next_sib', '__do<span class="variable-linewrap">\</span>
-c__', '__init__'])                                                     
+set(['_add_kid', '__module__', 'position', '__metaclass__', 'observer'<span class="variable-linewrap">\</span>
+, 'grandparent', '_initialized', '_kid_instance', '__setattr__', 'make<span class="variable-linewrap">\</span>
+_kid', 'previous_sib', '_buildcell', '_run_observers', 'next_sib', '__<span class="variable-linewrap">\</span>
+doc__', '__init__'])                                                   
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -677,9 +683,9 @@ c__', '__init__'])
   A list of Models which are guaranteed to have the attribute overrides 
   defined in <code>kid_slots</code>
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x2d14b0&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x70bf10&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x2d14b0&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x70bf10&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -694,9 +700,9 @@ c__', '__init__'])
   defined in the class in <code>kid_slots</code> minus the attributes 
   defined in every Model.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x2d14f0&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x70bf50&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x2d14f0&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x70bf50&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -723,13 +729,19 @@ c__', '__init__'])
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:41 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:29 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

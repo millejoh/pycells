@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -57,10 +63,22 @@
 <!-- ==================== MODULE DESCRIPTION ==================== -->
 <h2 class="module">Module cell
 <br/><span class="codelink"><a href="cells.cell-pysrc.html">source&nbsp;code</a></span></h2>
-Cell, and subclasses of Cell. You will almost certainly never use 
+<p>Cell, and subclasses of Cell. You will almost certainly never use 
   these directly, instead relying on <code><a 
   href="cells.model.Model-class.html" class="link">Model</a></code> and its
-  subclasses to instantiate these into objects for you.<br /><br />
+  subclasses to instantiate these into objects for you.</p>
+  You should know what these do, though, as you can specify <code><a 
+  href="cells-module.html#makecell" class="link">cells.makecell</a></code> 
+  or <code><a href="cells-module.html#fun2cell" 
+  class="link">cells.fun2cell</a></code> instantiate a specific type of 
+  cell for you:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    l = cells.makecell(value=[1,3,5], celltype=cells.ListCell)
+<span class="py-prompt">... </span>    @cells.fun2cell(celltype=cells.RuleThenInputCell)
+<span class="py-prompt">... </span>    <span class="py-keyword">def</span> from_a_global(self, prev):
+<span class="py-prompt">... </span>        <span class="py-keyword">global</span> e
+<span class="py-prompt">... </span>        <span class="py-keyword">return</span> e[<span class="py-string">&quot;something&quot;</span>]</span></pre><br /><br />
 
 <!-- ==================== CLASSES ==================== -->
 <a name="section-Classes"></a>
@@ -79,15 +97,18 @@ Cell, and subclasses of Cell. You will almost certainly never use
     </table>
   </td>
 </tr>
-<tr>
-  <td width="15%">
-    <strong><a href="cells.cell.DictCell-class.html">DictCell</a></strong></td>
-  <td>A input cell whose value is initialized to {}.</td>
-</tr>
 <tr class="private">
   <td width="15%">
     <strong><a href="cells.cell._CellException-class.html">_CellException</a></strong></td>
   <td>&nbsp;</td>
+</tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Only Inherited</th></tr>
+<tr>
+  <td width="15%">
+    <strong><a href="cells.cell.LazyCell-class.html">LazyCell</a></strong></td>
+  <td>A RuleCell which does not update upon propogation.</td>
 </tr>
 <tr bgcolor="#e8f0f8" >
   <th colspan="2" class="group"
@@ -99,18 +120,18 @@ Cell, and subclasses of Cell. You will almost certainly never use
 </tr>
 <tr>
   <td width="15%">
+    <strong><a href="cells.cell.DictCell-class.html">DictCell</a></strong></td>
+  <td>A input cell whose value is initialized to {}.</td>
+</tr>
+<tr>
+  <td width="15%">
     <strong><a href="cells.cell.InputCell-class.html">InputCell</a></strong></td>
   <td>A cell whose value can be set</td>
 </tr>
 <tr>
   <td width="15%">
-    <strong><a href="cells.cell.LazyCell-class.html">LazyCell</a></strong></td>
-  <td>A RuleCell which does not update upon propogation.</td>
-</tr>
-<tr>
-  <td width="15%">
-    <strong><a href="cells.cell.OnceAskedLazyCell-class.html">OnceAskedLazyCell</a></strong></td>
-  <td>&nbsp;</td>
+    <strong><a href="cells.cell.ListCell-class.html">ListCell</a></strong></td>
+  <td>A input cell whose value is initialized to [].</td>
 </tr>
 <tr>
   <td width="15%">
@@ -127,9 +148,7 @@ Cell, and subclasses of Cell. You will almost certainly never use
   <td width="15%">
     <strong><a href="cells.cell.UntilAskedLazyCell-class.html">UntilAskedLazyCell</a></strong></td>
   <td>A LazyCell who converts to a normal RuleCell after its first 
-        post-init <code><a 
-        href="cells.cell.UntilAskedLazyCell-class.html#get" 
-        class="link">get</a>()</code></td>
+        post-init <code><code class="link">get</code>()</code></td>
 </tr>
 <tr bgcolor="#e8f0f8" >
   <th colspan="2" class="group"
@@ -343,13 +362,19 @@ False
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:39 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:29 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>

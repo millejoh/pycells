@@ -30,7 +30,13 @@
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -139,7 +145,8 @@ A class in which CellAttrs may be used. Models automatically bring
     <span class="sig"><a href="cells.model.Model-class.html#__setattr__" class="sig-name">__setattr__</a>(<span class="sig-arg">self</span>,
         <span class="sig-arg">key</span>,
         <span class="sig-arg">value</span>)</span>
-    <br />x.__setattr__('name', value) &lt;==&gt; x.name = value
+    <br />Per KT's spec, Models may not set non-cell attributes after 
+      __init__.
   </td>
 </tr>
 <tr class="private">
@@ -274,17 +281,17 @@ A class in which CellAttrs may be used. Models automatically bring
 <tr>
   <td width="15%">
     <strong><a href="cells.model.Model-class.html#model_name">model_name</a></strong></td>
-  <td>The name of this Model.</td>
+  <td>A cell holding The name of this Model.</td>
 </tr>
 <tr>
   <td width="15%">
     <strong><a href="cells.model.Model-class.html#model_value">model_value</a></strong></td>
-  <td>The value of this Model.</td>
+  <td>A cell holding the value of this Model.</td>
 </tr>
 <tr>
   <td width="15%">
     <strong><a href="cells.model.Model-class.html#parent">parent</a></strong></td>
-  <td>For <code><a href="cells.family.Family-class.html" 
+  <td>A cell for <code><a href="cells.family.Family-class.html" 
       class="link">Family</a></code> graph traversal.</td>
 </tr>
 </table>
@@ -406,11 +413,15 @@ A class in which CellAttrs may be used. Models automatically bring
     ></td>
   </table>
   
-  x.__setattr__('name', value) &lt;==&gt; x.name = value
+  Per KT's spec, Models may not set non-cell attributes after 
+  __init__.
   <dl><dt></dt><dd>
+    <dl><dt>Raises:</dt></dl>
+    <ul>
+        <li><code><strong class='fraise'>NonCellSetError</strong></code> - If you try to set a non-cell attribute</li>
+    </ul>
     <dl><dt>Overrides:
       object.__setattr__
-        <dd><em class="note">(inherited documentation)</em></dd>
     </dt></dl>
   </dd></dl>
 </td></tr></table>
@@ -472,6 +483,25 @@ A class in which CellAttrs may be used. Models automatically bring
   may be set to fire on any change in the model, any change in an 
   attribute, or when a function testing the new or old value of a cell 
   returns true.
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">import</span> cells
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=4)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>@A.observer(attrib=<span class="py-string">&quot;x&quot;</span>, newvalue=<span class="py-keyword">lambda</span> a: a % 2)
+<span class="py-prompt">... </span><span class="py-keyword">def</span> odd_x_obs(model):
+<span class="py-prompt">... </span>    <span class="py-keyword">print</span> <span class="py-string">&quot;New value of x is odd!&quot;</span>
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">4</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 5</span>
+<span class="py-output">New value of x is odd!</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x = 42
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x = 11</span>
+<span class="py-output">New value of x is odd!</span></pre>
   <dl><dt></dt><dd>
     <dl><dt>Parameters:</dt></dl>
     <ul>
@@ -577,11 +607,11 @@ set([])
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>model_name</h3>
-  The name of this Model. By default, None.
+  A cell holding The name of this Model. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x2d1050&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x70b9f0&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x2d1050&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x70b9f0&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -591,11 +621,11 @@ set([])
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>model_value</h3>
-  The value of this Model. By default, None.
+  A cell holding the value of this Model. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x2d1110&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x70ba50&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x2d1110&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x70ba50&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -605,12 +635,12 @@ set([])
 <div>
 <table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
   <h3>parent</h3>
-  For <code><a href="cells.family.Family-class.html" 
+  A cell for <code><a href="cells.family.Family-class.html" 
   class="link">Family</a></code> graph traversal. By default, None.
   <dl><dt></dt><dd>
-    <dl title="&lt;cells.cellattr.CellAttr object at 0x2d1130&gt;"><dt>Value:</dt>
+    <dl title="&lt;cells.cellattr.CellAttr object at 0x70ba70&gt;"><dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-&lt;cells.cellattr.CellAttr object at 0x2d1130&gt;                           
+&lt;cells.cellattr.CellAttr object at 0x70ba70&gt;                           
       </pre></td></tr></table></dd>
     </dl>
   </dd></dl>
@@ -637,13 +667,19 @@ set([])
       <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
         href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
 
-      <th class="navbar" width="100%"></th>
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Thu Jul 27 12:22:41 2006</td>
+        3.0alpha2 on Sun Aug 20 15:12:29 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>
