@@ -175,7 +175,28 @@ class RowList(cells.ListCell):
 
     def __iter__(self):
 	self._pregets()
-	return self.value.__iter__()
+	if not self.db:
+	    return []
+	
+	s = "SELECT " + ", ".join([_.name for _ in self.table.columns]) +\
+	    " FROM " + self.table.name
+	_debug("__iter__ fetching all with:", s)
+
+	while(True):
+	    r = list(cur.fetchone())
+	    if not r:		# end of selects
+		return
+	    
+	    _debug("__getitem__ retrieved:", r)
+	    
+	    newtable = self.table.__class__()
+
+	    for column in self.table.columns:
+		trans_v = column.translate_from_sql(r.pop(0))
+		getattr(newtable, column.name).value = trans_v
+
+	    yield newtable
+	    
 
     def __len__(self):
 	self._pregets()
@@ -232,6 +253,10 @@ class RowList(cells.ListCell):
 		# XXX: raise a more detailed error regarding type mismatch
 		raise Exception()
 
+	    i = self.__len__()
+	    _debug("Adding new row at", i)
+	    table.pk.value = i
+
 	    cur = self.db._rawcon.cursor()
 	    cur.execute(table.insert_string, table.insert_values)
 	    self.db._rawcon.commit()
@@ -272,7 +297,7 @@ class RowList(cells.ListCell):
 		_debug(e)
 		# might exist. try to update that pk instead
 		_debug("__setitem__ executing:", v.update_string)
-		cur.execute(v.update_string)
+		cur.execute(v.update_string, v.insert_values)
 		self.db._rawcon.commit()
 		
     # insert not implemented
@@ -351,8 +376,7 @@ class Table(cells.Family):
     @cells.fun2cell()
     def update_string(self, prev):
 	return " ".join(("UPDATE", self.name, "SET",
-			 ",".join([ col.name + "=" + col.sql_value
-				    for col in self.columns]),
+			 ", ".join([ _.name + "=?" for _ in self.columns ]),
 			 "WHERE pk=" + str(self.pk.sql_value)))
 			
 @Table.observer(attrib=("ready", "create_table_string"))

@@ -379,7 +379,7 @@ class Cell(object):
         self.remove_called_bys()
         self.reset_calls()
 
-        self.dp = cells.cellenv.dp                             # we're up-to-date
+        self.dp = cells.cellenv.dp # we're up-to-date
         newvalue = self.rule(self.owner, self.value)   # run the rule
         self.bound = True
         
@@ -579,6 +579,7 @@ class RuleThenInputCell(Cell):
         Cell.__init__(self, *args, **kwargs)
         self.run()
         self.remove_called_bys()
+	self.reset_calls()
         self.rule = None
         self.bound = True
 
@@ -593,7 +594,7 @@ class RuleThenInputCell(Cell):
         """
         if self.bound:
             raise InputCellRunError("attempt to run RuleThenInputCell '" +
-                                    self.name + "'")
+                                    self.name)
         else:
             Cell.run(self)
 

@@ -205,6 +205,7 @@ class Sqlite_CellQLTests(unittest.TestCase):
 	newrow.r.value = orig_r
 	newrow.b.value = orig_b
 	newrow.i.value = orig_i
+
 	db.tables["Test"].rows[0] = newrow
 
 	self.cur.execute("SELECT s,r,b,i FROM Test WHERE pk=0")
