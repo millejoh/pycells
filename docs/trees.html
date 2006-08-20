@@ -96,14 +96,14 @@
     <li> <strong class="uidlink">exceptions.Exception</strong>:
       <em class="summary">Common base class for all exceptions.</em>
     <ul>
+    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>:
+      <em class="summary">You may not set a non-cell Model attribute after 
+        initialization.</em>
+    </li>
     <li> <strong class="uidlink"><a href="cells.family.FamilyTraversalError-class.html">cells.family.FamilyTraversalError</a></strong>:
       <em class="summary">Raised when there's some sort of error in <code><a 
         href="cells.family.Family-class.html" 
         class="link">Family</a></code>'s traversal methods.</em>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.model.NonCellSetError-class.html">cells.model.NonCellSetError</a></strong>:
-      <em class="summary">You may not set a non-cell Model attribute after 
-        initialization.</em>
     </li>
     <li> <strong class="uidlink"><a href="cells.cell._CellException-class.html">cells.cell._CellException</a></strong>
     <ul>
@@ -115,12 +115,12 @@
       <em class="summary">An attempt to <code><code class="link">run</code>()</code> an 
         InputCell was made.</em>
     </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
-      <em class="summary">RuleCells may not be set.</em>
-    </li>
     <li> <strong class="uidlink"><a href="cells.cell.SetDuringNotificationError-class.html">cells.cell.SetDuringNotificationError</a></strong>:
       <em class="summary">An attempt at a non-deferred <code><code 
         class="link">set</code>()</code> happened during propogation.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleCellSetError-class.html">cells.cell.RuleCellSetError</a></strong>:
+      <em class="summary">RuleCells may not be set.</em>
     </li>
     <li> <strong class="uidlink"><a href="cells.cell.RuleAndValueInitError-class.html">cells.cell.RuleAndValueInitError</a></strong>:
       <em class="summary">Both <code>rule</code> and <code>value</code> were passed to 
@@ -146,6 +146,22 @@
     </li>
     <li> <strong class="uidlink"><a href="cells.observer.ObserverAttr-class.html">cells.observer.ObserverAttr</a></strong>:
       <em class="summary">Wrapper for Observers within Models.</em>
+    </li>
+    <li> <strong class="uidlink">type</strong>:
+      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
+        -&gt; a new type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.observer.Observer-class.html">cells.observer.Observer</a></strong>:
+      <em class="summary">Wrapper for a function which fires when a <code><a 
+        href="cells.model.Model-class.html" class="link">Model</a></code> 
+        updates and certain conditions are met.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
+      <em class="summary">CellAttr</em>
     </li>
     <li> <strong class="uidlink">cells.cell.Cell</strong>:
       <em class="summary">The base Cell class.</em>
@@ -178,6 +194,10 @@
     </li>
     </ul>
     </li>
+    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
+      <em class="summary">Runs the rule to determine initial value, then acts like a 
+        InputCell</em>
+    </li>
     <li> <strong class="uidlink"><a href="cells.synapse.Synapse-class.html">cells.synapse.Synapse</a></strong>:
       <em class="summary">A very specialized Cell variant.</em>
     <ul>
@@ -185,26 +205,6 @@
       <em class="summary">A very simple filter.</em>
     </li>
     </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.cell.RuleThenInputCell-class.html">cells.cell.RuleThenInputCell</a></strong>:
-      <em class="summary">Runs the rule to determine initial value, then acts like a 
-        InputCell</em>
-    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.cellattr.CellAttr-class.html">cells.cellattr.CellAttr</a></strong>:
-      <em class="summary">CellAttr</em>
-    </li>
-    <li> <strong class="uidlink"><a href="cells.observer.Observer-class.html">cells.observer.Observer</a></strong>:
-      <em class="summary">Wrapper for a function which fires when a <code><a 
-        href="cells.model.Model-class.html" class="link">Model</a></code> 
-        updates and certain conditions are met.</em>
-    </li>
-    <li> <strong class="uidlink">type</strong>:
-      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) 
-        -&gt; a new type</em>
-    <ul>
-    <li> <strong class="uidlink"><a href="cells.model.ModelMetatype-class.html">cells.model.ModelMetatype</a></strong>
     </li>
     </ul>
     </li>
@@ -243,7 +243,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">Generated by Epydoc
-        3.0alpha2 on Sun Aug 20 15:12:28 2006</td>
+        3.0alpha2 on Sun Aug 20 15:38:09 2006</td>
     <td align="right" class="footer">
       <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
     </td>
