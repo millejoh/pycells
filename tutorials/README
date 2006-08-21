@@ -1,0 +1,18 @@
+These tutorials are meant to to step you through some of the basics of
+    using cells. I'd strongly suggest looking at basic.py first, but
+    the rest can be done in whatever order interests you the most.
+    	
+    	basic.py: Cells 101. Input cells and Rule cells are covered,
+    	    along with using the Model class
+    
+	observers.py: In general, one wants to keep rules free of side
+    	    effects. Observers allow you to hold to this and get some
+    	    actual work done.
+    
+	cell_varieties.py: There's more to choose from in the cell
+    	    menagerie than just input and rules. This tutorial
+    	    introduces you to some of what's there.
+    
+	family.py: Some applications require an large number of
+    	    similar Models. The Family class can ease some pains with
+    	    these apps.

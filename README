@@ -1,0 +1,80 @@
+PyCells: Automatic dataflow management for Python
+http://pycells.pdxcb.net
+---------------------------------------------------------------------------
+This library, its documentation, tutorials, and all example code
+copyright 2006 Ryan Forsythe. It is free software: you may modify and
+redistribute it under the terms of the LGPL. You may find the full
+license terms in the LICENSE file in this directory.
+---------------------------------------------------------------------------
+
+Introduction:
+-------------
+    PyCells is a port of Ken Tilton's Cells extension to Common
+    Lisp. Cells are objects which detect, notify, and propogate
+    changes to each other. An example:
+    
+	>>> import cells
+	>>> class Rectangle(cells.Model):
+	...     width = cells.makecell(value=1)
+	...     ratio = cells.makecell(value=1.618)
+	...     @cells.fun2cell()
+	...     def length(self, prev):
+	...         print "Length updating..."
+	...         return float(self.width) * float(self.ratio)
+	... 
+	>>> r = Rectangle()
+	Length updating...
+	>>> r.length
+	1.6180000000000001
+	>>> r.width = 5
+	Length updating...
+	>>> r.length
+	8.0899999999999999    
+    
+    Care is taken to verify that changes are propogated correctly, and
+    completely, so the user of cells may ignore the underlying
+    implementation details and trust the system to do the right thing
+    in all cases.
+    
+Documentation:
+--------------    
+    There are several options for documentation
+    
+    /docs: The API documentation, generated from the source by epydoc,
+        can be found in the docs directory
+    
+    /tutorials: I've written up a short set of tutorials to step you
+        through some of the basics of using cells:
+    	
+    	basic.py: Cells 101. Input cells and Rule cells are covered,
+    	    along with using the Model class
+    
+	observers.py: In general, one wants to keep rules free of side
+    	    effects. Observers allow you to hold to this and get some
+    	    actual work done.
+    
+	cell_varieties.py: There's more to choose from in the cell
+    	    menagerie than just input and rules. This tutorial
+    	    introduces you to some of what's there.
+    
+	family.py: Some applications require an large number of
+    	    similar Models. The Family class can ease some pains with
+    	    these apps.
+    
+    /demos: In addition to the tutorials, there's several larger demo
+        applications available. I've written a wiki sort of web server
+        thing, the start to a SQL library I'm calling CellQL, and a
+        GUI application and library using Tkinter.
+    
+Installation:
+-------------
+    Use the setup.py script in the normal way:
+    
+	user@host $ sudo python setup.py install
+    
+    This is an easy_install script, so you can also use it to build an
+    egg of PyCells. Run
+    
+	user@host $ python setup.py --help-commands
+    
+    to see all of your options.

@@ -125,13 +125,19 @@ class Observer(object):
     @ivar func: The function to run when the observer
         fires. Signature: C{f(model_instance) -> (ignored)}
 
+    @ivar priority: When this observer should be run compared to the
+        other observers on this model. Larger priorities run first,
+        None (default priority) is run last. Observers with the same
+        priority are possible; there are no guarantees as to the run
+        order in that case.
+
     @ivar last_ran: The DP this observer last ran in. Observers only
         run once per DP.
     """
     
-    def __init__(self, attrib, oldvalue, newvalue, func):
+    def __init__(self, attrib, oldvalue, newvalue, func, priority=None):
 	"""
-	__init__(self, attrib, oldvalue, newvalue, func)
+	__init__(self, attrib, oldvalue, newvalue, func, priority)
 
 	Initializes a new Observer. All arguments are required, but
 	only func is required to be anything but none.
@@ -143,6 +149,7 @@ class Observer(object):
         self.oldvalue = oldvalue
         self.newvalue = newvalue
         self.func = func
+	self.priority = priority
         self.last_ran = 0
 
     def run_if_applicable(self, model, attr):

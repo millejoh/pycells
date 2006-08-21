@@ -1,0 +1,16 @@
+Cells CMS: A wiki-type web thing demonstrating the use of cells in web
+applications.
+
+It's pretty simple. Modify cms.cfg to suit your environment -- the
+defaults should work fine unless you have server running on port 8088
+-- then run cms.py. It will begin serving static documents out of the
+configured static directory (./static, by default). Navigating to
+non-static files will either load out of the on-disk store (in
+./store) or offer to create the file. All files are cached in memory
+(which could present a problem if you were to use this for anything serious).
+
+Editing documents -- which are cells -- causes the changes to cascade
+throughout the cached documents. For instance, if you modify the
+special element __header__, which is used in the default template, it
+will cascade that change automatically to all cached pages which use
+the template.

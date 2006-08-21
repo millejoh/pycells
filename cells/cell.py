@@ -646,8 +646,8 @@ class LazyCell(RuleCell):
         RuleCell.__init__(self, *args, **kwargs)
         self.lazy = True
 
-# class OnceAskedLazyCell(LazyCell):
-#     pass
+class OnceAskedLazyCell(LazyCell):
+    pass
 
 class AlwaysLazyCell(LazyCell):
     """
@@ -666,7 +666,7 @@ class UntilAskedLazyCell(LazyCell):
             self.lazy = False
 
         return v
-
+    
 class DictCell(InputCell, UserDict.DictMixin):
     """
     A input cell whose value is initialized to {}. An ordinary

@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>cells.cell.ListCell</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="cells-module.html">Package&nbsp;cells</a> ::
+        <a href="cells.cell-module.html">Module&nbsp;cell</a> ::
+        Class&nbsp;ListCell
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="cells.cell.ListCell-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h2 class="class">Class ListCell
+<br/><span class="codelink"><a href="cells.cell-pysrc.html#ListCell">source&nbsp;code</a></span></h2>
+<pre class="base-tree">
+object --+        
+         |        
+      Cell --+    
+             |    
+     <a href="cells.cell.InputCell-class.html">InputCell</a> --+
+                 |
+                <strong class="uidshort">ListCell</strong>
+</pre>
+
+<hr />
+A input cell whose value is initialized to []. An ordinary InputCell 
+  doesn't act like we'd like it to in this case:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">import</span> cells
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=[])
+<span class="py-prompt">... </span>    @cells.fun2cell()
+<span class="py-prompt">... </span>    <span class="py-keyword">def</span> xlen(self, prev):
+<span class="py-prompt">... </span>        <span class="py-keyword">return</span> len(self.x)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">[]</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.xlen</span>
+<span class="py-output">0</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x.append(<span class="py-string">&quot;foo&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">['foo']</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.xlen</span>
+<span class="py-output">0</span></pre>
+  But if we specify a ListCell, it should work as we expect it:
+<pre class="doctestblock">
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">import</span> cells
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">class</span> A(cells.Model):
+<span class="py-prompt">... </span>    x = cells.makecell(value=[])
+<span class="py-prompt">... </span>    @cells.fun2cell()
+<span class="py-prompt">... </span>    <span class="py-keyword">def</span> xlen(self, prev):
+<span class="py-prompt">... </span>        <span class="py-keyword">return</span> len(self.x)
+<span class="py-prompt">... </span>
+<span class="py-prompt">&gt;&gt;&gt; </span>a = A()
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">[]</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.xlen</span>
+<span class="py-output">0</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.x.append(<span class="py-string">&quot;foo&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>a.x</span>
+<span class="py-output">['foo']</span>
+
+<span class="py-src"><span class="py-prompt">&gt;&gt;&gt; </span>a.xlen</span>
+<span class="py-output">1</span></pre>
+  Note that <code>unchanged_if</code> acts on list elements rather than 
+  the entire value.<br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Methods</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__init__" class="sig-name">__init__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>)</span>
+    <br />Initializes an DictCell object.
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#_onchanges" class="sig-name">_onchanges</a>(<span class="sig-arg">self</span>)</span>
+    
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#_pregets" class="sig-name">_pregets</a>(<span class="sig-arg">self</span>)</span>
+    
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#_should_defer" class="sig-name">_should_defer</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>,
+        <span class="sig-arg">argtuple</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#count" class="sig-name">count</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">v</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#index" class="sig-name">index</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">v</span>,
+        <span class="sig-arg">start</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">stop</span>=<span class="sig-default">None</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__getitem__" class="sig-name">__getitem__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">k</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__iter__" class="sig-name">__iter__</a>(<span class="sig-arg">self</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__len__" class="sig-name">__len__</a>(<span class="sig-arg">self</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#pop" class="sig-name">pop</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">index</span>=<span class="sig-default">None</span>)</span>
+    <br />Warning: ListCell.pop() does not act quite like you may expect it 
+      in certain circumstances.
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#_make_listfun" class="sig-name">_make_listfun</a>(<span class="sig-arg">name</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#append" class="sig-name">append</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#extend" class="sig-name">extend</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#insert" class="sig-name">insert</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#remove" class="sig-name">remove</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#reverse" class="sig-name">reverse</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#sort" class="sig-name">sort</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__add__" class="sig-name">__add__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__iadd__" class="sig-name">__iadd__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__mul__" class="sig-name">__mul__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__rmul__" class="sig-name">__rmul__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__imul__" class="sig-name">__imul__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__setitem__" class="sig-name">__setitem__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="rtype">
+    &nbsp;
+   </td>
+  <td>
+    <span class="sig"><a href="cells.cell.ListCell-class.html#__delitem__" class="sig-name">__delitem__</a>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code><a href="cells.cell.InputCell-class.html">InputCell</a></code></span>:
+      <code><a href="cells.cell.InputCell-class.html#run">run</a></code>
+      </p>
+    <p class="varlist"><span class="varlist-header">Inherited from <code>Cell</code></span>:
+      <code>add_called_by</code>,
+      <code>add_calls</code>,
+      <code>called_by_list</code>,
+      <code>calls_list</code>,
+      <code>changed</code>,
+      <code>getvalue</code>,
+      <code>propogate</code>,
+      <code>propogation_list</code>,
+      <code>remove_called_bys</code>,
+      <code>remove_cb</code>,
+      <code>reset_calls</code>,
+      <code>set</code>,
+      <code>updatecell</code>
+      </p>
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Class Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code>object</code></span>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="summary">Instance Variables</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2">
+    <p class="varlist"><span class="varlist-header">Inherited from <code>Cell</code></span>:
+      <code>called_by</code>,
+      <code>calls</code>,
+      <code>synapse_space</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <td colspan="2">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <th align="left" class="details">Method Details</th>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">owner</span>,
+        <span class="sig-arg">name</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">rule</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">value</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">unchanged_if</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__init__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Initializes an DictCell object. You may not pass a 
+  <code>rule</code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul>
+        <li><strong class="pname"><code>name</code></strong> - This cell's name. When using a <code>Cell</code> with <code><a
+          href="cells.model.Model-class.html" 
+          class="link">Model</a></code>s, this parameter is assigned 
+          automatically.</li>
+        <li><strong class="pname"><code>value</code></strong> - Define a value for this cell. This must be a dictionary.</li>
+        <li><strong class="pname"><code>unchanged_if</code></strong> - Sets a function to determine if the dictionary's value has 
+          changed. The signature for the passed function is <code>f(old, 
+          new) -&gt; bool</code>.</li>
+    </ul>
+    <dl><dt>Returns:</dt>
+        <dd><pre class="literalblock">
+None
+
+</pre></dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul>
+        <li><code><strong class='fraise'>InputCellRunError</strong></code> - If <code>rule</code> is passed as a parameter</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="cells.cell.InputCell-class.html#__init__">InputCell.__init__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_onchanges"></a>
+<div class="private">
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">_onchanges</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell._onchanges">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_pregets"></a>
+<div class="private">
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">_pregets</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell._pregets">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_should_defer"></a>
+<div class="private">
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">_should_defer</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>,
+        <span class="sig-arg">argtuple</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell._should_defer">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="count"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">count</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">v</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.count">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="index"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">index</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">v</span>,
+        <span class="sig-arg">start</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">stop</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.index">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">k</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__getitem__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__iter__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__iter__</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__iter__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__len__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__len__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Length operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__len__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="pop"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">pop</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">index</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.pop">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Warning: ListCell.pop() does not act quite like you may expect it in 
+  certain circumstances. If a pop occurs during a propogation, the value 
+  will be returned, but the list will not be altered until the end of the 
+  propogation (thus ensuring all cells &quot;see&quot; the same value of 
+  this cell during the DP).
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_make_listfun"></a>
+<div class="private">
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">_make_listfun</span>(<span class="sig-arg">name</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell._make_listfun">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="append"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">append</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.append">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="extend"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">extend</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.extend">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="insert"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">insert</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.insert">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="remove"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">remove</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.remove">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="reverse"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">reverse</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.reverse">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="sort"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">sort</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.sort">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__add__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__add__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    <br /><em class="fname">(Addition operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__add__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__iadd__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__iadd__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__iadd__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__mul__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__mul__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__mul__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__rmul__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__rmul__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__rmul__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__imul__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__imul__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__imul__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__setitem__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__setitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    <br /><em class="fname">(Index assignment operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__setitem__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__delitem__"></a>
+<div>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3><span class="sig"><span class="sig-name">__delitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+    <br /><em class="fname">(Index deletion operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="cells.cell-pysrc.html#ListCell.__delitem__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="cells-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar"
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center">
+            <p class="nomargin">
+              <a class="navbar" target="_top" href="http://pycells.pdxcb.net/">PyCells</a>
+      </p></th></tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha2 on Sun Aug 20 15:38:09 2006</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sf.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -185,6 +185,7 @@ class Model(object):
         self._observers = []
         for name in self._observernames:
             self._observers.append(getattr(self, name))
+	self._prioritize_observers()
 
         # do initial equalizations
         debug("INITIAL EQUALIZATIONS START")
@@ -259,10 +260,20 @@ class Model(object):
         kwargs['name'] = name
         return celltype(self, *args, **kwargs)
 
+    def _prioritize_observers(self):
+	"""
+	_prioritize_observers(self) -> none
+
+	(re)Sorts the observer list by priorities
+	"""
+	self._observers.sort(cmp=lambda x, y: cmp(x.priority, y.priority),
+			     reverse=True)
+
     @classmethod
-    def observer(klass, attrib=None, oldvalue=None, newvalue=None):
+    def observer(klass, attrib=None, oldvalue=None, newvalue=None,
+		 priority=None):
         """
-        observer(attrib=None, oldvalue=None, newvalue=None) -> decorator
+        observer(attrib=None, oldvalue=None, newvalue=None, priority=Non) -> decorator
 
         A classmethod to add an observer attribute to a Model. The
         observer may be set to fire on any change in the model, any
@@ -296,6 +307,13 @@ class Model(object):
         @param newvalue: A function to run on up-to-date value; if the
             function returns True, the observer will fire. The
             signature for the function must be C{f(val) -> bool}
+
+        @param priority: When this observer should be run compared to
+            the other observers on this model. Observers have a
+            priority of None by default. Observers with larger
+            priorities are run first, None last. Observers with the
+            same priority are run in arbitrary order.
+
         """
         def observer_decorator(func):
             klass._observernames.add(func.__name__)

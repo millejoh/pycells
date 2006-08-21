@@ -161,7 +161,7 @@ def fun2cell(*args, **kwargs):
         return CellAttr(rule=func, *args, **kwargs)
     return fun2cell_decorator
 
-from cell import Cell, InputCell, RuleCell, RuleThenInputCell
+from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
 from cell import UntilAskedLazyCell, AlwaysLazyCell, DictCell, ListCell
 from cell import _CellException, RuleCellSetError
 from cell import InputCellRunError, SetDuringNotificationError

@@ -79,6 +79,10 @@ class CellAttr(object):
         self.args = args
         self.kwargs = kwargs
 
+	if kwargs.has_key("rule"):
+	    print "setting __doc__ to ", kwargs['rule'].__doc__
+	    self.__doc__ = kwargs['rule'].__doc__
+
     def __set__(self, owner, value):
         """
         __set__(self, owner, value) -> None
