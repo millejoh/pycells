@@ -115,6 +115,21 @@ class CellAttr(object):
         else:
             # return the value in owner.myname
             return cell.getvalue()
+
+    def getkwargs(self, owner):
+	"""
+	getkwargs(owner) -> dict
+
+	Returns the keyword arguments for the target cell, taking into
+	account any overrides which exist in the passed owner model
+	"""
+	newkwargs = self.kwargs.copy()
+	override = owner._initregistry.get(self.name)
+	if override:
+	    newkwargs.update(override)
+
+	return newkwargs
+	
         
     def getcell(self, owner):
         """
@@ -133,21 +148,12 @@ class CellAttr(object):
         debug("got request for cell in", self.name)
         if self.name not in owner.__dict__.keys():
 	    debug(self.name, "not in owner. Building a new cell in it.")
-            # first, find out if this object has overrides on this cell's init
-            override = owner._initregistry.get(self.name)
-            if override:                # it does, use the override
-                newkwargs = self.kwargs.copy()
-                newkwargs.update(override)
-                newcell = self.buildcell(owner, *self.args, **newkwargs)
-            else:                       # it doesn't, use class's default
-                newcell = self.buildcell(owner, *self.args, **self.kwargs)
-                
+	    newcell = self.buildcell(owner, *self.args, **self.getkwargs(owner))
             owner.__dict__[self.name] = newcell
 
             # observers have to be run *after* the cell is embedded in the
             # instance!
             owner._run_observers(newcell)
-
 
         debug("finished getting", self.name)
         return owner.__dict__[self.name]

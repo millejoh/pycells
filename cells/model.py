@@ -191,9 +191,22 @@ class Model(object):
         debug("INITIAL EQUALIZATIONS START")
         for name in dir(self):
             try:
-		# look for always-lazy cells, and skip 'em
-		if not isinstance(self.__dict__[name], cells.AlwaysLazyCell):
-		    getattr(self, name) # will run observers by itself
+		# if it's not been otherwise initialized
+		debug("examining", name)
+		if not self.__dict__.has_key(name):
+		    debug(name, "is already in this object")
+		    # grab the cell attr and figure out if it's an always-lazy
+		    cellattr = getattr(self.__class__, name)		    
+		    if isinstance(cellattr, cells.CellAttr):
+			kwargs = cellattr.getkwargs(self)
+			debug(name, "is a cellattr with kwargs", repr(kwargs))
+			# if it isn't an always-lazy
+			if kwargs.get('celltype') is not cells.AlwaysLazyCell:
+			    debug(name, "should be init'd")
+			    # get it, initializing it
+			    getattr(self, name) # will run observers by itself
+			else:
+			    debug(name, "is an always-lazy")
             except EphemeralCellUnboundError, e:
                 debug(name, "was an unbound ephemeral")
         debug("INITIAL EQUALIZATIONS END")
