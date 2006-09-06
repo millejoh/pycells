@@ -201,7 +201,8 @@ class Model(object):
 			kwargs = cellattr.getkwargs(self)
 			debug(name, "is a cellattr with kwargs", repr(kwargs))
 			# if it isn't an always-lazy
-			if kwargs.get('celltype') is not cells.AlwaysLazyCell:
+			if issubclass(kwargs.get('celltype', object),
+				      cells.AlwaysLazyCell):
 			    debug(name, "should be init'd")
 			    # get it, initializing it
 			    getattr(self, name) # will run observers by itself
