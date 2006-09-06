@@ -8,7 +8,7 @@ ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 
 setup(name='PyCells',
-      version='0.1a2',
+      version='0.1b1',
       packages=find_packages(),
       extras_require = { 'Epydoc': ['epydoc>=2.1'], },
     

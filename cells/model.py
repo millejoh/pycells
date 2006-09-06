@@ -191,7 +191,9 @@ class Model(object):
         debug("INITIAL EQUALIZATIONS START")
         for name in dir(self):
             try:
-                getattr(self, name) # will run observers by itself
+		# look for always-lazy cells, and skip 'em
+		if not isinstance(self.__dict__[name], cells.AlwaysLazyCell):
+		    getattr(self, name) # will run observers by itself
             except EphemeralCellUnboundError, e:
                 debug(name, "was an unbound ephemeral")
         debug("INITIAL EQUALIZATIONS END")

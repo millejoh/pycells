@@ -36,6 +36,7 @@ Lazy Rule Cell, Until-asked flavor:
 
 Lazy Rule Cell, Always-lazy flavor:
 1. Evaluates only when read, and is unbound or a dependency has changed.
+2. Does not evaluate during model init
 
 Ephemeral Cells:
 1. After propogation, their value is returned to None
@@ -154,6 +155,24 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
         x.set(5)                        # cause another propogation
         self.failUnless(a.value == 47)  # yadda yadda...
         self.failUnless(a.getvalue() == 52)
+
+    def test_2_NoEvalOnInit(self):
+	"Always Lazy 2: Does not evaluate during model init"
+	cells.reset()
+
+	ran_flag = False
+	
+	def a_rule(self, prev):
+	    ran_flag = True
+	    return self.x + 2
+
+	class M(cells.Model):
+	    x = cells.makecell(value=3)
+	    a = cells.makecell(rule=a_rule, celltype=cells.AlwaysLazyCell)
+
+	m = M()
+	self.failIf(ran_flag)
+	self.failUnless(m.a == 5)
 
 class CellTypeTests_DictTests(unittest.TestCase):
     def setUp(self):
