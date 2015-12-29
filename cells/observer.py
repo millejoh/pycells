@@ -33,7 +33,7 @@ def _debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "observer".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
-        print " ".join(msgs)
+        print(" ".join(msgs))
 
 # we want observers to be defined at the class level but have per-instance
 # information. So, do the same trick as is done with CellAttr/Cells
@@ -51,7 +51,7 @@ class ObserverAttr(object):
         _debug("got request for observer", self.name,
               "args =", str(self.args),
               "kwargs =", str(self.kwargs))
-        if self.name not in owner.__dict__.keys():
+        if self.name not in list(owner.__dict__.keys()):
             owner.__dict__[self.name] = Observer(*self.args,
                                                  **self.kwargs)
         return owner.__dict__[self.name]
@@ -70,44 +70,44 @@ class Observer(object):
     You should use the C{L{Model.observer}} decorator to add Observers
     to Models:
 
-	>>> import cells
-	>>> class A(cells.Model):
-	...     x = cells.makecell(value=4)
-	... 
-	>>> @A.observer(attrib="x",
-	...             newvalue=lambda a: a % 2)
-	... def odd_x_obs(model):
-	...     print "New value of x is odd!"
-	... 
-	>>> @A.observer(attrib="x")
-	... def x_obs(model):
-	...     print "x got changed!"
-	... 
-	>>> @A.observer()      
-	... def model_obs(model):
-	...     print "something in the model changed"
-	... 
-	>>> @A.observer(attrib="x",
-	...             newvalue=lambda a: a % 2,
-	...             oldvalue=lambda a: not (a % 2))
-	... def was_even_now_odd_x_obs(model):
-	...     print "New value of x is odd, and it was even!"
-	... 
-	>>> a = A()
-	something in the model changed
-	x got changed!
-	>>> a.x = 5
-	something in the model changed
-	x got changed!
-	New value of x is odd!
-	New value of x is odd, and it was even!
-	>>> a.x = 11
-	something in the model changed
-	x got changed!
-	New value of x is odd!
-	>>> a.x = 42
-	something in the model changed
-	x got changed!
+    >>> import cells
+    >>> class A(cells.Model):
+    ...     x = cells.makecell(value=4)
+    ...
+    >>> @A.observer(attrib="x",
+    ...             newvalue=lambda a: a % 2)
+    ... def odd_x_obs(model):
+    ...     print "New value of x is odd!"
+    ...
+    >>> @A.observer(attrib="x")
+    ... def x_obs(model):
+    ...     print "x got changed!"
+    ...
+    >>> @A.observer()
+    ... def model_obs(model):
+    ...     print "something in the model changed"
+    ...
+    >>> @A.observer(attrib="x",
+    ...             newvalue=lambda a: a % 2,
+    ...             oldvalue=lambda a: not (a % 2))
+    ... def was_even_now_odd_x_obs(model):
+    ...     print "New value of x is odd, and it was even!"
+    ...
+    >>> a = A()
+    something in the model changed
+    x got changed!
+    >>> a.x = 5
+    something in the model changed
+    x got changed!
+    New value of x is odd!
+    New value of x is odd, and it was even!
+    >>> a.x = 11
+    something in the model changed
+    x got changed!
+    New value of x is odd!
+    >>> a.x = 42
+    something in the model changed
+    x got changed!
 
 
     @ivar attrib: (optional) The cell name this observer watches. Only
@@ -136,20 +136,18 @@ class Observer(object):
     """
     
     def __init__(self, attrib, oldvalue, newvalue, func, priority=None):
-	"""
-	__init__(self, attrib, oldvalue, newvalue, func, priority)
+        """__init__(self, attrib, oldvalue, newvalue, func, priority)
 
-	Initializes a new Observer. All arguments are required, but
-	only func is required to be anything but none.
+        Initializes a new Observer. All arguments are required, but
+        only func is required to be anything but none.
 
-	See attrib, oldvalue, and newvalue instance variable docs for
-	explanation of their utility.
-	"""
+        See attrib, oldvalue, and newvalue instance variable docs for
+        explanation of their utility."""
         self.attrib_name = attrib
         self.oldvalue = oldvalue
         self.newvalue = newvalue
         self.func = func
-	self.priority = priority
+        self.priority = priority
         self.last_ran = 0
 
     def run_if_applicable(self, model, attr):
@@ -158,7 +156,7 @@ class Observer(object):
         appropriate.
 
         @param model: the model instance to search for matching cells
-            within.
+        within.
 
         @param attr: the attribute which "asked" this observer to run.
         """
@@ -168,24 +166,24 @@ class Observer(object):
             return
         
         if self.attrib_name:
-	    if isinstance(self.attrib_name, str):
-		attrs = (self.attrib_name,)
-	    else:
-		attrs = self.attrib_name
+            if isinstance(self.attrib_name, str):
+                attrs = (self.attrib_name,)
+            else:
+                attrs = self.attrib_name
 
-	    for attrib_name in attrs:
-		if isinstance(attr, Cell):
-		    if attr.name == attrib_name:
-			_debug("found a cell with matching name!")
-			break
-		elif getattr(model, attrib_name) is attr:
-		    _debug(self.func.__name__, "looked in its model for an " +
-			   "attrib with its desired name; found one that " +
-			   "matched passed attr.")
-		    break
-	    else:
-		_debug("Attribute name tests failed")
-		return
+        for attrib_name in attrs:
+            if isinstance(attr, Cell):
+                if attr.name == attrib_name:
+                    _debug("found a cell with matching name!")
+                    break
+            elif getattr(model, attrib_name) is attr:
+                _debug(self.func.__name__, "looked in its model for an " +
+                   "attrib with its desired name; found one that " +
+                   "matched passed attr.")
+                break
+            else:
+                _debug("Attribute name tests failed")
+        return
 
         if self.newvalue:
             if isinstance(attr, Cell):

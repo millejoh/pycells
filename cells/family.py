@@ -25,9 +25,10 @@ Family, a specialized C{L{Model}} for networks of C{L{Model}}s.
 DEBUG = False
 
 import cells
-from model import Model, ModelMetatype
-from cellattr import CellAttr
-from cell import ListCell
+from .model import Model, ModelMetatype
+from .cellattr import CellAttr
+from .cell import ListCell
+
 
 def _debug(*msgs):
     """
@@ -38,7 +39,8 @@ def _debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "family".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
-        print " ".join(msgs)
+        print(" ".join(msgs))
+
 
 class Family(Model):
     """
@@ -71,8 +73,8 @@ class Family(Model):
 
         @param klass: The base type for the new kid instance
         """
-	if not klass:
-	    klass = self.kid_slots
+        if not klass:
+            klass = self.kid_slots
         _debug("making an instance of", str(klass))
         # first, find the attributes the kid_slots attrib actual wants to
         # define:
@@ -87,10 +89,10 @@ class Family(Model):
                     override_attrnames.append(attrname)
             # if it's a normal attribute, override only if it doesn't
             # exist in the base class
-            else:                
+            else:
                 if attrname not in dir(cells.Family):
                     override_attrnames.append(attrname)
-                    
+
         # now, do the overrides, bypassing normal getattrs
         for attrib_name in override_attrnames:
             _debug("overriding", attrib_name, "in", str(klass))
@@ -100,12 +102,12 @@ class Family(Model):
         klass._observernames.update(self.kid_slots._observernames)
 
         # XXX: should we memoize all that work here?
-        
+
         # finally, return an instance of that munged class with this obj set
         # as its parent:
         i = klass(parent=self)
         return i
-    
+
     def make_kid(self, klass):
         """
         make_kid(self, klass) -> None
@@ -116,7 +118,7 @@ class Family(Model):
 
         @param klass: the base type for the new kid instance
         """
-	_debug("make_kid called with", str(klass))
+        _debug("make_kid called with", str(klass))
         self._add_kid(self._kid_instance(klass))
 
     def _add_kid(self, kid):
@@ -142,7 +144,7 @@ class Family(Model):
         if self.parent:
             return self.parent.kids.index(self)
         raise FamilyTraversalError("No enclosing Family")
-        
+
     def previous_sib(self):
         """
         previous_sib(self) -> Model
@@ -155,7 +157,7 @@ class Family(Model):
         if self.parent and self.position() > 0:
             return self.parent.kids[self.position() - 1]
         raise FamilyTraversalError("No enclosing Family")
-    
+
     def next_sib(self):
         """
         previous_sib(self) -> Model
@@ -168,7 +170,7 @@ class Family(Model):
         if self.parent and self.position() < len(self.parent.kids) - 1:
             return self.parent.kids[self.position() + 1]
         raise FamilyTraversalError("No enclosing Family")
-        
+
     def grandparent(self):
         """
         grandparent(self) -> Model
@@ -182,12 +184,15 @@ class Family(Model):
                 return self.parent.parent
         return None
 
+
 class FamilyTraversalError(Exception):
     """
     Raised when there's some sort of error in C{L{Family}}'s traversal
     methods.
     """
+
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)

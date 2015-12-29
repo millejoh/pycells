@@ -24,11 +24,13 @@ may be embedded.
 """
 
 import cells
-from cell import Cell, EphemeralCellUnboundError
-from cellattr import CellAttr
-from observer import Observer, ObserverAttr
+from .cell import Cell, EphemeralCellUnboundError
+from .cellattr import CellAttr
+from .observer import Observer, ObserverAttr
+import collections
 
 DEBUG = False
+
 
 def debug(*msgs):
     """
@@ -39,14 +41,15 @@ def debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "model".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
-        print " ".join(( str(msg) for msg in msgs))
+        print(" ".join((str(msg) for msg in msgs)))
+
 
 class ModelMetatype(type):
     def __init__(klass, name, bases, dikt):
         # copy over inherited registries of observers and non-cell attributes
         klass._observernames = set([])
         klass._noncells = set([])
-        
+
         for cls in bases:
             obsnames = getattr(cls, "_observernames", None)
             noncellnames = getattr(cls, "_noncells", None)
@@ -56,7 +59,7 @@ class ModelMetatype(type):
                 klass._noncells.update(noncellnames)
 
         # do some work on various attributes of this class:
-        for k,v in dikt.iteritems():
+        for k, v in dikt.items():
             debug("metaclass inspecting", k)
             if isinstance(v, CellAttr):
                 debug("metaclass adding name field to", k)
@@ -66,12 +69,12 @@ class ModelMetatype(type):
                 debug("registering observer", k)
                 klass._observernames.add(k)
 
-            else:                       # non-cell, non-observer attrib
+            else:  # non-cell, non-observer attrib
                 debug("registering noncell", k)
                 klass._noncells.add(k)
-                
-                      
-class Model(object):
+
+
+class Model(object, metaclass=ModelMetatype):
     """
     A class in which CellAttrs may be used. Models automatically bring
     their cells up-to-date at C{L{__init__}}-time. Cells may be
@@ -87,7 +90,6 @@ class Model(object):
     @ivar parent: A cell for C{L{Family}} graph traversal. By default,
         None.
     """
-    __metaclass__ = ModelMetatype
 
     _initialized = False
 
@@ -156,17 +158,17 @@ class Model(object):
         klass = self.__class__
 
         # do automagic overriding:
-        for k,v in kwargs.iteritems():       # for each keyword arg
-            if k in dir(klass):       # if there's a match in my class
+        for k, v in kwargs.items():  # for each keyword arg
+            if k in dir(klass):  # if there's a match in my class
                 # normalize the input
-                if callable(v):
+                if isinstance(v, collections.Callable):
                     cellinit = {'rule': v}
                 elif 'keys' in dir(v):
                     # kinda ran out of synonyms/shortened versions of
                     # keys, here. I just want to see if any of 'rule',
                     # 'value', or 'celltype' are in the keys of the
                     # dict in v:
-                    quays = v.keys()
+                    quays = list(v.keys())
                     for qui in ('rule', 'value', 'celltype'):
                         if qui in quays:
                             cellinit = v
@@ -174,9 +176,10 @@ class Model(object):
                 else:
                     cellinit = {'value': v}
 
-		if not cellinit:
-		    raise BadInitError("A cell initialization dictionary was not built. Try wrapping your value or rule assignment in a dictionary.")
-                    
+                if not cellinit:
+                    raise BadInitError(
+                        "A cell initialization dictionary was not built. Try wrapping your value or rule assignment in a dictionary.")
+
                 # set the new init in the registry for this cell name; to be
                 # read at cell-build time
                 self._initregistry[k] = cellinit
@@ -185,30 +188,30 @@ class Model(object):
         self._observers = []
         for name in self._observernames:
             self._observers.append(getattr(self, name))
-	self._prioritize_observers()
+        self._prioritize_observers()
 
         # do initial equalizations
         debug("INITIAL EQUALIZATIONS START")
         for name in dir(self):
             try:
-		# if it's not been otherwise initialized
-		debug("examining", name)
-		if not self.__dict__.has_key(name):
-		    debug(name, "is already in this object")
-		    # grab the cell attr and figure out if it's an always-lazy
-		    cellattr = getattr(self.__class__, name)		    
-		    if isinstance(cellattr, cells.CellAttr):
-			kwargs = cellattr.getkwargs(self)
-			debug(name, "is a cellattr with kwargs", repr(kwargs))
-			# if it isn't an always-lazy
-			if issubclass(kwargs.get('celltype', object),
-				      cells.AlwaysLazyCell):
-			    debug(name, "should be init'd")
-			    # get it, initializing it
-			    getattr(self, name) # will run observers by itself
-			else:
-			    debug(name, "is an always-lazy")
-            except EphemeralCellUnboundError, e:
+                # if it's not been otherwise initialized
+                debug("examining", name)
+                if name not in self.__dict__:
+                    debug(name, "is already in this object")
+                    # grab the cell attr and figure out if it's an always-lazy
+                    cellattr = getattr(self.__class__, name)
+                    if isinstance(cellattr, cells.CellAttr):
+                        kwargs = cellattr.getkwargs(self)
+                        debug(name, "is a cellattr with kwargs", repr(kwargs))
+                        # if it isn't an always-lazy
+                        if issubclass(kwargs.get('celltype', object),
+                                      cells.AlwaysLazyCell):
+                            debug(name, "should be init'd")
+                            # get it, initializing it
+                            getattr(self, name)  # will run observers by itself
+                        else:
+                            debug(name, "is an always-lazy")
+            except EphemeralCellUnboundError as e:
                 debug(name, "was an unbound ephemeral")
         debug("INITIAL EQUALIZATIONS END")
 
@@ -220,28 +223,28 @@ class Model(object):
         self._initialized = True
 
     def __setattr__(self, key, value):
-	"""
+        """
 	Per KT's spec, Models may not set non-cell attributes after
 	__init__.
 
 	@raise NonCellSetError: If you try to set a non-cell attribute
 	"""
-         # always set Cells
+        # always set Cells
         if isinstance(self.__dict__.get(key), Cell):
-                object.__setattr__(self, key, value)
+            object.__setattr__(self, key, value)
         # we can set noncells before init
-        elif not self._initialized:     
-            if key not in self._noncells: # make sure it's registered, though
+        elif not self._initialized:
+            if key not in self._noncells:  # make sure it's registered, though
                 self._noncells.add(key)
-            object.__setattr__(self, key, value) # and then set it
+            object.__setattr__(self, key, value)  # and then set it
         # we can set anything we've not seen, too
-        elif key not in self.__dict__.keys():
+        elif key not in list(self.__dict__.keys()):
             object.__setattr__(self, key, value)
         # but the only thing left is non-cells we've seen, which is verboten
         else:
-            raise NonCellSetError, "Setting non-cell attributes of models " + \
-                  "after init is disallowed"
-        
+            raise NonCellSetError("Setting non-cell attributes of models " + \
+                                  "after init is disallowed")
+
     def _run_observers(self, attribute):
         """Runs each observer in turn. There's some optimization that
         could go on here, if it turns out to be neccessary.
@@ -260,11 +263,11 @@ class Model(object):
         debug("                args:", str(args))
         debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
-        if kwargs.has_key('celltype'):
+        if 'celltype' in kwargs:
             celltype = kwargs["celltype"]
-        elif kwargs.has_key('rule'):  # it's a rule-cell.
+        elif 'rule' in kwargs:  # it's a rule-cell.
             celltype = cells.RuleCell
-        elif kwargs.has_key('value'):     # it's a value-cell
+        elif 'value' in kwargs:  # it's a value-cell
             celltype = cells.InputCell
         else:
             raise Exception("Could not determine target type for cell " +
@@ -272,22 +275,22 @@ class Model(object):
                             ", name: " + name +
                             ", args:" + str(args) +
                             ", kwargs:" + str(kwargs))
-        
+
         kwargs['name'] = name
         return celltype(self, *args, **kwargs)
 
     def _prioritize_observers(self):
-	"""
+        """
 	_prioritize_observers(self) -> none
 
 	(re)Sorts the observer list by priorities
 	"""
-	self._observers.sort(cmp=lambda x, y: cmp(x.priority, y.priority),
-			     reverse=True)
+        self._observers.sort(key=lambda x: x.priority,
+                             reverse=True)
 
     @classmethod
     def observer(klass, attrib=None, oldvalue=None, newvalue=None,
-		 priority=None):
+                 priority=None):
         """
         observer(attrib=None, oldvalue=None, newvalue=None, priority=Non) -> decorator
 
@@ -331,11 +334,13 @@ class Model(object):
             same priority are run in arbitrary order.
 
         """
+
         def observer_decorator(func):
             klass._observernames.add(func.__name__)
             setattr(klass, func.__name__, ObserverAttr(func.__name__, attrib,
                                                        oldvalue, newvalue,
                                                        func))
+
         return observer_decorator
 
 
@@ -343,13 +348,17 @@ class NonCellSetError(Exception):
     """
     You may not set a non-cell Model attribute after initialization.
     """
+
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
+
 
 class BadInitError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)

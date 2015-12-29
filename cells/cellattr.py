@@ -23,9 +23,10 @@ CellAttr, a wrapper for C{L{Cell}} objects within C{L{Models}}
 """
 
 import cells
-from cell import Cell, RuleCell, InputCell
+from .cell import Cell, RuleCell, InputCell
 
 DEBUG = False
+
 
 def debug(*msgs):
     """
@@ -36,7 +37,7 @@ def debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "cell attr".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
-        print " ".join(msgs)
+        print(" ".join(msgs))
 
 
 class CellAttr(object):
@@ -47,6 +48,7 @@ class CellAttr(object):
     Model, and which does the hiding of C{Cell.L{get}()} and
     C{Cell.L{set}()}.
     """
+
     # kid_overrides is essentially internal, so it's hidden from the
     # documentation
     def __init__(self, kid_overrides=True, *args, **kwargs):
@@ -79,8 +81,8 @@ class CellAttr(object):
         self.args = args
         self.kwargs = kwargs
 
-	if kwargs.has_key("rule"):
-	    self.__doc__ = kwargs['rule'].__doc__
+        if "rule" in kwargs:
+            self.__doc__ = kwargs['rule'].__doc__
 
     def __set__(self, owner, value):
         """
@@ -94,7 +96,7 @@ class CellAttr(object):
         @param value: The value to set
         """
         self.getcell(owner).set(value)
-        
+
     def __get__(self, owner, ownertype):
         """
         __get__(self, owner, ownertype) -> value
@@ -117,20 +119,19 @@ class CellAttr(object):
             return cell.getvalue()
 
     def getkwargs(self, owner):
-	"""
+        """
 	getkwargs(owner) -> dict
 
 	Returns the keyword arguments for the target cell, taking into
 	account any overrides which exist in the passed owner model
 	"""
-	newkwargs = self.kwargs.copy()
-	override = owner._initregistry.get(self.name)
-	if override:
-	    newkwargs.update(override)
+        newkwargs = self.kwargs.copy()
+        override = owner._initregistry.get(self.name)
+        if override:
+            newkwargs.update(override)
 
-	return newkwargs
-	
-        
+        return newkwargs
+
     def getcell(self, owner):
         """
         getcell(owner) -> Cell
@@ -146,9 +147,9 @@ class CellAttr(object):
         """
         # if there isn't a value in owner.myname, make it a cell
         debug("got request for cell in", self.name)
-        if self.name not in owner.__dict__.keys():
-	    debug(self.name, "not in owner. Building a new cell in it.")
-	    newcell = self.buildcell(owner, *self.args, **self.getkwargs(owner))
+        if self.name not in list(owner.__dict__.keys()):
+            debug(self.name, "not in owner. Building a new cell in it.")
+            newcell = self.buildcell(owner, *self.args, **self.getkwargs(owner))
             owner.__dict__[self.name] = newcell
 
             # observers have to be run *after* the cell is embedded in the
@@ -188,18 +189,18 @@ class CellAttr(object):
             C{rule} or C{value} correctly. Refer to L{cells.cell} for
             available types.
         """
-        
+
         """Creates a new cell of the appropriate type"""
         debug("Building cell: owner:", str(owner))
         debug("                name:", self.name)
         debug("                args:", str(args))
         debug("              kwargs:", str(kwargs))
         # figure out what type the user wants:
-        if kwargs.has_key('celltype'):    # user-specified cell
+        if 'celltype' in kwargs:  # user-specified cell
             celltype = kwargs["celltype"]
-        elif kwargs.has_key('rule'):      # it's a rule-cell.
+        elif 'rule' in kwargs:  # it's a rule-cell.
             celltype = RuleCell
-        elif kwargs.has_key('value'):     # it's a value-cell
+        elif 'value' in kwargs:  # it's a value-cell
             celltype = InputCell
         else:
             raise Exception("Could not determine target type for cell " +
@@ -211,5 +212,3 @@ class CellAttr(object):
         kwargs['name'] = self.name
 
         return celltype(owner, *args, **kwargs)
-
-

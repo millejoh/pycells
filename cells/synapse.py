@@ -25,7 +25,8 @@ than 5% since the last time C{a} used it.
 @var DEBUG: Turns on debugging messages for the synapse module.
 """
 
-import cells, cell
+import cells
+import cells.cell as cell
 
 DEBUG = False
 
@@ -33,7 +34,7 @@ def debug(*msgs):
     msgs = list(msgs)
     msgs.insert(0, "synapse".rjust(cells._DECO_OFFSET) + " > ")
     if DEBUG or cells.DEBUG:
-        print " ".join(msgs)
+        print(" ".join(msgs))
 
 class Synapse(cell.Cell):
     """
@@ -63,11 +64,10 @@ class Synapse(cell.Cell):
         """
         # first, check to see if there's already a synapse with this name in
         # the owner Cell
-        if not owner.synapse_space.has_key(name): # and if there isn't
+        if name not in owner.synapse_space: # and if there isn't
             # make one in the owner
             debug("building new synapse '" + name + "' in", str(owner))
-            owner.synapse_space[name] = cell.Cell.__new__(cls, owner,
-                                                           name=name, **kwargs)
+            owner.synapse_space[name] = cell.Cell.__new__(cls, owner, name=name, **kwargs)
 
         # finally, return the owner's synapse
         return owner.synapse_space[name]

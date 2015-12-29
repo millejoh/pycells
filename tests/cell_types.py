@@ -46,12 +46,12 @@ class CellTypeTests_Input(unittest.TestCase):
     def setUp(self):
         cells.reset()
         self.x = cells.InputCell(None, 5, name="x")
-        
+
     def test_1_Settability(self):
         "Input 1: An input cell must be settable"
         try:
             self.x.set(4)
-        except Exception, e:
+        except Exception as e:
             self.fail()
 
     def test_2_SetDuringPropogation(self):
@@ -66,7 +66,7 @@ class CellTypeTests_Input(unittest.TestCase):
             return a.getvalue()
         d = cells.RuleCell(None, d_rule, name="d")
 
-        # establish dependencies. 
+        # establish dependencies.
         d.getvalue()                         # x.value = 2, now.
         self.captured_x = None          # set trap
         self.x.set(5)
@@ -84,7 +84,7 @@ class CellTypeTests_Rule(unittest.TestCase):
         "Rule 1: Rule cells may not be set"
         cells.reset()
         x = cells.RuleCell(None, lambda s,p: 0, name="x")
-        self.failUnlessRaises(cells.RuleCellSetError, x.set, 5)        
+        self.failUnlessRaises(cells.RuleCellSetError, x.set, 5)
 
 class CellTypeTests_RuleThenInput(unittest.TestCase):
     def test_1b_RunRaisesAfterEval(self):
@@ -105,7 +105,7 @@ class CellTypeTests_OnceAskedLazy(unittest.TestCase):
 
         self.a.getvalue()                         # establish dependencies
         self.x.set(42)                       # cause propogation
-        
+
     def test_1_EvaluateDuringMOInit(self):
         "Once-asked Lazy 1: Once-asked lazy cells are eval'd during MO init."
         #TODO: Make a real test
@@ -127,7 +127,7 @@ class CellTypeTests_UntilAskedLazy(unittest.TestCase):
                                      rule=lambda s,p: self.x.getvalue() + 1)
         self.a.getvalue(init=True)          # establish dependencies, a = 5
         self.x.set(42)                 # cause propogation
-        
+
     def test_1_EvalOnRead(self):
         "Until-asked Lazy 1: Until-asked lazys with changed called cells are evaluated when called"
         self.failUnless(self.a.value == 5)   # sneaky exam doesn't cause eval
@@ -157,22 +157,21 @@ class CellTypeTests_AlwaysLazy(unittest.TestCase):
         self.failUnless(a.getvalue() == 52)
 
     def test_2_NoEvalOnInit(self):
-	"Always Lazy 2: Does not evaluate during model init"
-	cells.reset()
+        "Always Lazy 2: Does not evaluate during model init"
+        cells.reset()
+        ran_flag = False
 
-	ran_flag = False
-	
-	def a_rule(self, prev):
-	    ran_flag = True
-	    return self.x + 2
+        def a_rule(self, prev):
+            ran_flag = True
+            return self.x + 2
 
-	class M(cells.Model):
-	    x = cells.makecell(value=3)
-	    a = cells.makecell(rule=a_rule, celltype=cells.AlwaysLazyCell)
+        class M(cells.Model):
+            x = cells.makecell(value=3)
+            a = cells.makecell(rule=a_rule, celltype=cells.AlwaysLazyCell)
 
-	m = M()
-	self.failIf(ran_flag)
-	self.failUnless(m.a == 5)
+        m = M()
+        self.failIf(ran_flag)
+        self.failUnless(m.a == 5)
 
 class CellTypeTests_DictTests(unittest.TestCase):
     def setUp(self):
@@ -182,7 +181,7 @@ class CellTypeTests_DictTests(unittest.TestCase):
     def test_1_DictCellSettable(self):
         try:
             self.x.set({'blah': 'blah blippity bloo'})
-        except Exception, e:
+        except Exception as e:
             self.fail()
 
     def test_2_RunRaises(self):
@@ -200,14 +199,13 @@ class CellTypeTests_DictTests(unittest.TestCase):
 
 class CellTypeTests_Ephemerals(unittest.TestCase):
     def test_Ephemeral(self):
-	x = cells.InputCell(None, name="x", value=None, ephemeral=True)
-	y = cells.RuleCell(None, name="y", rule=lambda s,p: x.getvalue())
+        x = cells.InputCell(None, name="x", value=None, ephemeral=True)
+        y = cells.RuleCell(None, name="y", rule=lambda s,p: x.getvalue())
+        y.getvalue()		# establish dep
+        s = "Foobar"
+        x.set(s)		# propogate change
+        self.failUnless(y.getvalue() == s) # y should have got the new value
+        self.failUnless(x.getvalue() is None) # but x should be back to None
 
-	y.getvalue()		# establish dep
-	s = "Foobar"
-	x.set(s)		# propogate change
-	self.failUnless(y.getvalue() == s) # y should have got the new value
-	self.failUnless(x.getvalue() is None) # but x should be back to None
-	
 if __name__ == "__main__":
     unittest.main()

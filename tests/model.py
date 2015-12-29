@@ -73,7 +73,7 @@ class SimpleModelTests(unittest.TestCase):
         raisedflag = False
         try:
             m.a = 5            
-        except cells.RuleCellSetError, e:
+        except cells.RuleCellSetError as e:
             return
 
         self.fail()
@@ -82,7 +82,7 @@ class SimpleModelTests(unittest.TestCase):
         "Non-cell attributes of a model should not be settable after init"
         try:
             self.M().offset = 2
-        except cells.NonCellSetError, e:
+        except cells.NonCellSetError as e:
             return
 
         self.fail()

@@ -63,7 +63,7 @@ cellenv.curr_propogator = None
 cellenv.queued_updates = []
 cellenv.deferred_sets = []
 
-from cellattr import CellAttr
+from .cellattr import CellAttr
 
 def makecell(*args, **kwargs):
     """
@@ -161,14 +161,14 @@ def fun2cell(*args, **kwargs):
         return CellAttr(rule=func, *args, **kwargs)
     return fun2cell_decorator
 
-from cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
-from cell import UntilAskedLazyCell, AlwaysLazyCell, DictCell, ListCell
-from cell import _CellException, RuleCellSetError
-from cell import InputCellRunError, SetDuringNotificationError
+from .cell import Cell, InputCell, RuleCell, RuleThenInputCell, OnceAskedLazyCell
+from .cell import UntilAskedLazyCell, AlwaysLazyCell, DictCell, ListCell
+from .cell import _CellException, RuleCellSetError
+from .cell import InputCellRunError, SetDuringNotificationError
 
-from model import Model, NonCellSetError
-from family import Family, FamilyTraversalError
-from synapse import ChangeSynapse
+from .model import Model, NonCellSetError
+from .family import Family, FamilyTraversalError
+from .synapse import ChangeSynapse
 
 def _debug(*msgs):
     """
@@ -177,7 +177,7 @@ def _debug(*msgs):
     Prints debug messages.
     """
     if DEBUG:
-        print " ".join(msgs)
+        print(" ".join(msgs))
 
 def reset():
     """
